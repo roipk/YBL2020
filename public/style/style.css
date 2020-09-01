@@ -1,0 +1,107 @@
+ html, body {
+    background-image: url("../style/img/background.jpeg");
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+#title-img{
+    height: 15%;
+    width: 30%; 
+}
+#title {
+    margin: auto;
+    text-align: center;
+    padding-top: 30px;
+}
+
+.sec-design {
+    width: 35%;
+    margin: auto;
+    margin-top: 1%;
+    background-color: whitesmoke;
+    border-radius: 20px; 
+    margin-bottom: 10%;
+}
+
+.sec-design1 {
+    width: 35%;
+    margin: auto;
+    margin-top: 3%;
+    background-color: whitesmoke;
+    border-radius: 20px; 
+    margin-bottom: 10%;
+}
+
+.form-design {
+    padding: 15% 15% 15% 15%;
+}
+
+#confirm {
+    margin-top: 5%;
+}
+
+.title-input {
+    float: right;
+    margin-bottom: 2%;
+    text-align: right;
+}
+
+#title-message {
+    float: right;
+    font-weight: bold;
+}
+
+#insert-message-textarea{
+    height: 150px;
+    margin: auto;
+}
+#feedback-button, #report-button{
+    min-height: 50px;
+    width: 90%;
+    margin-top: 20px;
+}
+
+.checkboxes , .report{
+    height: 150px;
+    margin: auto;
+    background-color: white;
+    border: gray solid 1px;
+    padding: 5% 5% 5% 5%;
+    text-align: right;
+}
+
+#go-back, #confirm-form, #confirm-code{
+    padding: 5px;
+    margin: 10px;
+    border-radius: 20%;
+    text-align: center;
+    display: inline-block;
+}
+
+select{
+    width: 60%;
+}
+
+h1{
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.chekbox{
+    float: right;
+    margin-bottom: 2%;
+    text-align: right;
+}
+
+table,th,tr,td{
+    font-size: small;
+    border: 1px black solid;
+}
+.report{
+    width: 100%;
+    overflow: auto;
+}
