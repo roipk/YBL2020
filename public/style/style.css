@@ -11,6 +11,7 @@
 #title-img{
     height: 15%;
     width: 30%; 
+    column-rule-color: aliceblue;
 }
 #title {
     margin: auto;
