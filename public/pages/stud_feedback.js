@@ -1,5 +1,5 @@
-import {loadMenu} from './stud_menu.js'
-import {homepage} from './home.js'
+// import {loadMenu} from './stud_menu.js'
+// import {homepage} from './home.js'
 
 function studentFeedback(){
  
@@ -48,8 +48,8 @@ function studentFeedback(){
      </div>
   
   </div>
-          <button type="submit" id="confirm-form" class="btn btn-info" onClick="${fBConfirmation()}">דווח נוכחות ושלח משוב<spanclass="fa fa-arrow-right"></span></button>
-          <button id="go-back" class="btn btn-info" onClick="${loadMenu()}">חזור</button>
+          <button type="submit" id="confirm-form" class="btn btn-info" onClick="fBConfirmation()">דווח נוכחות ושלח משוב<spanclass="fa fa-arrow-right"></span></button>
+          <button id="go-back" class="btn btn-info" onClick="studLoadMenu()">חזור</button>
   
         
               
@@ -70,7 +70,7 @@ function studentFeedback(){
             <div id="name-group" class="form-group">
               <label id="insert-student" class="title-input" for="name">המשוב התקבל בהצלחה (:</label>
             </div>
-            <button id="go-back" class="btn btn-info" onClick="${homepage()}">התנתק</button>
+            <button id="go-back" class="btn btn-info" onClick="homepage()">התנתק</button>
           </form>
         </div>
       </section>
@@ -78,4 +78,4 @@ function studentFeedback(){
     );
   }
 
-export {studentFeedback};
+// export {studentFeedback};

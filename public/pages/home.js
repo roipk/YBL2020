@@ -1,5 +1,5 @@
-import {login} from './login.js'
-import {signup} from './signup.js'
+// import {login} from './login.js'
+// import {signup} from './signup.js'
 
 function homepage() {
     console.log(":)")
@@ -16,7 +16,7 @@ function homepage() {
   
             <button type="submit" id="confirm" onClick="login(3)" class="btn btn-info">כניסת מנהל<span class="fa fa-arrow-right"></span></button>
 
-            <button type="submit" id="confirm" onClick="signup()" class="btn btn-info">התחבר<span class="fa fa-arrow-right"></span></button>
+            <button type="submit" id="confirm" onClick="signup()" class="btn btn-info">הרשם<span class="fa fa-arrow-right"></span></button>
             </center>
   
           </form>
@@ -27,4 +27,4 @@ function homepage() {
 }
 
 
-export {homepage}
+// export {homepage}

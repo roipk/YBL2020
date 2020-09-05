@@ -1,6 +1,6 @@
 
-import {homepage} from './home.js'
-import {login} from './login.js'
+// import {homepage} from './home.js'
+// import {login} from './login.js'
 
 
 function signup() {
@@ -44,5 +44,5 @@ function signup() {
 
 
 
-  export {signup};
+  // export {signup};
   

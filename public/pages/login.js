@@ -1,4 +1,4 @@
-import {homepage} from './home.js'
+// import {homepage} from './home.js'
 
 function login(permission) {
     console.log(permission)
@@ -87,5 +87,5 @@ function loginEmail(permission) {
   }
 
 
-  export {login, loginEmail};
+  // export {login, loginEmail};
   

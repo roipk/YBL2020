@@ -1,5 +1,5 @@
-import {loadMenu} from './stud_menu.js'
-import {studentFeedback} from './stud_feedback.js'
+// import {loadMenu} from './stud_menu.js'
+// import {studentFeedback} from './stud_feedback.js'
 
 function attendReport(){
     var today = new Date();
@@ -33,8 +33,8 @@ function attendReport(){
             </div>
         
     
-            <button type="submit" id="confirm-form" class="btn btn-info" onClick="${studentFeedback()}">המשך<spanclass="fa fa-arrow-right"></span></button>
-            <button id="go-back" class="btn btn-info" onClick="${loadMenu()}">חזור</button>
+            <button type="submit" id="confirm-form" class="btn btn-info" onClick="studentFeedback()">המשך<spanclass="fa fa-arrow-right"></span></button>
+            <button id="go-back" class="btn btn-info" onClick="studLoadMenu()">חזור</button>
                 
             </form>
         </section>
@@ -43,4 +43,4 @@ function attendReport(){
   }
 
 
-  export {attendReport};
+  // export {attendReport};

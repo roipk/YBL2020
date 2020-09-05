@@ -1,4 +1,4 @@
-import {loadMenu} from './mng_menu.js'
+// import {loadMenu} from './mng_menu.js'
 
 function viewStudentFeedback() {
     var today = new Date();
@@ -41,7 +41,7 @@ function viewStudentFeedback() {
               </table>
             </div>
           </div>
-          <button id="go-back" class="btn btn-info" onClick="${loadMenu()}">חזור</button>
+          <button id="go-back" class="btn btn-info" onClick="mngLoadMenu()">חזור</button>
         </form>
       </div>
     </section>
@@ -78,7 +78,7 @@ function viewStudentFeedback() {
             <div  class="report">
             </div>
           </div>
-          <button id="go-back" class="btn btn-info" onClick="${loadMenu()}">חזור</button>
+          <button id="go-back" class="btn btn-info" onClick="loadMenu()">חזור</button>
         </form>
       </div>
     </section>
@@ -86,4 +86,4 @@ function viewStudentFeedback() {
     );
   }
 
-export {viewInstructorFeedback, viewStudentFeedback};
+// export {viewInstructorFeedback, viewStudentFeedback};

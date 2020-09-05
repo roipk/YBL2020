@@ -1,4 +1,4 @@
-import {loadMenu} from './mng_menu.js'
+// import {loadMenu} from './mng_menu.js'
 
 function viewReport(){
     var selectDate = document.getElementById("insert-date").value;
@@ -34,7 +34,7 @@ function viewReport(){
             <div  id="report" class="report">
             </div>
           </div>
-          <button id="go-back" class="btn btn-info" onClick="${loadMenu()}">חזור</button>
+          <button id="go-back" class="btn btn-info" onClick="mngLoadMenu()">חזור</button>
         </form>
       </div>
     </section>
@@ -43,4 +43,4 @@ function viewReport(){
     
   }
 
-export {viewReport};
+// export {viewReport};
