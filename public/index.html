@@ -1,15 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">    
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<head>
     <title id=WebName>Young Business Leadership</title>
-
-
-
     <link rel="icon" href="style/img/logo.png" type="image/x-icon"/>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
@@ -24,29 +18,19 @@
 
     <link rel="stylesheet" href="style/style.css">
     <link href="style/mobile.css" rel="stylesheet" media="(max-width: 1280px)">
+    <script type="module" src="pages/home.js"></script>
+    <script type="module" src="pages/signup.js"></script>
+    <script type="module" src="pages/login.js"></script>
+    <script type="text/javascript">
+        onload = function(){
+            homepage();
+        }
+        $("document").ready(onload);
+    </script>
 
-    <script src="js/pages.js"></script>
-  </head>
-  <body dir="rtl">
-    <!-- The core Firebase JS SDK is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
-
-    <!-- TODO: Add SDKs for Firebase products that you want to use
-        https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
-    <script src="/js/firebase.js"></script>
-
-    <main>
-      <div id="title">
-        <img id="title-img" src="style/img/title.png" alt="מנהיגות עסקית צעירה" >  
-      </div>
-      <section id="data-change">
-  
+</head>
+<body>
+    <section id="data-change">
       </section>
-    </main>
- 
-
-    
-  </body>
- 
+</body>
 </html>
