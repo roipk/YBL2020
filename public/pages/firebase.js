@@ -30,7 +30,6 @@ async function writeUserData(phone, name, email, pass) {
     var user =await checkIfUserExist(phone);
     console.log(user);
     if (!user){
-
         firebase.database().ref('waitforapproval/' + phone).set({
             name: name,
             email: email,
@@ -38,14 +37,7 @@ async function writeUserData(phone, name, email, pass) {
             password : pass,
             active : false
         }).then( res => {
-<<<<<<< refs/remotes/origin/master
-
             alert(name + "הרשמתך בוצעה בהצלחה להמשך תהליך המנהל יצור איתך קשר");
-
-=======
-            alert(name +  "פרטיך נשלחו בהצלחה ");
->>>>>>> update firebase file
-
         }).catch( err => {
             console.log(err);
         });
@@ -59,41 +51,6 @@ async function writeUserData(phone, name, email, pass) {
             alert("המספר פלאפון קיים במערכת נא להתחבר ממספר אחר")
     }
 }
-
-<<<<<<< refs/remotes/origin/master
-=======
-function checkIfUserExist(phone, name, email, pass){
-    firebase.database().ref(`waitforapproval/${phone}`).once("value", snapshot => {
-        if (snapshot.exists()){
-            alert("משתמש רשום, אנא המתן לאישור מנהל");
-        }
-        else{
-            firebase.database().ref(`students/${phone}`).once("value", snapshot => {
-                if (snapshot.exists()){
-                    alert("מספר הטלפון כבר קיים במערכת");
-                }
-                else{
-                    firebase.database().ref(`guide/${phone}`).once("value", snapshot => {
-                        if (snapshot.exists()){
-                            alert("מספר הטלפון כבר קיים במערכת");
-                        }
-                        else{
-                            firebase.database().ref(`managers/${phone}`).once("value", snapshot => {
-                                if (snapshot.exists()){
-                                    alert("מספר הטלפון כבר קיים במערכת");
-                                }
-                                else{
-                                    writeUserData(phone, name, email, pass);
-                                }
-                            });
-                        }
-                    });
-                }
-             });
-        }
-     });
->>>>>>> update firebase file
-
 
 
 
