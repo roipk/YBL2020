@@ -12,3 +12,24 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 
+const auth = firebase.auth();
+var ref = firebase.database().ref("students");
+console.log(ref);
+
+ref.on("value", function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+        var childData = childSnapshot.val();
+        var id=childData.uid;
+        console.log(childData);
+
+    });
+});
+console.log();
+
+function writeUserData(userId, name, email, imageUrl) {
+    firebase.database().ref('users/' + userId).set({
+        username: name,
+        email: email,
+        profile_picture : imageUrl
+    });
+}

@@ -38,6 +38,10 @@ function signup() {
     );
   }
 
+  
+  function sendDataToFirebase() {
+
+  }
 
 
   // export {signup};
