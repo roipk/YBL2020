@@ -26,14 +26,8 @@ var db = firebase.firestore();
 //     });
 // });
 
-ref.on("value", function(snapshot) {
-    snapshot.forEach(function(childSnapshot) {
-        var childData = childSnapshot.val();
-        var id=childData.uid;
-        // console.log(childData);
+async function writeUserData(phoneNum,name,email,pass) {
 
-
-    console.log(phone);
     var user =await checkIfUserExist(phone);
     console.log(user);
     if (!user) {
