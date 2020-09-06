@@ -14,13 +14,15 @@ firebase.analytics();
 
 const auth = firebase.auth();
 var ref = firebase.database().ref("students");
+const database= firebase.database();
 // console.log(ref);
+authUsers("students");
 
 ref.on("value", function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
         var childData = childSnapshot.val();
         var id=childData.uid;
-        // console.log(childData);
+        // console.log(id);
 
     });
 });
@@ -54,7 +56,7 @@ async function writeUserData(phone, name, email, pass) {
 
 
 
-async function checkIfUserExist(phone, name, email, pass){
+async function checkIfUserExist(phone){
     var user;
     var path=["guide/","students/","waitforapproval/"]
     var i =0;
@@ -66,7 +68,22 @@ async function checkIfUserExist(phone, name, email, pass){
             return true;
         }
     }
-    return  false;
+    return  false; 
+}
 
-    
+async function authUsers(role){
+    var root = firebase.database().ref();
+    var database = root.child('waitforapproval');
+    database.once('value', function(snapshot){
+        snapshot.forEach(function(data){
+            var uid = data.key;
+            firebase.database().ref(role+'/'+uid).set({
+                name: data.val().name,
+                email: data.val().email,
+                phone : data.val().phone,                    
+                password : data.val().password,
+                active : true
+            });
+        });
+    });
 }
