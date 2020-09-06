@@ -38,12 +38,7 @@ function signup() {
     var phoneNum = signup_form.phoneNumber.value;
     var email= signup_form.email.value;
     var password = signup_form.password.value;
-    console.log(name);
-    console.log(phoneNum);
-    console.log(email);
-    console.log(password);
-    alert("פרטיך נשלחו בהצלחה");
-    writeUserData(phoneNum,name,email,password);
+    checkIfUserExist(phoneNum,name,email,password);
   }
 
 

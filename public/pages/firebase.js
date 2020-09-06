@@ -27,10 +27,57 @@ ref.on("value", function(snapshot) {
 console.log();
 
 function writeUserData(phone, name, email, pass) {
-    firebase.database().ref('users/' + phone).set({
-        username: name,
-        email: email,
-        phone : phone,
-        password : pass
-    });
+    console.log(phone);
+    if (checkIfUserExist(phone) != true){
+        
+        firebase.database().ref('waitforapproval/' + phone).set({
+            name: name,
+            email: email,
+            phone : phone,
+            password : pass,
+            active : false
+        }).then( res => {
+            alert(name + "פרטיך נשלחו בהצלחה ");
+
+        }).catch( err => {
+            console.log(err);
+        });
+    }
+}
+
+function checkIfUserExist(phone, name, email, pass){
+    firebase.database().ref(`waitforapproval/${phone}`).once("value", snapshot => {
+        if (snapshot.exists()){
+            console.log(snapshot);
+            alert("משתמש רשום, אנא המתן לאישור מנהל");
+        }
+        else{
+            firebase.database().ref(`students/${phone}`).once("value", snapshot => {
+                if (snapshot.exists()){
+                    alert("מספר הטלפון כבר קיים במערכת");
+                }
+                else{
+                    firebase.database().ref(`guide/${phone}`).once("value", snapshot => {
+                        if (snapshot.exists()){
+                            alert("מספר הטלפון כבר קיים במערכת");
+                        }
+                        else{
+                            firebase.database().ref(`managers/${phone}`).once("value", snapshot => {
+                                if (snapshot.exists()){
+                                    alert("מספר הטלפון כבר קיים במערכת");
+                                }
+                                else{
+                                    writeUserData(phone, name, email, pass);
+                                }
+                            });
+                        }
+                    });
+                }
+             });
+        }
+     });
+
+
+
+    
 }
