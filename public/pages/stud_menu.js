@@ -1,10 +1,4 @@
-// import {homepage} from './home.js'
-// import {attendReport} from './stud_attend.js'
-
 function studLoadMenu() {
-    // $("#loginCode_form").submit(function (event) {
-    //   if (!$("#loginCode_form").valid()) return;
-  
       $("#data-change").replaceWith(`
       <section id="data-change">
         <div id="instructor" class="sec-design"> 
@@ -16,7 +10,4 @@ function studLoadMenu() {
         </div>
         </section>
     `);
-    // });
 }
-
-// export {loadMenu};
