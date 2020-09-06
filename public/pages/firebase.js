@@ -26,10 +26,11 @@ ref.on("value", function(snapshot) {
 });
 console.log();
 
-function writeUserData(userId, name, email, imageUrl) {
-    firebase.database().ref('users/' + userId).set({
+function writeUserData(phone, name, email, pass) {
+    firebase.database().ref('users/' + phone).set({
         username: name,
         email: email,
-        profile_picture : imageUrl
+        phone : phone,
+        password : pass
     });
 }
