@@ -1,4 +1,32 @@
- html, body {
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.previous {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.next {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.round {
+    border-radius: 50%;
+}
+
+
+
+
+html, body {
     background-image: url("../style/img/background.jpeg");
     background-repeat: no-repeat;
     background-position: center center;
@@ -10,7 +38,7 @@
 }
 #title-img{
     height: 15%;
-    width: 30%; 
+    width: 30%;
     column-rule-color: aliceblue;
 }
 #title {
@@ -24,7 +52,7 @@
     margin: auto;
     margin-top: 1%;
     background-color: whitesmoke;
-    border-radius: 20px; 
+    border-radius: 20px;
     margin-bottom: 10%;
 }
 
@@ -33,7 +61,7 @@
     margin: auto;
     margin-top: 3%;
     background-color: whitesmoke;
-    border-radius: 20px; 
+    border-radius: 20px;
     margin-bottom: 10%;
 }
 

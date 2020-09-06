@@ -1,35 +1,55 @@
-[debug] [2020-09-06T16:26:50.167Z] ----------------------------------------------------------------------
-[debug] [2020-09-06T16:26:50.171Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\sap94\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
-[debug] [2020-09-06T16:26:50.172Z] CLI Version:   8.10.0
-[debug] [2020-09-06T16:26:50.172Z] Platform:      win32
-[debug] [2020-09-06T16:26:50.172Z] Node Version:  v14.4.0
-[debug] [2020-09-06T16:26:50.174Z] Time:          Sun Sep 06 2020 19:26:50 GMT+0300 (שעון מזרח אירופה (קיץ))
-[debug] [2020-09-06T16:26:50.174Z] ----------------------------------------------------------------------
-[debug] [2020-09-06T16:26:50.174Z] 
-[debug] [2020-09-06T16:26:50.186Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2020-09-06T16:26:50.188Z] > authorizing via signed-in user
-[debug] [2020-09-06T16:26:50.188Z] [iam] checking project ybl-project-b5e04 for permissions ["firebase.projects.get"]
-[debug] [2020-09-06T16:26:50.192Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2020-09-06T16:26:50.192Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- <request body omitted>
-[debug] [2020-09-06T16:26:50.465Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Sep 2020 16:26:25 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
-[debug] [2020-09-06T16:26:50.482Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/ybl-project-b5e04:testIamPermissions  
- {"permissions":["firebase.projects.get"]}
-[debug] [2020-09-06T16:26:51.367Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Sep 2020 16:26:26 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=640","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
-[debug] [2020-09-06T16:26:51.369Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/ybl-project-b5e04  
- 
-[debug] [2020-09-06T16:26:52.801Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Sep 2020 16:26:28 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-09-06T18:55:28.858Z] ----------------------------------------------------------------------
+[debug] [2020-09-06T18:55:28.861Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\roipk\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2020-09-06T18:55:28.861Z] CLI Version:   8.10.0
+[debug] [2020-09-06T18:55:28.861Z] Platform:      win32
+[debug] [2020-09-06T18:55:28.861Z] Node Version:  v10.15.3
+[debug] [2020-09-06T18:55:28.863Z] Time:          Sun Sep 06 2020 21:55:28 GMT+0300 (Israel Daylight Time)
+[debug] [2020-09-06T18:55:28.863Z] ----------------------------------------------------------------------
+[debug] [2020-09-06T18:55:28.863Z] 
+[debug] [2020-09-06T18:55:28.872Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-09-06T18:55:28.872Z] > authorizing via signed-in user
 [info] 
-[info] === Serving from 'C:\Users\sap94\OneDrive\שולחן העבודה\ybl2020\YBL2020'...
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\roipk\Desktop\new project js\YBL2020
+
+Before we get started, keep in mind:
+
+  * You are initializing in an existing Firebase project directory
+
 [info] 
-[debug] [2020-09-06T16:26:52.818Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/ybl-project-b5e04/webApps/-/config  
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  .firebaserc already has a default project, using ybl2020. 
+[debug] [2020-09-06T18:56:20.050Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/ybl2020  
  
-[debug] [2020-09-06T16:26:53.653Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 06 Sep 2020 16:26:29 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
-[info] i  hosting: Serving hosting files from: public {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mpublic\u001b[22m"}}
-[info] +  hosting: Local server: http://localhost:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://localhost:5000\u001b[22m\u001b[24m"}}
-[info] i  hosting: 127.0.0.1 - - [06/Sep/2020:16:26:53 +0000] "GET / HTTP/1.1" 200 3105 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Sep/2020:16:26:53 +0000] \"GET / HTTP/1.1\" 200 3105 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Sep/2020:16:26:53 +0000] "GET /pages/firebase.js HTTP/1.1" 200 2762 "http://localhost:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Sep/2020:16:26:53 +0000] \"GET /pages/firebase.js HTTP/1.1\" 200 2762 \"http://localhost:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Sep/2020:16:26:54 +0000] "GET /style/img/logo.png HTTP/1.1" 200 1066 "http://localhost:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Sep/2020:16:26:54 +0000] \"GET /style/img/logo.png HTTP/1.1\" 200 1066 \"http://localhost:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Sep/2020:16:27:32 +0000] "GET / HTTP/1.1" 200 3105 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Sep/2020:16:27:32 +0000] \"GET / HTTP/1.1\" 200 3105 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Sep/2020:16:27:32 +0000] "GET /pages/firebase.js HTTP/1.1" 200 2752 "http://localhost:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Sep/2020:16:27:32 +0000] \"GET /pages/firebase.js HTTP/1.1\" 200 2752 \"http://localhost:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44\""}}
-[info] i  hosting: 127.0.0.1 - - [06/Sep/2020:16:27:32 +0000] "GET /style/img/logo.png HTTP/1.1" 200 1066 "http://localhost:5000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [06/Sep/2020:16:27:32 +0000] \"GET /style/img/logo.png HTTP/1.1\" 200 1066 \"http://localhost:5000/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36 Edg/85.0.564.44\""}}
+[debug] [2020-09-06T18:56:20.791Z] <<< HTTP RESPONSE 403 {"vary":"X-Origin, Referer, Origin,Accept-Encoding","content-type":"application/json; charset=UTF-8","date":"Sun, 06 Sep 2020 18:56:19 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-27=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-09-06T18:56:20.791Z] <<< HTTP RESPONSE BODY {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2020-09-06T18:56:20.799Z] HTTP Error: 403, The caller does not have permission
+[debug] [2020-09-06T18:56:21.643Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+    at module.exports (C:\Users\roipk\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:38:12)
+    at Request._callback (C:\Users\roipk\AppData\Roaming\npm\node_modules\firebase-tools\lib\api.js:41:35)
+    at Request.self.callback (C:\Users\roipk\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:185:22)
+    at Request.emit (events.js:189:13)
+    at Request.EventEmitter.emit (domain.js:441:20)
+    at Request.<anonymous> (C:\Users\roipk\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:1154:10)
+    at Request.emit (events.js:189:13)
+    at Request.EventEmitter.emit (domain.js:441:20)
+    at IncomingMessage.<anonymous> (C:\Users\roipk\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\request\request.js:1076:12)
+    at Object.onceWrapper (events.js:277:13)
+    at IncomingMessage.emit (events.js:194:15)
+    at IncomingMessage.EventEmitter.emit (domain.js:441:20)
+    at endReadableNT (_stream_readable.js:1125:12)
+    at process._tickCallback (internal/process/next_tick.js:63:19)
+[error] 
+[error] Error: Failed to get Firebase project ybl2020. Please make sure the project exists and your account has permission to access it.

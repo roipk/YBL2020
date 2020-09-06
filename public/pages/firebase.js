@@ -12,47 +12,69 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 
+
 const auth = firebase.auth();
-var ref = firebase.database().ref("students");
-const database= firebase.database();
+var db = firebase.firestore();
 // console.log(ref);
-authUsers("students");
+//
+// ref.on("value", function(snapshot) {
+//     snapshot.forEach(function(childSnapshot) {
+//         var childData = childSnapshot.val();
+//         var id=childData.uid;
+//         // console.log(childData);
+//
+//     });
+// });
 
 ref.on("value", function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
         var childData = childSnapshot.val();
         var id=childData.uid;
-        // console.log(id);
+        // console.log(childData);
 
-    });
-});
 
-async function writeUserData(phone, name, email, pass) {
     console.log(phone);
     var user =await checkIfUserExist(phone);
     console.log(user);
-    if (!user){
-        firebase.database().ref('waitforapproval/' + phone).set({
+    if (!user) {
+
+        const data = {
             name: name,
             email: email,
-            phone : phone,
-            password : pass,
-            active : false
-        }).then( res => {
+            phone: phone,
+            password: pass,
+            active: false
+        };
+        const res = await db.collection('waitforapproval').doc(phone).set(data);
+
+
+        // firebase.database().ref('waitforapproval/' + phone).set({
+        //     name: name,
+        //     email: email,
+        //     phone : phone,
+        //     password : pass,
+        //     active : false
+        // }).then( res => {
+        //
             alert(name + "הרשמתך בוצעה בהצלחה להמשך תהליך המנהל יצור איתך קשר");
-        }).catch( err => {
-            console.log(err);
-        });
+
+        //
+        // }).catch( err => {
+        //     console.log(err);
+        // });
     }
     else
     {
-        var user = await firebase.database().ref("waitforapproval" + phone).once("value");
-        if(user.exists())
+        // var user = await firebase.database().ref("waitforapproval" + phone).once("value");
+        var user = await firebase.firestore().collection("waitforapproval").doc(phone).get();
+        if(user.exists)
             alert("המספר קיים במערכת ממתין לאישור מנהל")
         else
             alert("המספר פלאפון קיים במערכת נא להתחבר ממספר אחר")
     }
 }
+
+
 
 
 
@@ -62,8 +84,9 @@ async function checkIfUserExist(phone){
     var i =0;
     for(; i<path.length; i++)
     {
-        user = await firebase.database().ref(path[i] + phone).once("value");
-        if(user.exists())
+        var user = await firebase.firestore().collection(path[i]).doc(phone).get();
+        // user = await firebase.database().ref(path[i] + phone).once("value");
+        if(user.exists)
         {
             return true;
         }
