@@ -15,10 +15,6 @@ function signup() {
               <input type="text" class="form-control" name="fullName" id="fullName" minlength="2" required>
             </div>
             <div id="name-group" class="form-group">
-                <label id="insert-guideName" class="signup-input">שם המדריך:</label>
-                <input type="text" class="form-control" name="guideName" id="guideName" minlength="2" required>
-            </div>
-            <div id="name-group" class="form-group">
               <label id="insert-mail" class="signup-input">אימייל:</label>
               <input type="email" class="form-control" name="email" id="email" required>
             </div>
