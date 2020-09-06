@@ -3,7 +3,7 @@
 // import {viewReport} from './mng_attend_report.js'
 
 
-function mngLoadMenu(permission) {
+function mngLoadMenu() {
     $("#loginCode_form").submit(function (event) {
       if (!$("#loginCode_form").valid()) return;
   

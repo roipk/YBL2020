@@ -1,9 +1,9 @@
 // import {homepage} from './home.js'
 // import {attendReport} from './stud_attend.js'
 
-function studLoadMenu(permission) {
-    $("#loginCode_form").submit(function (event) {
-      if (!$("#loginCode_form").valid()) return;
+function studLoadMenu() {
+    // $("#loginCode_form").submit(function (event) {
+    //   if (!$("#loginCode_form").valid()) return;
   
       $("#data-change").replaceWith(`
       <section id="data-change">
@@ -16,7 +16,7 @@ function studLoadMenu(permission) {
         </div>
         </section>
     `);
-    });
+    // });
 }
 
 // export {loadMenu};

@@ -2,7 +2,7 @@
 // import {instractorFeedback} from './guide_feedback.js'
 // import {loadInstactorReport} from './guide_attend_report.js'
 
-function guideLoadMenu(permission) {
+function guideLoadMenu() {
     $("#loginCode_form").submit(function (event) {
       if (!$("#loginCode_form").valid()) return;
   
