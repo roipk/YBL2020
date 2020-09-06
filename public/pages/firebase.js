@@ -14,22 +14,23 @@ firebase.analytics();
 
 const auth = firebase.auth();
 var ref = firebase.database().ref("students");
-console.log(ref);
+// console.log(ref);
 
 ref.on("value", function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
         var childData = childSnapshot.val();
         var id=childData.uid;
-        console.log(childData);
+        // console.log(childData);
 
     });
 });
-console.log();
 
-function writeUserData(phone, name, email, pass) {
+async function writeUserData(phone, name, email, pass) {
     console.log(phone);
-    if (checkIfUserExist(phone) != true){
-        
+    var user =await checkIfUserExist(phone);
+    console.log(user);
+    if (!user){
+
         firebase.database().ref('waitforapproval/' + phone).set({
             name: name,
             email: email,
@@ -37,47 +38,41 @@ function writeUserData(phone, name, email, pass) {
             password : pass,
             active : false
         }).then( res => {
-            alert(name + "פרטיך נשלחו בהצלחה ");
+
+            alert(name + "הרשמתך בוצעה בהצלחה להמשך תהליך המנהל יצור איתך קשר");
+
 
         }).catch( err => {
             console.log(err);
         });
     }
+    else
+    {
+        var user = await firebase.database().ref("waitforapproval" + phone).once("value");
+        if(user.exists())
+            alert("המספר קיים במערכת ממתין לאישור מנהל")
+        else
+            alert("המספר פלאפון קיים במערכת נא להתחבר ממספר אחר")
+    }
 }
 
-function checkIfUserExist(phone, name, email, pass){
-    firebase.database().ref(`waitforapproval/${phone}`).once("value", snapshot => {
-        if (snapshot.exists()){
-            console.log(snapshot);
-            alert("משתמש רשום, אנא המתן לאישור מנהל");
-        }
-        else{
-            firebase.database().ref(`students/${phone}`).once("value", snapshot => {
-                if (snapshot.exists()){
-                    alert("מספר הטלפון כבר קיים במערכת");
-                }
-                else{
-                    firebase.database().ref(`guide/${phone}`).once("value", snapshot => {
-                        if (snapshot.exists()){
-                            alert("מספר הטלפון כבר קיים במערכת");
-                        }
-                        else{
-                            firebase.database().ref(`managers/${phone}`).once("value", snapshot => {
-                                if (snapshot.exists()){
-                                    alert("מספר הטלפון כבר קיים במערכת");
-                                }
-                                else{
-                                    writeUserData(phone, name, email, pass);
-                                }
-                            });
-                        }
-                    });
-                }
-             });
-        }
-     });
 
 
+
+
+async function checkIfUserExist(phone, name, email, pass){
+    var user;
+    var path=["guide/","students/","waitforapproval/"]
+    var i =0;
+    for(; i<path.length; i++)
+    {
+        user = await firebase.database().ref(path[i] + phone).once("value");
+        if(user.exists())
+        {
+            return true;
+        }
+    }
+    return  false;
 
     
 }

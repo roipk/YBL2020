@@ -1,5 +1,5 @@
 function signup() {
-    $("#data-change").replaceWith(
+  $("#data-change").replaceWith(
       `
       <section id="data-change">
         <div id="signup" class="sec-design">
@@ -29,18 +29,19 @@ function signup() {
         </div>
       </section>
       `
-    );
-  }
-
-  
-  function sendDataToFirebase() {
-    var name = signup_form.fullName.value;
-    var phoneNum = signup_form.phoneNumber.value;
-    var email= signup_form.email.value;
-    var password = signup_form.password.value;
-    writeUserData(phoneNum,name,email,password);
-  }
+  );
+}
 
 
-  // export {signup};
+function sendDataToFirebase() {
+  console.log("in")
+  var name = signup_form.fullName.value;
+  var phoneNum = signup_form.phoneNumber.value;
+  var email= signup_form.email.value;
+  var password = signup_form.password.value;
+  writeUserData(phoneNum,name,email,password);
+}
+
+
+// export {signup};
   
