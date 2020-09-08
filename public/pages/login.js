@@ -12,13 +12,19 @@ function login(permission) {
               <label id="insert-phone" class="title-input" for="phone">הכנס מספר טלפון להזדהות:</label>
               <input type="text" class="form-control" name="phoneNumber" id="phoneNumber"  placeholder="Phone Number" 
               required>
+              
+               <label id="insert-password" class="title-input" for="password">הכנס מספר טלפון להזדהות:</label>
+              <input type="text" class="form-control" name="password" id="password"  placeholder="password" 
+              required>
             </div>
+  
   
             <button type="submit" id="confirm" onClick="loadCode(${permission})" class="btn btn-info">שלח קוד לנייד<span
                 class="fa fa-arrow-right"></span></button>
             <div id="recaptcha-container"></div>
   
             <button id="go-back" class="btn btn-info" onClick="homepage()">חזור</button>
+            <button id="send" class="btn btn-info" onClick="enter(${permission})">התחבר</button>
   
           </form>
         </div>
@@ -86,6 +92,17 @@ function loginEmail(permission) {
   
   }
 
+
+
+  function enter(promise) {
+      var name = loginPhone_form.phoneNumber.value;
+      var phoneNum = loginPhone_form.password.value;
+      console.log(name)
+      console.log(phoneNum)
+      console.log(promise)
+      guideLoadMenu()
+
+}
 
   // export {login, loginEmail};
   

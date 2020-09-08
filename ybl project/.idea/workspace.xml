@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="abdfd6f1-b0a4-4f77-881c-d14429a2b226" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/ybl/.firebaserc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/database.rules.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/firebase.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/firestore.indexes.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/firestore.rules" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/public/404.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/public/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/HomePage/HomePage.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/HomePage/HomePage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/Login/Login.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/Login/Login.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/SignUp/SignUp.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/SignUp/signUp.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/Users/Users.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/components/pages/temp.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/firebase/firebase.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/layout/images/background.jpeg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/layout/images/mobile-bg.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/src/layout/images/title.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ybl/storage.rules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ybl/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/ybl/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ybl/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/ybl/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ybl/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/ybl/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ybl/src/App.css" beforeDir="false" afterPath="$PROJECT_DIR$/ybl/src/App.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ybl/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/ybl/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ybl/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/ybl/src/index.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/ybl" />
+  </component>
+  <component name="ProjectId" id="1hBMchLzjk54dt4qtoIqDALHq4N" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../reactProject/team 1 - movies - amjad/movies-list" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.3.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\roipk\Desktop\ybl project\ybl\public" />
+    </key>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="abdfd6f1-b0a4-4f77-881c-d14429a2b226" name="Default Changelist" comment="" />
+      <created>1599480112147</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599480112147</updated>
+      <workItem from="1599480113566" duration="44269000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="393" y="7" key="CommitChangelistDialog2" timestamp="1599482498533">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="393" y="7" key="CommitChangelistDialog2/0.0.1536.824@0.0.1536.824" timestamp="1599482498533" />
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1599536683548">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1599536683548" />
+    <state width="1515" height="210" key="GridCell.Tab.0.bottom" timestamp="1599483940052">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="210" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1599483940052" />
+    <state width="1515" height="210" key="GridCell.Tab.0.center" timestamp="1599483940052">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="210" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1599483940052" />
+    <state width="1515" height="210" key="GridCell.Tab.0.left" timestamp="1599483940052">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="210" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1599483940052" />
+    <state width="1515" height="210" key="GridCell.Tab.0.right" timestamp="1599483940052">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1515" height="210" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1599483940052" />
+    <state x="462" y="144" width="805" height="536" key="find.popup" timestamp="1599538884323">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="462" y="144" width="805" height="536" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1599538884323" />
+    <state x="425" y="187" key="run.anything.popup" timestamp="1599543527976">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="425" y="187" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1599543527976" />
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1599549105555">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1599549105555" />
+  </component>
+</project>

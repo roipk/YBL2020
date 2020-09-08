@@ -3,8 +3,8 @@
 // import {loadInstactorReport} from './guide_attend_report.js'
 
 function guideLoadMenu() {
-    $("#loginCode_form").submit(function (event) {
-      if (!$("#loginCode_form").valid()) return;
+    // $("#loginCode_form").submit(function (event) {
+      // if (!$("#loginCode_form").valid()) return;
   
       $("#data-change").replaceWith(`
       <section id="data-change">
@@ -19,7 +19,7 @@ function guideLoadMenu() {
         </div>
         </section>
     `);
-    });
+    // });
 }
 
 // export {loadMenu};
