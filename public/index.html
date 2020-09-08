@@ -1,70 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title id=WebName>Young Business Leadership</title>
-    <link rel="icon" href="style/img/logo.png" type="image/x-icon"/>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="./logo.png" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        interity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-
-
-
-
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-database.js"></script>
-
-
-    <link rel="stylesheet" href="style/style.css">
-    <link href="style/mobile.css" rel="stylesheet" media="(max-width: 1280px)">
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>React App</title>
 
 
-    <script src="pages/home.js"></script>
-    <script src="pages/login.js"></script>
-    <script src="pages/signup.js"></script>
-    <script src="pages/stud_menu.js"></script>
-    <script src="pages/stud_attend.js"></script>
-    <script src="pages/stud_feedback.js"></script>
-    <script src="pages/guide_menu.js"></script>
-    <script src="pages/guide_feedback.js"></script>
-    <script src="pages/guide_attend_report.js"></script>
-    <script src="pages/mng_menu.js"></script>
-    <script src="pages/mng_attend_report.js"></script>
-    <script src="pages/mng_show_feedback.js"></script>
 
 
-    <script src="pages/firebase.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.19.1/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
 
-    <script type="text/javascript">
-    </script>
 
-</head>
-<body onload="homepage()">
-    <main>
-        <div id="title">
-          <img id="title-img" src="style/img/title.png" alt="מנהיגות עסקית צעירה" >  
-        </div>
-        <section id="data-change">
-    
-        </section>
 
-        <table id="mytable">
 
-        </table>
-      </main>
 
-    <a href="#" class="previous">&laquo; Previous</a>
-    <a href="#" class="next">Next &raquo;</a>
-</body>
+
+
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+  </body>
 </html>
