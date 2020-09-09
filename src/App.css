@@ -3,7 +3,13 @@
 
 
 }
+img {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 
+  z-index: -1;
+}
 
 .App-logo {
   height: 40vmin;

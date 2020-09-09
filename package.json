@@ -43,6 +43,7 @@
   "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
   "main": "index.js",
   "devDependencies": {
+    "eslint-plugin-react-hooks": "^4.1.0",
     "terser-webpack-plugin": "^4.1.0"
   },
   "author": "",

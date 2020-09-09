@@ -1,12 +1,15 @@
+#registerBtn{
+    color: black;
+    background-color: #65b0ff;
+}
 
-.sec-design{
-    margin-top: 20%;
-    margin-left: auto;
-    margin-right: auto;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 15px;
-    padding: 5%;
+#LoginBtn{
+    color: black;
+    background-color: rgba(0, 203, 0, 0.69);
+}
 
 
+#HomeBtn{
+    color: black;
+    background-color: rgba(203, 146, 133, 0.75);
 }

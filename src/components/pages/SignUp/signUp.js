@@ -1,30 +1,32 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-
-import {db} from '../../../firebase/firebase';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-
-import './SignUp.css'
-
-
-
+import React, { useState } from 'react'
+import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import withStyles from '@material-ui/core/styles/withStyles'
+import { Link, withRouter } from 'react-router-dom'
 import firebase from '../../../firebase/firebase' ;
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import '../temp.css'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = theme => ({
+    main: {
+        width: 'auto',
+        display: 'block', // Fix IE 11 issue.
+        marginLeft: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        [theme.breakpoints.up(400 + theme.spacing(3) * 2)]: {
+            width: 400,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+
+        },
+    },
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop:theme.spacing(8),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`,
     },
     avatar: {
         margin: theme.spacing(1),
@@ -35,171 +37,150 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(3),
     },
     submit: {
-        margin: theme.spacing(3, 0, 2),
+        marginTop:theme.spacing(3),
     },
-
     TextField: {
         alignItems: 'center',
     },
-}));
+})
 
-var newUser={
-    "fname":"",
-    "lname":"",
-    "phone":"",
-    "email":"",
-    "password":""
-}
+function SignUp(props) {
+    const { classes } = props
 
-
-
-
-export default function SignUp() {
-    const classes = useStyles();
-
+    const [fname, setFname] = useState('')
+    const [lname, setLname] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [password, setPassword] = useState('')
 
 
     return (
-
-        <Container component="main" maxWidth="xs">
-            <div className="sec-design">
-            <CssBaseline />
-            <div className={classes.paper}>
+        <main className={classes.main}>
+            <Paper className={classes.paper} style={{
+                backgroundColor: "rgba(255,255,255,0.85)",
+                borderRadius: "25px"}}>
                 <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                   הרשמה
+                    טופס הרשמה
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} onSubmit={e => e.preventDefault() && false }>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={6}>
                             <TextField
-                                inputProps={{ style: {textAlign: 'center'} }}
-                                autoComplete="fname"
-                                name="firstName"
+                                inputProps={{style: {textAlign: 'center'}}}
+                                id="fname"
+                                name="fname"
+                                autoComplete="off"
+                                autoFocus value={fname}
+                                onChange={e => setFname(e.target.value)}
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="firstName"
                                 label="שם פרטי"
-                                autoFocus
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={6}>
                             <TextField
-                                inputProps={{ style: {textAlign: 'center'} }}
+                                inputProps={{style: {textAlign: 'center'}}}
+                                id="lname"
+                                name="lname"
+                                autoComplete="off"
+                                autoFocus value={lname}
+                                onChange={e => setLname(e.target.value)}
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="lastName"
                                 label="שם משפחה"
-                                name="lastName"
-                                autoComplete="lname"
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                inputProps={{ style: {textAlign: 'center'} }}
-                                variant="outlined"
-                                required
-                                fullWidth
+                                inputProps={{style: {textAlign: 'center'}}}
                                 id="phone"
-                                label="פלאפון"
                                 name="phone"
-                                autoComplete="nphone"
+                                autoComplete="off"
+                                autoFocus value={phone}
+                                onChange={e => setPhone(e.target.value)}
+                                variant="outlined"
+                                required
+                                fullWidth
+                                label="פלאפון"
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                inputProps={{ style: {textAlign: 'center'} }}
+                                inputProps={{style: {textAlign: 'center'}}}
+                                id="email" name="email"
+                                autoComplete="off"
+                                value={email} onChange={e => setEmail(e.target.value)}
                                 variant="outlined"
                                 required
                                 fullWidth
-                                id="email"
-                                label="Email כתובת"
-                                name="email"
-                                autoComplete="email"
+                                label="Email"
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                inputProps={{ style: {textAlign: 'center'} }}
-                                variant="outlined"
-                                required
-                                fullWidth
+                                inputProps={{style: {textAlign: 'center'}}}
                                 name="password"
-                                label="סיסמא"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
+                                autoComplete="off"
+                                value={password} onChange={e => setPassword(e.target.value)}
+                                variant="outlined"
+                                required
+                                fullWidth
+                                label="סיסמא"
                             />
                         </Grid>
                     </Grid>
+
                     <Button
-                        // type="submit"
+                        type="submit"
                         fullWidth
                         variant="contained"
-                        color="primary"
+                        id="registerBtn"
+                        onClick={onRegister}
                         className={classes.submit}
-                        onClick={checkUser}
-                    >
+                        register="true">
+
                         הרשמה
                     </Button>
-                    <Grid container justify="flex-end">
-                        <Grid item>
-                            <Link id="backLogin" href="/" variant="body2">
-                              כבר יש לך חשבון? התחבר כאן
-                            </Link>
-                        </Grid>
-                    </Grid>
+
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        id="LoginBtn"
+                        component={Link}
+                        to="/Login"
+                        className={classes.submit}>
+                        כבר יש לך משתמש? התחברות
+                    </Button>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        id="HomeBtn"
+                        component={Link}
+                        to="/"
+                        className={classes.submit}>
+                        חזרה לעמוד הראשי
+                    </Button>
                 </form>
-            </div>
-            </div>
-        </Container>
+            </Paper>
+        </main>
+    )
 
-    );
-}
-
-
-
-
-async function checkIfUserExist(phone){
-    console.log(phone)
-    var path=["guide","students","waitforapproval"]
-    var i =0;
-    for(; i<path.length; i++)
-    {
-        var user = await db.collection(path[i]).doc(phone).get();
-        // user = await firebase.database().ref(path[i] + phone).once("value");
-
-        if(user.exists)
-        {
-            console.log("found : " + path[i])
-            return true;
+    async function onRegister() {
+        try {
+            await firebase.register(fname, email, password)
+            props.history.replace('/user')
+        } catch(error) {
+            alert(error.message)
         }
-        else
-            console.log("not found : " + path[i])
     }
-    return  false;
 }
 
-
-
-
-async function checkUser() {
-    newUser.phone = document.getElementById("phone").value
-    var user = await checkIfUserExist(newUser.phone)
-    if (user)
-        alert("משתמש קיים")
-    else {
-        alert("ההרשמה בוצעה בהצלחה יש להמתין לאישור המנהל")
-        document.getElementById("backLogin").click()
-
-    }
-    // newUser.p = document.getElementById("firstName").value
-    // newUser. = document.getElementById("firstName").value
-    // newUser.fname = document.getElementById("firstName").value
-    // newUser.fname = document.getElementById("firstName").value
-    // newUser.fname = document.getElementById("firstName").value
-}
+export default withRouter(withStyles(useStyles)(SignUp))

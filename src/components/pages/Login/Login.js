@@ -1,188 +1,189 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import './Login.css'
-
-import {db,auth} from  '../../../firebase/firebase';
+import React, { useState } from 'react'
+import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import withStyles from '@material-ui/core/styles/withStyles'
+import { Link, withRouter } from 'react-router-dom'
+import firebase ,{auth} from '../../../firebase/firebase' ;
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
 
 
-    const useStyles = makeStyles((theme) => ({
-        paper: {
-            marginTop: theme.spacing(8),
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+const useStyles = theme => ({
+    main: {
+        width: 'auto',
+        display: 'block', // Fix IE 11 issue.
+        marginLeft: theme.spacing(3),
+        marginRight: theme.spacing(3),
+        [theme.breakpoints.up(400 + theme.spacing(3) * 2)]: {
+            width: 400,
+            marginLeft: 'auto',
+            marginRight: 'auto',
         },
-        avatar: {
-            margin: theme.spacing(1),
-            backgroundColor: theme.palette.secondary.main,
-        },
-        form: {
-            width: '100%', // Fix IE 11 issue.
-            marginTop: theme.spacing(3),
-        },
-        submit: {
-            margin: theme.spacing(3, 0, 2),
-        },
-
-        TextField: {
-            alignItems: 'center',
-        },
-    }));
-
-
-
-
-
-
-
-async function loginWithEmail()  {
+    },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`,
+    },
+    avatar: {
+        margin: theme.spacing(),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(),
+    },
+    submit: {
+        marginTop: theme.spacing(3),
+    },
+});
 
 
-    var email = document.getElementById("email");
-    var password = document.getElementById("password");
-    var canLogin = await auth.signInWithEmailAndPassword(email.value, password.value).catch(function (error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        if(errorCode!==errorMessage);
-        alert("user or password not correct")
+//
+// class MovieList extends React.Component {
+//     constructor(props) {
+//         super(props);
+//         // State initialize
+//         this.state = {
+//
+//         };
+//     }
+//
+//     // render() {
+//     //     return (
+//     //         this.List()
+//     //         //this.state.flag === true ? <PaintingExtraDetails data={this.state.extra_details_paint}/> : this.List()
+//     //     );
+//     // }
+//
+// }
 
-    });
 
-    if (canLogin) {
-        console.log(canLogin)
-        alert("welcome")
-        document.getElementById("clickme").click()
-        console.log("click")
-    }
-}
+function LoginPage(props) {
+    const { classes } = props
 
 
-
-class LoginPage extends React.Component {
-
-    constructor(){
-        super();
-        // this.classes = useStyles();
-
-        this.state = {
-            t:{
-                "fname":"roi",
-                "lname":"madmon"
-            },
-            flag: false
-
-            }
-        };
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
+    const [password, setPassword] = useState('')
 
 
 
+    return (
+        <main className={classes.main}>
+            <Paper className={classes.paper}  style={{
+                backgroundColor: "rgba(255,255,255,0.85)",
+                borderRadius: "25px"}}>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon />
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    התחברות
+                </Typography>
+                <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
 
-
-
-
-    render() {
-        return (
-            this.Login()
-            //this.state.flag === true ? <PaintingExtraDetails data={this.state.extra_details_paint}/> : this.List()
-        );
-    }
-
-
-
-    Login() {
-        return (
-
-            <Container component="main" maxWidth="xs">
-                <div className="sec-design">
-                    <CssBaseline/>
-                    <div className={useStyles.paper}>
-                        <Avatar className={useStyles.avatar}>
-                            <LockOutlinedIcon/>
-                        </Avatar>
-                        <Typography className="enter" component="h1" variant="h5">
-                            התחברות
-                        </Typography>
-                        <form className={useStyles.form} noValidate>
-                            <Grid container spacing={2}>
-
-                                <Grid item xs={12}>
-                                    <TextField
-                                        inputProps={{style: {textAlign: 'center'}}}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="phone"
-                                        label="פלאפון"
-                                        name="phone"
-                                        autoComplete="nphone"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        inputProps={{style: {textAlign: 'center'}}}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        id="email"
-                                        label="Email כתובת"
-                                        name="email"
-                                        autoComplete="email"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        inputProps={{style: {textAlign: 'center'}}}
-                                        variant="outlined"
-                                        required
-                                        fullWidth
-                                        name="password"
-                                        label="סיסמא"
-                                        type="password"
-                                        id="password"
-                                        autoComplete="current-password"
-                                    />
-                                </Grid>
-                            </Grid>
-
-                            <Button
-                                // type="submit"
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <TextField
+                                inputProps={{style: {textAlign: 'center'}}}
+                                id="phone"
+                                name="phone"
+                                autoComplete="off"
+                                autoFocus value={phone}
+                                onChange={e => setPhone(e.target.value)}
+                                variant="outlined"
+                                // required
                                 fullWidth
-                                variant="contained"
-                                color="primary"
-                                // className={classes.submit}
-                                onClick={loginWithEmail}
-                            >
-                                כניסה
-                            </Button>
+                                label="פלאפון"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                inputProps={{style: {textAlign: 'center'}}}
+                                id="email" name="email"
+                                autoComplete="off"
+                                value={email} onChange={e => setEmail(e.target.value)}
+                                variant="outlined"
+                                required
+                                fullWidth
+                                label="Email"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                inputProps={{style: {textAlign: 'center'}}}
+                                name="password"
+                                type="password"
+                                id="password"
+                                autoComplete="off"
+                                value={password} onChange={e => setPassword(e.target.value)}
+                                variant="outlined"
+                                required
+                                fullWidth
+                                label="סיסמא"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Button
+                        id="LoginBtn"
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        onClick={login}
+                        className={classes.submit}>
+                       כניסה
+                    </Button>
 
-                            <Link id="clickme" href={"/Users/"+this.state.t.fname} variant="body2">
-                            </Link>
-                            <Grid container justify="flex-end">
-                                <Grid item>
-                                    <Link href="/signup" variant="body2">
-                                        עוד אין לך חשבון? להרשמה
-                                    </Link>
-                                </Grid>
-                            </Grid>
-                        </form>
-                    </div>
-                </div>
-            </Container>
+                    <Button
+                        id="registerBtn"
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        id="registerBtn"
+                        component={Link}
+                        to="/SignUp"
+                        className={classes.submit}>
+                        הרשמה
+                    </Button>
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        id="HomeBtn"
+                        component={Link}
+                        to="/"
+                        className={classes.submit}>
+                        חזרה לעמוד הראשי
+                    </Button>
+                </form>
+            </Paper>
+        </main>
+    )
 
-        );
+    async function login() {
+        try {
+
+
+            var user = await auth.signInWithEmailAndPassword(email, password).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // ...
+            });
+            console.log(user.user.email)
+
+
+            // await firebase.login(email, password)
+            props.history.push('/User')
+
+        } catch(error) {
+            alert(error.message)
+        }
     }
-
-
 }
 
+export default withRouter(withStyles(useStyles)(LoginPage))
 
-export default LoginPage;
+// export default MovieList;
