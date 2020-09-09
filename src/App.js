@@ -4,6 +4,7 @@ import SignUp from './components/pages/SignUp/signUp';
 import Login from './components/pages/Login/Login';
 import Users from './components/pages/Users/Users';
 import TempPage from "./components/pages/temp";
+import Users from './components/pages/Users/student/Users';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 
@@ -67,6 +68,7 @@ function App() {
             <Route exact path="/User" component={test} />
             {/*<Route exact path="/Users/:id" component={Users} />*/}
           <Route exact path="/SignUp" component={SignUp} />
+            <Route exact path="/Users/:id" component={Users} />
         </Switch>
       </Router>
       </div>
