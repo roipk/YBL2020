@@ -2,7 +2,7 @@ import React from 'react'
 import HomePage from './components/pages/HomePage/HomePage';
 import SignUp from './components/pages/SignUp/signUp';
 import LoginPage from './components/pages/Login/Login';
-import Users from './components/pages/Users/Users';
+import Users from './components/pages/Users/student';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import './App.css';
@@ -22,6 +22,7 @@ function App() {
           <Route exact path="/signUp">
               <SignUp/>
           </Route>
+          
         </Switch>
       </Router>
   );

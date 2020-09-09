@@ -26,7 +26,7 @@ var db = firebase.firestore();
 //     });
 // });
 
-async function writeUserData(phoneNum,name,email,pass) {
+async function writeUserData(phone,name,email,pass) {
 
     var user =await checkIfUserExist(phone);
     console.log(user);
