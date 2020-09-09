@@ -2,7 +2,6 @@ import React from 'react'
 import HomePage from './components/pages/HomePage/HomePage';
 import SignUp from './components/pages/SignUp/signUp';
 import Login from './components/pages/Login/Login';
-import Users from './components/pages/Users/Users';
 import TempPage from "./components/pages/temp";
 import Users from './components/pages/Users/student/Users';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
