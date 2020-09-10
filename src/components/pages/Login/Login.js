@@ -177,7 +177,11 @@ function LoginPage(props) {
 
 
             // await firebase.login(email, password)
-            props.history.push('/User')
+            props.history.push({
+                pathname: '/User',
+                data: user.user // your data array of objects
+            })
+            // props.history.push('/User')
 
         } catch(error) {
             alert(error.message)

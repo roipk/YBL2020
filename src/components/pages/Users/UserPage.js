@@ -3,7 +3,7 @@ import firebase, {auth} from '../../../firebase/firebase'
 import {Button} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { withRouter} from 'react-router'
-import User from './student/Users'
+import User from './Student/Students'
 
 // import { css } from "@emotion/core";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -22,11 +22,13 @@ class UserPage extends React.Component {
         super(props);
         this.state = {
             isLoad:false,
-            user:{},
+            user: props.location,
             error:false,
             loading: true,
+            rule:"Manager",
         };
     }
+
 
     loadPage(event){
         this.setState({loading:event})
@@ -66,61 +68,59 @@ class UserPage extends React.Component {
     }
 
     render() {
-        if(this.state.isLoad && this.state.user) {
+
+        if(this.state.user.email)
+            console.log("this is email : "+this.state.user.email)
             return (
                 <div>
-                    {this.userPage()}
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="secondary"
-                        onClick={this.logout}>
-                        Logout
-                    </Button>
+                {!this.state.user.email? (null):(
+                    <div>
+                        {this.userPage()}
+                        <Button
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="secondary"
+                            onClick={this.logout}>
+                            Logout
+                        </Button>
 
-                    <Link to={{
-                        pathname:`/Users/${this.state.user.name}`,
-                        state: this.state }}>
-                        <button className="btn btn-info">go to new user</button>
-                    </Link>
 
-                    <button onClick={() => this.loadPage(true)}>loading page</button>
-                    <button onClick={() => this.loadPage(false)}>unloading page</button>
 
-    {!this.state.loading? "":
-                    <div  className="sweet-loading" >
-        <ClipLoader style={{
-                backgroundColor: "rgba(255,255,255,0.85)",
-                borderRadius: "25px"}}
-        //   css={override}
-          size={150}
-          color={"#123abc"}
-        
-        />
-      </div>
-                }
-                    
+                        <button onClick={() => this.loadUser("Student")}>Enter Student</button>
+                        <button onClick={() => this.loadUser("Guide")}>Enter Guide</button>
+                        <button onClick={() => this.loadUser("Manager")}>Enter Manager</button>
+                        <button onClick={() => this.loadUser("Temp")}>Enter Temp</button>
+
+                        <button onClick={() => this.loadPage(true)}>loading page</button>
+                        <button onClick={() => this.loadPage(false)}>unloading page</button>
+
+                        {!this.state.loading? "":
+                            <div  className="sweet-loading" >
+                                <ClipLoader style={{
+                                    backgroundColor: "rgba(255,255,255,0.85)",
+                                    borderRadius: "25px"}}
+                                    //   css={override}
+                                            size={150}
+                                            color={"#123abc"}
+
+                                />
+                            </div>
+                        }
+
+                    </div>
+                )}
                 </div>
             );
-        }
-        else if(!this.state.isLoad)
-        {
-            return (<div>
-                    whait for user
-                </div>
-            )
-        }
-        else
-        {
-            return (<div>
-                    not found user need log out
-
-                </div>
-            )
-        }
     }
 
+    loadUser(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}/${this.state.user.email}`,
+            data: this.state.user // your data array of objects
+        })
+    }
     userPage()
     {
         const { user , isLoaded , error} = this.state

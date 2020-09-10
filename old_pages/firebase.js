@@ -74,7 +74,7 @@ async function writeUserData(phone,name,email,pass) {
 
 async function checkIfUserExist(phone){
     var user;
-    var path=["guide/","students/","waitforapproval/"]
+    var path=["Guide/","students/","waitforapproval/"]
     var i =0;
     for(; i<path.length; i++)
     {
