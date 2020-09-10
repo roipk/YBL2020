@@ -43,15 +43,7 @@ export default firebase;
 //         })
 //     }
 //
-//     addQuote(quote) {
-//         if(!this.auth.currentUser) {
-//             return alert('Not authorized')
-//         }
 //
-//         return this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).set({
-//             quote
-//         })
-//     }
 //
 //     isInitialized() {
 //         return new Promise(resolve => {
@@ -63,10 +55,6 @@ export default firebase;
 //         return firebase.auth().currentUser //&& this.auth.currentUser.displayName
 //     }
 //
-//     async getCurrentUserQuote() {
-//         const quote = await this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).get()
-//         return quote.get('quote')
-//     }
 // }
 
 // export default Firebase;

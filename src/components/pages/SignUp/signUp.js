@@ -6,7 +6,7 @@ import { Link, withRouter } from 'react-router-dom'
 import firebase from '../../../firebase/firebase' ;
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import '../temp.css'
+import '../Users/UserPage.css'
 
 const useStyles = theme => ({
     main: {

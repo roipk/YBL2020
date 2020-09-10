@@ -2,9 +2,10 @@ import React from 'react'
 import HomePage from './components/pages/HomePage/HomePage';
 import SignUp from './components/pages/SignUp/signUp';
 import Login from './components/pages/Login/Login';
-import TempPage from "./components/pages/temp";
+import UserPage from "./components/pages/Users/UserPage";
 import Users from './components/pages/Users/student/Users';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import TestGuide from "./components/pages/Users/guide/tempGuide";
 
 
 import firebase  from "./firebase/firebase";
@@ -64,10 +65,10 @@ function App() {
             {/*</Route>*/}
             <Route exact path="/" component={HomePage} />
             <Route exact path="/Login" component={Login} />
-            <Route exact path="/User" component={test} />
-            {/*<Route exact path="/Users/:id" component={Users} />*/}
+            <Route exact path="/User" component={UserPage} />
+            <Route exact path="/User/:email" component={Users} />
           <Route exact path="/SignUp" component={SignUp} />
-            <Route exact path="/Users/:id" component={Users} />
+            <Route exact path="/testguide" component={TestGuide} />
         </Switch>
       </Router>
       </div>

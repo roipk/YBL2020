@@ -3,9 +3,8 @@ import firebase from "../../../../firebase/firebase";
 
 class Users extends Component {
 
-    constructor() {
-        super();
-
+    constructor(props) {
+        super(props);
 
         this.state =
             {
