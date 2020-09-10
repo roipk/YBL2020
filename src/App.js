@@ -6,6 +6,8 @@ import UserPage from "./components/pages/Users/UserPage";
 import Users from './components/pages/Users/student/Users';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import TestGuide from "./components/pages/Users/guide/tempGuide";
+import test_g_a_r from "./components/pages/Users/guide/test_g_a_r";
+import test_g_f from "./components/pages/Users/guide/test_g_f";
 
 
 import firebase  from "./firebase/firebase";
@@ -69,6 +71,9 @@ function App() {
             <Route exact path="/User/:email" component={Users} />
           <Route exact path="/SignUp" component={SignUp} />
             <Route exact path="/testguide" component={TestGuide} />
+            <Route exact path="/test_g_a_r" component={test_g_a_r} />
+            <Route exact path="/test_g_f" component={test_g_f} />
+
         </Switch>
       </Router>
       </div>
