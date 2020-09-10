@@ -8,8 +8,8 @@ import UserPage from "./components/pages/Users/UserPage";
 import Students from './components/pages/Users/Student/Students';
 import Guides from "./components/pages/Users/Guide/Guide";
 import Managers from './components/pages/Users/Manager/Manager';
-import test_g_a_r from "./components/pages/Users/guide/test_g_a_r";
-import test_g_f from "./components/pages/Users/guide/test_g_f";
+import test_g_a_r from "./components/pages/Users/Guide/test_g_a_r";
+import test_g_f from "./components/pages/Users/Guide/test_g_f";
 
 
 import TempStudent from "./components/pages/Users/Student/TempStudent";
