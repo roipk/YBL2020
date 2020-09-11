@@ -16,8 +16,7 @@ class Users extends Component {
 
     render() {
         
-        return(
-            <div id="student_feedback" class="sec-design1">
+        return(<div id="student_feedback" class="sec-design1">
                 <form id="student_feed" class="form-design" name="student_feed">
                     <div id="topic" class="form-group">
                         <label id="insert-topic" class="title-input" for="name"> באיזה נושא המפגש עסק:</label>
@@ -53,8 +52,7 @@ class Users extends Component {
                     <button type="submit" id="confirm-form" class="btn btn-info" onClick="fBConfirmation()">דווח נוכחות ושלח משוב</button>
                     <button id="go-back" class="btn btn-info" onClick="studLoadMenu()">חזור</button>
                 </form>
-            </div>
-        )
+            </div>)
     }
 }
 

@@ -73,8 +73,7 @@ class TestGuide extends React.Component {
             return(this.menu())
     }
 
-    menu()
-    {
+    menu() {
         return (
             <div id="instructor" className="sec-design">
                 <h2>Hello Guide {this.state.user.email} </h2>
@@ -88,7 +87,6 @@ class TestGuide extends React.Component {
             </div>
         )
     }
-
 
     GuideAttendReport(){
         return(
@@ -110,9 +108,7 @@ class TestGuide extends React.Component {
         )
     }
 
-
-    GuideFeedback()
-    {
+    GuideFeedback() {
         return(
             <div id="guideFeeadback" className="sec-design1">
                 <form id="guide_form" className="form-design" name="guide_form">
