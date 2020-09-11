@@ -7,14 +7,85 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-image: url(layout/images/background.jpeg);
-  position: fixed;
+  background-image: url(layout/images/background1.jpeg);
+  /* position: fixed; */
   min-height: 100%;
   min-width: 100%;
   background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.sec-design{
+  margin: auto;
+  margin-top: 20%;
+  margin-bottom: 20%;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  padding: 5%;
+  width: 40%;
+}
+
+
+button{
+  width: 100%;
+  background-color: #3399ff;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #0088cc;
+}
+#logout{
+  background-color:#ff4d4d;
+}
+#logout:hover{
+  background-color:#ff1a1a;
+}
+
+
+
+label{
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+}
+
+.radio input{
+  text-align: right;
+  display:inline;
+}
+
+.checkboxes{
+  border-radius: 6px;
+  background-color: #ecf0f1;
+  padding: 20px;
+  height: 150px;
+  overflow: auto;
+}
+
+input[type=text], input[type=date] {
+  color: grey;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: right;
+  appearance: none;
+  font-family: "Helvetica", arial, sans-serif;
+  font-size: 18px;
+  border:1px solid #ecf0f1;
+  background:#ecf0f1;
+  visibility: visible ;
 }
