@@ -137,8 +137,7 @@ class TestGuide extends React.Component {
                         <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
                     </div>
                     <div id ="box" className="chekbox">
-                        <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label>
-                        <br/><br/>
+                        <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
                         <form name="form1" className="chekbox" >
                             <label>במידה מועטה<input type="radio" value="1"/></label>
                             <label>במידה בינונית<input type="radio" value="2"/></label>
