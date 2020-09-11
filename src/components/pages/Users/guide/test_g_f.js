@@ -7,15 +7,13 @@ class test_g_f extends Component {
         super();
 
 
-        this.state =
-            {
+        this.state = {
                 isLoaded:false,
-
             }
     }
 
-    render() {
 
+    render() {
         return(
             <div id="guideFeeadback" class="sec-design1">
                 <form id="guide_form" class="form-design" name="guide_form">

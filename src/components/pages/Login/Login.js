@@ -162,11 +162,11 @@ function LoginPage(props) {
         </main>
     )
 
+
+
+
     async function login() {
         try {
-
-
-
             var user = await auth.signInWithEmailAndPassword(email, password).catch(function(error) {
                 // Handle Errors here.
                 var errorCode = error.code;
@@ -188,6 +188,8 @@ function LoginPage(props) {
         }
     }
 }
+
+
 
 export default withRouter(withStyles(useStyles)(LoginPage))
 

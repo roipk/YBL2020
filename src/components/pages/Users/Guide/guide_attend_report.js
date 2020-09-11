@@ -29,7 +29,7 @@ class Users extends Component {
                         <div id="stList" class="checkboxes"></div>
                     </div>
                     <button type="submit" id="confirm-form" class="btn btn-info" onClick="repConfirmation()">אשר</button>
-                    <button id="go-back" class="btn btn-info" onClick="loadMenu()">חזור</button>
+                    <button id="go-back" class="btn btn-info" >חזור</button>
                 </form>
             </div>
         )
