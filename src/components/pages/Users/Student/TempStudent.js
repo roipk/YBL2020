@@ -67,31 +67,18 @@ class TempStudent extends React.Component {
     render() {
         if(this.state.user.email)
             console.log("this is email : "+this.state.user.email)
-        if(this.state.page ==='feedback')
-            return(this.StudentFeedback())
-        else
-            return(this.menu())
-    }
-
-    menu() {
-        if(this.state.user.email)
-            console.log("this is email : "+this.state.user.email)
-
-        if(this.state.page ==='feedback')
-            return(this.StudentFeedback())
-        else if(this.state.page === 'report')
+        if(this.state.page ==='report')
             return(this.StudentAttendReport())
+        else if(this.state.page ==='feedback')
+            return(this.StudentFeedback())
         else
             return(this.menu())
-
-
-
     }
 
 
     menu() {
         return (<div id="instructor" className="sec-design">
-                <h2>Hello Guide {this.state.user.email} </h2>
+                <h2>Hello Student {this.state.user.email} </h2>
                 <form id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>רישום נוכחות<span
                         className="fa fa-arrow-right"></span></button>
@@ -103,7 +90,7 @@ class TempStudent extends React.Component {
     }
 
     StudentAttendReport(){
-        return (<div>
+        return ( <div>
                 <h2> Hello Student {this.state.user.email} </h2>
                 <div id="attendreport" className="sec-design">
 
@@ -120,21 +107,64 @@ class TempStudent extends React.Component {
                             <input type="text" className="form-control" name="instName" id="instName"
                                    placeholder="Name" minLength="2" required/>
                         </div>
-                        
-                        <button type="submit" id="confirm-form" className="btn btn-info"  onClick={()=>{this.chooseLayout('feedback')}}>המשך</button>
-                        <button id="logout" className="btn btn-info" onClick={this.logout}>התנתק</button>
+
+                        {/*<button type="submit" id="confirm-form" className="btn btn-info"  onClick={()=>{this.chooseLayout('feedback')}}>המשך</button>*/}
+                        {/*<button id="logout" className="btn btn-info" onClick={this.logout}>התנתק</button>*/}
+                        {/*<button id="go-back" className="btn btn-info" onClick={()=>{this.chooseLayout('menu')}}  >חזור</button>*/}
                     </form>
-
-
-                        <button type="submit" id="confirm-form" className="btn btn-info" onClick={()=>{this.chooseLayout('feedback')}} >המשך
-                            {/*<spanclass="fa fa-arrow-right"></span>*/}
+                    <form id="student_feed" className="form-design" name="student_feed">
+                        <div id="topic" className="form-group">
+                            <label id="insert-topic" className="title-input" htmlFor="name"> באיזה נושא המפגש
+                                עסק:</label>
+                            <input type="text" className="form-control" name="subject" id="subject"
+                                   placeholder="Your Answer" minLength="5" required/>
+                        </div>
+                        <div id="box" className="chekbox" onSubmit="return checkRadio()">
+                            <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה המפגש היום חידש
+                                לך/למדת דברים חדשים</label>
+                            <br/>
+                            <form name="form1" className="chekbox" onSubmit="return checkRadio()">
+                                <label>במידה מועטה<input type="radio" value="1"/></label>
+                                <label>במידה בינונית<input type="radio" value="2"/></label>
+                                <label>במידה רבה<input type="radio" value="3"/></label>
+                            </form>
+                            <br/>
+                            <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה אתה מרגיש שהמפגש
+                                יעזור לך בעתיד</label>
+                            <br/>
+                            <form name="form1" className="chekbox" onSubmit="return checkRadio()">
+                                <label>במידה מועטה<input type="radio" value="1"/></label>
+                                <label>במידה בינונית<input type="radio" value="2"/></label>
+                                <label>במידה רבה<input type="radio" value="3"/></label>
+                            </form>
+                            <br/>
+                            <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה נושא המפגש היה
+                                רלוונטי עבורך</label>
+                            <br/>
+                            <form name="form1" className="chekbox" onSubmit="return checkRadio()">
+                                <label>במידה מועטה<input type="radio" value="1"/></label>
+                                <label>במידה בינונית<input type="radio" value="2"/></label>
+                                <label>במידה רבה<input type="radio" value="3"/></label>
+                            </form>
+                            <br/>
+                            <div id="name-group" className="form-group">
+                                <label id="feedback" className="title-input" htmlFor="name"> מה את/ה לוקח/ת מהמפגש
+                                    היום</label>
+                                <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer"
+                                       minLength="10" required/>
+                            </div>
+                        </div>
+                        <button type="submit" id="confirm-form" className="btn btn-info">דווח נוכחות ושלח משוב</button>
+                        <button id="go-back" className="btn btn-info" onClick={() => {
+                            this.chooseLayout("menu")
+                        }}>חזור
                         </button>
-                        <button id="go-back" className="btn btn-info" onClick={()=>{this.chooseLayout('menu')}}  >חזור</button>
                     </form>
 
                 </div>
             </div>);
     }
+
     StudentFeedback(){
         return(
             <div id="student_feedback" class="sec-design">
@@ -178,45 +208,6 @@ class TempStudent extends React.Component {
         )
     }
 
-    StudentFeedback(){
-        return(<div id="student_feedback" class="sec-design1">
-            <form id="student_feed" class="form-design" name="student_feed">
-                <div id="topic" class="form-group">
-                    <label id="insert-topic" class="title-input" for="name"> באיזה נושא המפגש עסק:</label>
-                    <input type="text" class="form-control" name="subject" id="subject" placeholder="Your Answer" minlength="5" required/>
-                </div>
-                <div id ="box" class="chekbox" onSubmit="return checkRadio()">
-                    <label id="checkbox" class="title-input" for="name"> באיזה מידה המפגש היום חידש לך/למדת דברים חדשים:</label>
-                    <br/>
-                    <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                        <input type="radio" name="Q1" value="0"/>במידה מועטה<br/>
-                        <input type="radio" name="Q1" value="5"/>במידה בינונית<br/>
-                        <input type="radio" name="Q1" value="10"/>במידה רבה<br/>
-                    </form>
-                    <label id="checkbox" class="title-input" for="name"> באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד:</label>
-                    <br/>
-                    <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                        <input type="radio" name="Q2" value="0"/>במידה מועטה<br/>
-                        <input type="radio" name="Q2" value="5"/>במידה בינונית<br/>
-                        <input type="radio" name="Q2" value="10"/>במידה רבה<br/>
-                    </form>
-                    <label id="checkbox" class="title-input" for="name"> באיזה מידה נושא המפגש היה רלוונטי עבורך:</label>
-                    <br/>
-                    <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                        <input type="radio" name="Q3" value="0"/>במידה מועטה<br/>
-                        <input type="radio" name="Q3" value="5"/>במידה בינונית<br/>
-                        <input type="radio" name="Q3" value="10"/>במידה רבה<br/>
-                    </form>
-                    <div id="name-group" class="form-group">
-                        <label id="feedback" class="title-input" for="name"> מה את/ה לוקח/ת מהמפגש היום:</label>
-                        <input type="text" class="form-control" name="Q4" id="Q4" placeholder="Your Answer" minlength="10" required/>
-                    </div>
-                </div>
-                <button type="submit" id="confirm-form" class="btn btn-info" onClick={()=>{this.chooseLayout('menu')}} >דווח נוכחות ושלח משוב</button>
-                <button id="go-back" class="btn btn-info" onClick={()=>{this.chooseLayout('report')}} >חזור</button>
-            </form>
-        </div>)
-    }
 
 }
 
