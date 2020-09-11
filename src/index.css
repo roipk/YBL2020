@@ -8,13 +8,73 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   background-image: url(layout/images/background.jpeg);
-  position: fixed;
+  /* position: fixed; */
   min-height: 100%;
   min-width: 100%;
   background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.sec-design{
+  margin: auto;
+  margin-top: 20%;
+  margin-bottom: 20%;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  padding: 5%;
+  width: 40%;
+}
+
+input[type=text], select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+input[type=submit], button{
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#confirm-form, #go-back{
+  width: 50%;
+  margin: auto;
+}
+label{
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+}
+.radio input{
+  text-align: right;
+  display:inline;
+  }
+
+input[type=submit]:hover, button:hover {
+  background-color: #45a049;
+}
+
+.checkboxes{
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+  height: 150px;
+  overflow: auto;
 }
