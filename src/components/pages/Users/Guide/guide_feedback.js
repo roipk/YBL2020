@@ -17,7 +17,7 @@ class Users extends Component {
     render() {
         
         return(
-            <div id="guideFeeadback" class="sec-design1">
+            <div id="guideFeeadback" class="sec-design">
                 <form id="guide_form" class="form-design" name="guide_form">
                     <div id="name-group" class="form-group">
                         <label id="insert-date" class="title-input">הכנס את התאריך בו התקיים המפגש:</label>
