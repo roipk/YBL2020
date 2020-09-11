@@ -17,7 +17,7 @@ class Users extends Component {
     render() {
         
         return(
-            <div id="student_feedback" class="sec-design1">
+            <div id="student_feedback" class="sec-design">
                 <form id="student_feed" class="form-design" name="student_feed">
                     <div id="topic" class="form-group">
                         <label id="insert-topic" class="title-input" for="name"> באיזה נושא המפגש עסק:</label>

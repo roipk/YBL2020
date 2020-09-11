@@ -96,7 +96,7 @@ class TestGuide extends React.Component {
                 <form id="guideAttendReport" className="form-design" name="guideAttendReport">
                     <div id="name-group" className="form-group">
                         <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                        <input type="date" className="form-control" name="insert-date" id="insert-date"/>
+                        <input type="date" className="form-control" name="insert-date" id="insert-date" required/>
                         <button id="viewReport" className="btn btn-info" >הצג</button>
                     </div>
                     <div id="name-group" className="form-group" dir="rtl">
@@ -117,7 +117,7 @@ class TestGuide extends React.Component {
             <div id="guideFeeadback" className="sec-design">
                 <form id="guide_form" className="form-design" name="guide_form">
                     <div id="name-group" className="form-group">
-                        <label id="insert-date" className="title-input">הכנס את התאריך בו התקיים המפגש:</label>
+                        <label id="insert-date" className="title-input">הכנס את התאריך בו התקיים המפגש</label>
                         <input type="date" className="form-control" name="insert-student" id="insert-student" required/>
                     </div>
                     <div id="name-group" className="form-group">
@@ -137,13 +137,15 @@ class TestGuide extends React.Component {
                         <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
                     </div>
                     <div id ="box" className="chekbox">
-                        <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
+                        <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label>
+                        <br/><br/>
                         <form name="form1" className="chekbox" >
-                            <input type="radio" name="time" value="1"/>במידה מועטה<br/>
-                            <input type="radio" name="time" value="2"/>במידה בינונית<br/>
-                            <input type="radio" name="time" value="3"/>במידה רבה<br/>
+                            <label>במידה מועטה<input type="radio" value="1"/></label>
+                            <label>במידה בינונית<input type="radio" value="2"/></label>
+                            <label>במידה רבה<input type="radio" value="3"/></label>
                         </form>
                     </div>
+                    <br/>
                     <div id="name-group" className="form-group">
                         <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
                         <input type="text" className="form-control" name="firstName" id="firstName" placeholder="Your Answer" minLength="10" required/>

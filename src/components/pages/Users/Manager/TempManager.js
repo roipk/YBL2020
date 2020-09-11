@@ -68,7 +68,7 @@ class TempManager extends React.Component {
                     <button id="feedback-button" className="btn btn-info" >צפייה במשובי
                         מדריכים<span
                             className="fa fa-arrow-right"></span></button>
-                    <button id="go-back" className="btn btn-info" >התנתק</button>
+                    <button id="logout" className="btn btn-info" >התנתק</button>
                 </form>
             </div>
         );
