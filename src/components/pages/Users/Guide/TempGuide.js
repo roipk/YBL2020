@@ -1,5 +1,6 @@
 import React from "react";
-import firebase, {auth} from '../../../../firebase/firebase'
+import firebase, {auth,db} from '../../../../firebase/firebase'
+import SelectInput from "@material-ui/core/Select/SelectInput";
 
 
 
@@ -12,14 +13,58 @@ class TestGuide extends React.Component {
             error:false,
             loading: true,
             rule:"Manager",
+            reportDate: ""
         };
+        
+
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+
     }
 
 
+    
+
+    async getDataFromFirebase(event)
+    {
+        var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
+        try{
+            
+            var stude = await db.collection("students").doc(path).get()
+            alert("date: "+ this.state.reportDate)
+            var coms = stude.data().coms
+            var i=4;
+            console.log(coms) 
+            // if((coms[i]["date"]) == this.state.reportDate){
+            //     console.log("*")
+            //     console.log(coms[i]["date"]) 
+            // }
+
+        }catch(error) {
+            alert(error.message)
+        }
+
+
+
+    }
+
+    handleChange(event)
+    {
+        this.state.reportDate = event.target.value;
+        console.log("*****")
+    }
+
+    handleSubmit(event)
+    {
+        console.log(event)
+        this.getDataFromFirebase(event)
+
+    }
     loadPage(event){
         this.setState({loading:event})
         //    this.render()
     }
+ 
 
     async componentDidMount() {
         console.log("work")
@@ -63,14 +108,14 @@ class TestGuide extends React.Component {
 
 
     render() {
-        if(this.state.user.email)
-            console.log("this is email : "+this.state.user.email)
-        if(this.state.page ==='feedback')
-            return(this.GuideFeedback())
-        else if(this.state.page === 'report')
+        // if(this.state.user.email)
+        //     console.log("this is email : "+this.state.user.email)
+        // if(this.state.page ==='feedback')
+        //     return(this.GuideFeedback())
+        // else if(this.state.page === 'report')
             return(this.GuideAttendReport())
-        else
-            return(this.menu())
+        // else
+        //     return(this.menu())
     }
 
     menu() {
@@ -94,8 +139,8 @@ class TestGuide extends React.Component {
                 <form id="guideAttendReport" className="form-design" name="guideAttendReport">
                     <div id="name-group" className="form-group">
                         <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                        <input type="date" className="form-control" name="insert-date" id="insert-date" required/>
-                        <button id="viewReport" className="btn btn-info" >הצג</button>
+                        <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
+                        <button id="viewReport" className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
                     </div>
                     <div id="name-group" className="form-group" dir="rtl">
                         <label id="insert-message" className="title-input">אשר את נוכחות החניכים במפגש:</label><br/>

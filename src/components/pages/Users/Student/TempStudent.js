@@ -19,6 +19,7 @@ class TempStudent extends React.Component {
                 guide: "",
                 date: "",
                 studMail: "",
+                approved: false,
                 feedback: "",
                 topicMeeting: "",
                 feeedbackMeeting: {
