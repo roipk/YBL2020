@@ -18,6 +18,7 @@ class TempStudent extends React.Component {
             form:{
                 guide: "",
                 date: "",
+                studMail: "",
                 feedback: "",
                 topicMeeting: "",
                 feeedbackMeeting: {
@@ -42,7 +43,6 @@ class TempStudent extends React.Component {
 
 
         };
-
         this.handleChange1 = (e, { value }) => this.setState({ value })
         this.handleSearchChange1 = (e, { searchQuery }) => this.setState({ searchQuery })
 
@@ -50,8 +50,8 @@ class TempStudent extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.hendleSerch = this.hendleSerch.bind(this)
-        this. hendleRadioButton = this. hendleRadioButton.bind(this)
+        this.handleSerch = this.handleSerch.bind(this)
+        this.handleRadioButton = this.handleRadioButton.bind(this)
 
 
 
@@ -116,17 +116,17 @@ class TempStudent extends React.Component {
         console.log(item.item)
         this.setState({searchTerm:item.item});
     }
-    hendleSerch(event)
+    handleSerch(event)
     {
         // this.setState({searchTerm:event.target.value})
-        // this.hendleRes()
+        // this.handleRes()
         const results = this.people.filter(person =>
             person.toLowerCase().includes(event.target.value)
         );
         this.setState({searchResults:results,searchTerm:event.target.value});
 
     }
-    hendleRadioButton(event)
+    handleRadioButton(event)
     {
         var form = this.state.form
         var feeedbackMeeting= form.feeedbackMeeting
@@ -146,6 +146,9 @@ class TempStudent extends React.Component {
 
     handleSubmit(event)
     {
+        var form = this.state.form
+        form["studMail"] = this.state.user.email
+        this.setState({form:form})
         console.log(this.state.form)
         this.sendDataToFirebase(this.state.form)
 
@@ -272,7 +275,7 @@ class TempStudent extends React.Component {
                             name = "guide"
                             value={this.state.searchTerm}
                             onChange={(e)=>{
-                                this.hendleSerch(e);
+                                this.handleSerch(e);
                                 this.handleChange(e);
                             }}
 
@@ -302,7 +305,7 @@ class TempStudent extends React.Component {
                                 aria-label="new"
                                 name="new"
                                 // value={location}
-                                onChange={this.hendleRadioButton}
+                                onChange={this.handleRadioButton}
                                 row={true}
                             >
                                 <FormControlLabel value="1"  labelPlacement="start" control={<Radio />} label="במידה מועטה" />
@@ -319,7 +322,7 @@ class TempStudent extends React.Component {
                                 aria-label="Location"
                                 name="help"
                                 // value={location}
-                                onChange={this.hendleRadioButton}
+                                onChange={this.handleRadioButton}
                                 row={true}
                             >
                                 <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
@@ -336,7 +339,7 @@ class TempStudent extends React.Component {
                                 aria-label="Location"
                                 name="relevant"
                                 // value={location}
-                                onChange={this.hendleRadioButton}
+                                onChange={this.handleRadioButton}
                                 row={true}
 
                             >
@@ -364,54 +367,6 @@ class TempStudent extends React.Component {
             </div>
         </div>);
     }
-
-
-
-
-
-    StudentFeedback(){
-        return(
-            <div id="student_feedback" class="sec-design">
-                <form id="student_feed" class="form-design" name="student_feed">
-                    <div id="topic" class="form-group">
-                        <label id="insert-topic" class="title-input" for="name"> באיזה נושא המפגש עסק:</label>
-                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Your Answer" minlength="5" required/>
-                    </div>
-                    <div id ="box" class="chekbox" onSubmit="return checkRadio()">
-                        <label id="checkbox" class="title-input" for="name"> באיזה מידה המפגש היום חידש לך/למדת דברים חדשים</label>
-                        <br/>
-                        <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio" value="3"/></label>
-                        </form><br/>
-                        <label id="checkbox" class="title-input" for="name"> באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד</label>
-                        <br/>
-                        <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio"  value="3"/></label>
-                        </form><br/>
-                        <label id="checkbox" class="title-input" for="name"> באיזה מידה נושא המפגש היה רלוונטי עבורך</label>
-                        <br/>
-                        <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio" value="3"/></label>
-                        </form><br/>
-                        <div id="name-group" class="form-group">
-                            <label id="feedback" class="title-input" for="name"> מה את/ה לוקח/ת מהמפגש היום</label>
-                            <input type="text" class="form-control" name="Q4" id="Q4" placeholder="Your Answer" minlength="10" required/>
-                        </div>
-                    </div>
-                    <button type="submit" id="confirm-form" className="btn btn-info" >דווח נוכחות ושלח משוב</button>
-                    <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
-                </form>
-            </div>
-
-        )
-    }
-
 
 }
 
