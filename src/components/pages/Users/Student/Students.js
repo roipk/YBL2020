@@ -1,10 +1,10 @@
 import React ,{ useState, useEffect } from "react";
-import firebase, {auth} from '../../../../firebase/firebase'
+import firebase, {auth,db} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 
 
-class TempStudent extends React.Component {
+class Student extends React.Component {
 
     constructor(props) {
         super(props);
@@ -14,9 +14,17 @@ class TempStudent extends React.Component {
             error:false,
             loading: true,
             page:'menu',
-            rule:"Manager",
+            rule:"Student",
             form:{
-
+                guide: "",
+                date: "",
+                feedback: "",
+                topicMeeting: "",
+                feeedbackMeeting: {
+                    help: 0,
+                    new: 0,
+                    relevant: 0,
+                },
             },
             searchTerm:"",
             searchResults:[],
@@ -43,6 +51,9 @@ class TempStudent extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.hendleSerch = this.hendleSerch.bind(this)
+        this. hendleRadioButton = this. hendleRadioButton.bind(this)
+
+
 
 
     }
@@ -56,6 +67,50 @@ class TempStudent extends React.Component {
         "מישהו חשוב",
         "בדיקת אנשים"
     ];
+
+    async sendDataToFirebase(form)
+    {
+        var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
+        try{
+            var stude =await db.collection("students").doc(path).get()
+            var studeSet =await db.collection("students").doc(path)
+
+            var coms =stude.data().coms
+
+            if(!coms)
+            {
+                console.log(coms)
+
+                coms= []
+
+            }
+            coms.push(form)
+            var test = await studeSet.set({coms:coms}, {merge:true})
+            console.log(coms)
+
+
+            // var testAdd = await stude.add({coms:form}, {merge:true})
+
+            alert("end")
+
+            // if(stude){
+            //
+            //
+            //     console.log(stude.data())
+            //     stude.data().coms= form
+            //     console.log(stude.data())
+            //
+            // }
+
+
+        }catch(error) {
+            alert(error.message)
+        }
+
+
+
+    }
+
     getItem(item)
     {
         console.log(item.item)
@@ -69,10 +124,20 @@ class TempStudent extends React.Component {
             person.toLowerCase().includes(event.target.value)
         );
         this.setState({searchResults:results,searchTerm:event.target.value});
+
+    }
+    hendleRadioButton(event)
+    {
+        var form = this.state.form
+        var feeedbackMeeting= form.feeedbackMeeting
+        feeedbackMeeting[event.target.name] = event.target.value;
+        form.feeedbackMeeting=feeedbackMeeting
+        this.setState({form:form})
     }
 
     handleChange(event)
     {
+
         var form = this.state.form
         form[event.target.name] = event.target.value;
         this.setState({form:form})
@@ -81,8 +146,8 @@ class TempStudent extends React.Component {
 
     handleSubmit(event)
     {
-        console.log(this.state)
-
+        console.log(this.state.form)
+        this.sendDataToFirebase(this.state.form)
 
     }
     loadPage(event){
@@ -196,7 +261,7 @@ class TempStudent extends React.Component {
 
                     <div id="name-group" className="form-group">
                         <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
-                        <input type="date" className="form-control" id="insert-date" name="insert-date"
+                        <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange}
                                required/>
                     </div>
 
@@ -204,9 +269,14 @@ class TempStudent extends React.Component {
                         <input
                             type="text"
                             placeholder="בחר מדריך"
-                            name = "searchTerm"
+                            name = "guide"
                             value={this.state.searchTerm}
-                            onChange={this.hendleSerch}
+                            onChange={(e)=>{
+                                this.hendleSerch(e);
+                                this.handleChange(e);
+                            }}
+
+
                         />
                         <ul>
                             {this.state.searchResults.map(item => (
@@ -218,8 +288,9 @@ class TempStudent extends React.Component {
                     <div id="topic" className="form-group">
                         <label id="insert-topic" className="title-input" htmlFor="name"> באיזה נושא המפגש
                             עסק:</label>
-                        <input type="text" className="form-control" name="subject" id="subject"
-                               placeholder="Your Answer" minLength="5" required/>
+                        <input type="text" className="form-control" name="topicMeeting" id="subject"
+                               placeholder="Your Answer" minLength="5" required onChange={this.handleChange}/>
+
                     </div>
                     <div id="box" className="chekbox" >
                         <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה המפגש היום חידש
@@ -229,9 +300,9 @@ class TempStudent extends React.Component {
                         <div>
                             <RadioGroup
                                 aria-label="new"
-                                name="news"
+                                name="new"
                                 // value={location}
-                                // onChange={handleChange}
+                                onChange={this.hendleRadioButton}
                                 row={true}
                             >
                                 <FormControlLabel value="1"  labelPlacement="start" control={<Radio />} label="במידה מועטה" />
@@ -246,9 +317,9 @@ class TempStudent extends React.Component {
                         <div>
                             <RadioGroup
                                 aria-label="Location"
-                                name="halp"
+                                name="help"
                                 // value={location}
-                                // onChange={handleChange}
+                                onChange={this.hendleRadioButton}
                                 row={true}
                             >
                                 <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
@@ -265,8 +336,9 @@ class TempStudent extends React.Component {
                                 aria-label="Location"
                                 name="relevant"
                                 // value={location}
-                                // onChange={handleChange}
+                                onChange={this.hendleRadioButton}
                                 row={true}
+
                             >
                                 <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
                                 <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
@@ -277,14 +349,15 @@ class TempStudent extends React.Component {
                         <div id="name-group" className="form-group">
                             <label id="feedback" className="title-input" htmlFor="name"> מה את/ה לוקח/ת מהמפגש
                                 היום</label>
-                            <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer"
-                                   minLength="10" required/>
+                            <input type="text" className="form-control" name="feedback" id="Q4" placeholder="Your Answer"
+                                   minLength="10" onChange={this.handleChange} required/>
                         </div>
                     </div>
                     <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>דווח נוכחות ושלח משוב</button>
                     <button id="go-back" className="btn btn-info" onClick={() => {
                         this.chooseLayout("menu")
                     }}>חזור
+
                     </button>
                 </form>
 
@@ -343,4 +416,4 @@ class TempStudent extends React.Component {
 }
 
 
-export  default  TempStudent;
+export  default  Student;
