@@ -27,14 +27,22 @@ class TestGuide extends React.Component {
 
     async getDataFromFirebase(event)
     {
-        var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
+        //var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
             
-            var stude = await db.collection("students").doc(path).get()
-            alert("date: "+ this.state.reportDate)
-            var coms = stude.data().coms
-            var i=4;
-            console.log(coms) 
+            var collection = await db.collection("students").where("guide","==","awwLpQL9A1WKW9KX60Lz").get()
+            var students = []
+            collection.forEach(doc => {
+                const data = doc.data();
+                if (data)
+                students.push(data)
+               
+            });
+            console.log(students)
+            // alert("date: "+ this.state.reportDate)
+            // var coms = stude.data().coms
+            // var i=4;
+            // console.log(coms) 
             // if((coms[i]["date"]) == this.state.reportDate){
             //     console.log("*")
             //     console.log(coms[i]["date"]) 
@@ -51,7 +59,7 @@ class TestGuide extends React.Component {
     handleChange(event)
     {
         this.state.reportDate = event.target.value;
-        console.log("*****")
+        
     }
 
     handleSubmit(event)
@@ -136,19 +144,17 @@ class TestGuide extends React.Component {
     GuideAttendReport(){
         return(
             <div id="guideAttendReport" className="sec-design">
-                <form id="guideAttendReport" className="form-design" name="guideAttendReport">
                     <div id="name-group" className="form-group">
                         <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
                         <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
-                        <button id="viewReport" className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
+                        <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
                     </div>
                     <div id="name-group" className="form-group" dir="rtl">
                         <label id="insert-message" className="title-input">אשר את נוכחות החניכים במפגש:</label><br/>
                         <div id="stList" className="checkboxes"></div>
                     </div>
-                    <button type="submit" id="confirm-form" className="btn btn-info" >אשר</button>
+                    <button id="confirm-form" className="btn btn-info" >אשר</button>
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
-                </form>
             </div>
         )
     }
