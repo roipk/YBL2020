@@ -70,7 +70,9 @@ class TempStudent extends React.Component {
 
     async sendDataToFirebase(form)
     {
-        var path = "PhCxyXiyooqZNEqtGw3k"
+
+
+        var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
             var stude =await db.collection("students").doc(path).get()
             var studeSet =await db.collection("students").doc(path)
@@ -144,9 +146,15 @@ class TempStudent extends React.Component {
 
     }
 
-    handleSubmit(event)
+    async handleSubmit(event)
     {
+        var guideUid = 'awwLpQL9A1WKW9KX60Lz'
+        const guide = await firebase.firestore()
+            .collection('guides')
+            .doc(guideUid);
         var form = this.state.form
+        form["studMail"] = this.state.user.email
+        form["guide"] = guide
         this.setState({form:form})
         console.log(this.state.form)
         this.sendDataToFirebase(this.state.form)

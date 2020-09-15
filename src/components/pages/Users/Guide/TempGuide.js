@@ -31,9 +31,15 @@ class TestGuide extends React.Component {
     {
         var guidePath = "awwLpQL9A1WKW9KX60Lz"
         try{
-            
-            var collection = await db.collection("students").where("guide","==",guidePath).get()
-            
+
+            // var guideUid = 'awwLpQL9A1WKW9KX60Lz'
+            // const guide = await firebase.firestore()
+            //     .collection('guides')
+            //     .doc(guideUid);
+
+            // var collection = await db.collection("students").where("guide","==","awwLpQL9A1WKW9KX60Lz").get()
+            // var collection = await db.collection("students").where("guide2","==",guide).get()//reference
+            var collection = await db.collection("students").where("coms"," array-contains",{approved:false}).get()
             var students = []
             collection.forEach(doc => {
                 const data = doc.get("coms");
