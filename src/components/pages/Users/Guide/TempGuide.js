@@ -1,23 +1,25 @@
 import React from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase'
+import firebase, {auth,db} from '../../../../firebase/firebase';
 import SelectInput from "@material-ui/core/Select/SelectInput";
-
+import $ from 'jquery';
 
 
 class TestGuide extends React.Component {
     constructor(props) {
         super(props);
+        
         this.state = {
             page:'menu',
             user: props.location,
             error:false,
             loading: true,
             rule:"Manager",
-            reportDate: ""
+            reportDate:""
         };
         
 
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleSubmit2 = this.handleSubmit2.bind(this)
         this.handleChange = this.handleChange.bind(this)
 
     }
@@ -27,52 +29,45 @@ class TestGuide extends React.Component {
 
     async getDataFromFirebase(event)
     {
-        //var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
+        var guidePath = "awwLpQL9A1WKW9KX60Lz"
         try{
             
-            var collection = await db.collection("students").where("guide","==","awwLpQL9A1WKW9KX60Lz").get()
+            var collection = await db.collection("students").where("guide","==",guidePath).get()
+            
             var students = []
             collection.forEach(doc => {
-                const data = doc.data();
+                const data = doc.get("coms");
                 if (data)
-                students.push(data)
-               
-            });
-            console.log(students)
-            // alert("date: "+ this.state.reportDate)
-            // var coms = stude.data().coms
-            // var i=4;
-            // console.log(coms) 
-            // if((coms[i]["date"]) == this.state.reportDate){
-            //     console.log("*")
-            //     console.log(coms[i]["date"]) 
-            // }
+                    data.forEach(doc1 =>{
+                        if(doc1["date"] == this.state.reportDate && doc1["approved"]==false){
 
+                            students.push(doc);
+                            return false;
+                        }
+                    });
+            });
+            this.createCheckList(students);
         }catch(error) {
             alert(error.message)
         }
-
-
-
     }
 
     handleChange(event)
     {
         this.state.reportDate = event.target.value;
-        
     }
 
     handleSubmit(event)
     {
-        console.log(event)
         this.getDataFromFirebase(event)
-
     }
     loadPage(event){
         this.setState({loading:event})
-        //    this.render()
     }
- 
+    handleSubmit2(event)
+    {
+        this.checkstudents(event)
+    }
 
     async componentDidMount() {
         console.log("work")
@@ -98,7 +93,38 @@ class TestGuide extends React.Component {
 
     }
 
+    async checkstudents(event){
+        var date = this.state.reportDate
+        $('#stList input:checkbox').each(async function () {
+            var path = (this.checked ? $(this).val() : "");
+            try{
+                var stude = await db.collection("students").doc(path).get()
+                var data =stude.data().coms
+                if (data)
+                    data.forEach(doc1 =>{
+                        if(doc1["date"] == date && doc1["approved"]==false){
+                            alert("need to update firebase")
+                        }
+                    });
+            }catch(error){
+                console.log(error.message)
+            }
+        });
+    }
 
+    createCheckList(students){
+        students.forEach(doc =>{
+            const label=document.createElement("label");
+            label.setAttribute("class","container")
+            label.innerHTML=doc.get("fname")+" "+doc.get("lname")
+            const inputC = document.createElement("input"); 
+            inputC.setAttribute("type", "checkbox");
+            inputC.setAttribute("value", doc.id);
+            label.appendChild(inputC)
+            const div= document.getElementById("stList")
+            div.appendChild(label)
+        })
+    }
     async  logout() {
         //מסך טעינה
         await auth.signOut();
@@ -153,7 +179,7 @@ class TestGuide extends React.Component {
                         <label id="insert-message" className="title-input">אשר את נוכחות החניכים במפגש:</label><br/>
                         <div id="stList" className="checkboxes"></div>
                     </div>
-                    <button id="confirm-form" className="btn btn-info" >אשר</button>
+                    <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
             </div>
         )
@@ -204,10 +230,11 @@ class TestGuide extends React.Component {
         )
     }
 
-
+    
 
 
 }
+
 
 
 export  default  TestGuide;

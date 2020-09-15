@@ -18,7 +18,6 @@ class TempStudent extends React.Component {
             form:{
                 guide: "",
                 date: "",
-                studMail: "",
                 approved: false,
                 feedback: "",
                 topicMeeting: "",
@@ -71,7 +70,7 @@ class TempStudent extends React.Component {
 
     async sendDataToFirebase(form)
     {
-        var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
+        var path = "PhCxyXiyooqZNEqtGw3k"
         try{
             var stude =await db.collection("students").doc(path).get()
             var studeSet =await db.collection("students").doc(path)
@@ -148,7 +147,6 @@ class TempStudent extends React.Component {
     handleSubmit(event)
     {
         var form = this.state.form
-        form["studMail"] = this.state.user.email
         this.setState({form:form})
         console.log(this.state.form)
         this.sendDataToFirebase(this.state.form)

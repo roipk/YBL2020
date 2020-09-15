@@ -56,14 +56,15 @@ button:hover {
 
 
 label{
-  display: inline-block;
+  display: block;
   width: 100%;
   text-align: right;
 }
 
-.radio input{
+.radio input, input[type=checkbox]{
   text-align: right;
   display:inline;
+  float: right;
 }
 
 .checkboxes{
