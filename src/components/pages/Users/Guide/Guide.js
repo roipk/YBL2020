@@ -148,14 +148,14 @@ class Guide extends React.Component {
 
 
     render() {
-        // if(this.state.user.email)
-        //     console.log("this is email : "+this.state.user.email)
-        // if(this.state.page ==='feedback')
-        //     return(this.GuideFeedback())
-        // else if(this.state.page === 'report')
+        if(this.state.user.email)
+            console.log("this is email : "+this.state.user.email)
+        if(this.state.page ==='feedback')
+            return(this.GuideFeedback())
+        else if(this.state.page === 'report')
         return(this.GuideAttendReport())
-        // else
-        //     return(this.menu())
+        else
+            return(this.menu())
     }
 
     menu() {
