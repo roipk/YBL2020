@@ -70,46 +70,14 @@ class TempStudent extends React.Component {
 
     async sendDataToFirebase(form)
     {
-
-
         var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
-            var stude =await db.collection("students").doc(path).get()
-            var studeSet =await db.collection("students").doc(path)
-
-            var coms =stude.data().coms
-
-            if(!coms)
-            {
-                console.log(coms)
-
-                coms= []
-
-            }
-            coms.push(form)
-            var test = await studeSet.set({coms:coms}, {merge:true})
-            console.log(coms)
-
-
-            // var testAdd = await stude.add({coms:form}, {merge:true})
-
-            alert("end")
-
-            // if(stude){
-            //
-            //
-            //     console.log(stude.data())
-            //     stude.data().coms= form
-            //     console.log(stude.data())
-            //
-            // }
-
+            var studeSet =await db.collection("students").doc(path).collection("comes").doc(this.state.form.date)
+            var set = await studeSet.set(form)
 
         }catch(error) {
             alert(error.message)
         }
-
-
 
     }
 

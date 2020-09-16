@@ -31,27 +31,23 @@ class TestGuide extends React.Component {
     {
         var guidePath = "awwLpQL9A1WKW9KX60Lz"
         try{
-
-            // var guideUid = 'awwLpQL9A1WKW9KX60Lz'
-            // const guide = await firebase.firestore()
-            //     .collection('guides')
-            //     .doc(guideUid);
-
-            var collection = await db.collection("students").where("guide","==","awwLpQL9A1WKW9KX60Lz").get()
-            // var collection = await db.collection("students").where("guide2","==",guide).get()//reference
-            // var collection = await db.collection("students").where("coms"," array-contains",{approved:false}).get()
+              var collection = await db.collection("students").get()
             var students = []
-            collection.forEach(doc => {
-                const data = doc.get("coms");
-                if (data)
-                    data.forEach(doc1 =>{
-                        if(doc1["date"] == this.state.reportDate && doc1["approved"]==false){
+            var selectedDate = this.state.reportDate
+            collection.forEach(async function(doc){
+                if(doc.data()["guide"] == "1234"){
+                    console.log(selectedDate)
+                    var ref=await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
+                    var user = (await db.collection("students").doc(doc.id).get()).data()
+                    console.log(ref.data())
+                    if (ref.data() && ref.data()["approved"]==false){
+                        console.log(user)
+                        students.push(user);
+                    }
+                }
 
-                            students.push(doc);
-                            return false;
-                        }
-                    });
             });
+            console.log(students)
             this.createCheckList(students);
         }catch(error) {
             alert(error.message)
@@ -100,16 +96,20 @@ class TestGuide extends React.Component {
     }
 
     async checkstudents(event){
-        var date = this.state.reportDate
+        var selectedDate = this.state.reportDate
         $('#stList input:checkbox').each(async function () {
             var path = (this.checked ? $(this).val() : "");
             try{
                 var stude = await db.collection("students").doc(path).get()
                 var data =stude.data().coms
                 if (data)
-                    data.forEach(doc1 =>{
-                        if(doc1["date"] == date && doc1["approved"]==false){
-                            alert("need to update firebase")
+                    data.forEach(async function(doc1){
+                        if(doc1["date"] == selectedDate && doc1["approved"]==false){
+                            //var index =data.indexOf(doc1)
+                            var usersCollection = await db.collection('students').doc(`${path}/comes/${selectedDate}`);
+                            usersCollection.update({
+                                approved:true
+                            })
                         }
                     });
             }catch(error){
@@ -119,18 +119,28 @@ class TestGuide extends React.Component {
     }
 
     createCheckList(students){
-        students.forEach(doc =>{
-            const label=document.createElement("label");
-            label.setAttribute("class","container")
-            label.innerHTML=doc.get("fname")+" "+doc.get("lname")
-            const inputC = document.createElement("input"); 
-            inputC.setAttribute("type", "checkbox");
-            inputC.setAttribute("value", doc.id);
-            label.appendChild(inputC)
-            const div= document.getElementById("stList")
-            div.appendChild(label)
-        })
+        console.log(students,students.length)
+        for(var i=0;i<students.length;i++){
+            console.log(students[i])
+            // const label=document.createElement("label");
+            // label.setAttribute("class","container")
+            // label.innerHTML=doc.get("fname")+" "+doc.get("lname")
+            // const inputC = document.createElement("input"); 
+            // inputC.setAttribute("type", "checkbox");
+            // inputC.setAttribute("value", doc.id);
+            // label.appendChild(inputC)
+            // const div= document.getElementById("stList")
+            // div.appendChild(label)
+        }
     }
+
+    // createCheckList(students)
+    // {
+    //         console.log(students)
+    //         students.forEach(doc =>{
+    //             console.log("in")
+    //         })
+    // }
     async  logout() {
         //מסך טעינה
         await auth.signOut();

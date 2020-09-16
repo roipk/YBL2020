@@ -46,7 +46,7 @@ class Guide extends React.Component {
                 if (data)
                     data.forEach(doc1 =>{
                         if(doc1["date"] == this.state.reportDate && doc1["approved"]==false){
-
+                            console.log(doc)
                             students.push(doc);
                             return false;
                         }
@@ -100,7 +100,7 @@ class Guide extends React.Component {
     }
 
     async checkstudents(event){
-        var date = this.state.reportDate
+        var selectedDate = this.state.reportDate
         $('#stList input:checkbox').each(async function () {
             var path = (this.checked ? $(this).val() : "");
             try{
@@ -108,8 +108,10 @@ class Guide extends React.Component {
                 var data =stude.data().coms
                 if (data)
                     data.forEach(doc1 =>{
-                        if(doc1["date"] == date && doc1["approved"]==false){
-                            alert("need to update firebase")
+                        if(doc1["date"] == selectedDate && doc1["approved"]==false){
+                            var index =data.indexOf(doc1)
+                            var usersCollection = this.afs.collection('students', ref => ref.where('coms', 'array-contains', {'date':selectedDate }) );
+                            console.log(usersCollection)
                         }
                     });
             }catch(error){
