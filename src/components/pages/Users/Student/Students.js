@@ -201,12 +201,12 @@ class Student extends React.Component {
 
         // if(this.state.user.email)
         //     console.log(this.state)
-        // if(this.state.page ==='report')
+        if(this.state.page ==='report')
             return(this.StudentAttendReport())
-        // else if(this.state.page ==='feedback')
-        //     return(this.StudentFeedback())
-        // else
-        //     return(this.menu())
+        else if(this.state.page ==='viewReport')
+            return(this.StudentViewReport())
+        else
+            return(this.menu())
     }
 
 
@@ -216,39 +216,11 @@ class Student extends React.Component {
         return (<div id="instructor" className="sec-design">
             <h2>Hello Student {this.state.user.email} </h2>
 
-
-
-
-            {/*<Dropdown options={this.options} selection />*/}
-            {/*<Dropdown placeholder='State' search selection options={this.options} />*/}
-            <form >
-                <input
-                    type="text"
-                    name ="user"
-                    value={this.state.value}
-                    onChange={this.handleChange}
-                    placeholder="Enter user"
-                    required
-                />
-                <input
-                    type="text"
-                    name ="password"
-                    value={this.state.value}
-                    onChange={this.handleChange}
-                    placeholder="Enter password"
-                />
-
-                <button onSubmit={this.handleSubmit} >continue</button>
-            </form>
-
-
-            <form id="instructor_menu" className="form-design" name="student_form" method="POST">
                 <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>רישום נוכחות<span
                     className="fa fa-arrow-right"></span></button>
-                <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('feedback')}} >מילוי משוב<span
+                <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('viewReport')}} >הצגת נוכחות<span
                     className="fa fa-arrow-right"></span></button>
                 <button id="go-back" className="btn btn-info" >התנתק</button>
-            </form>
         </div>)
     }
 
@@ -257,7 +229,6 @@ class Student extends React.Component {
 
             <div id="attendreport" className="sec-design">
                 <h2> Hello Student {this.state.user.email} </h2>
-                <form id="student_form" className="form-design" name="student_form" >
 
                     <div id="name-group" className="form-group">
                         <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
@@ -353,13 +324,12 @@ class Student extends React.Component {
                                    minLength="10" onChange={this.handleChange} required/>
                         </div>
                     </div>
-                    <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>דווח נוכחות ושלח משוב</button>
+                    <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>
                     <button id="go-back" className="btn btn-info" onClick={() => {
                         this.chooseLayout("menu")
                     }}>חזור
 
                     </button>
-                </form>
 
             </div>
         </div>);
@@ -369,44 +339,15 @@ class Student extends React.Component {
 
 
 
-    StudentFeedback(){
+    StudentViewReport(){
         return(
             <div id="student_feedback" class="sec-design">
-                <form id="student_feed" class="form-design" name="student_feed">
                     <div id="topic" class="form-group">
-                        <label id="insert-topic" class="title-input" for="name"> באיזה נושא המפגש עסק:</label>
-                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Your Answer" minlength="5" required/>
+                       <h2>לא נמצאו רישומי נוכחות</h2>
                     </div>
-                    <div id ="box" class="chekbox" onSubmit="return checkRadio()">
-                        <label id="checkbox" class="title-input" for="name"> באיזה מידה המפגש היום חידש לך/למדת דברים חדשים</label>
-                        <br/>
-                        <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio" value="3"/></label>
-                        </form><br/>
-                        <label id="checkbox" class="title-input" for="name"> באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד</label>
-                        <br/>
-                        <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio"  value="3"/></label>
-                        </form><br/>
-                        <label id="checkbox" class="title-input" for="name"> באיזה מידה נושא המפגש היה רלוונטי עבורך</label>
-                        <br/>
-                        <form name="form1" class="chekbox" onSubmit="return checkRadio()">
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio" value="3"/></label>
-                        </form><br/>
-                        <div id="name-group" class="form-group">
-                            <label id="feedback" class="title-input" for="name"> מה את/ה לוקח/ת מהמפגש היום</label>
-                            <input type="text" class="form-control" name="Q4" id="Q4" placeholder="Your Answer" minlength="10" required/>
-                        </div>
-                    </div>
-                    <button type="submit" id="confirm-form" className="btn btn-info" >דווח נוכחות ושלח משוב</button>
+                    <button type="submit" id="confirm-form" className="btn btn-info" >רישום נוכחות</button>
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
-                </form>
+
             </div>
 
         )

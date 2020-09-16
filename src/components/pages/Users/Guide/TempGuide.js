@@ -37,9 +37,9 @@ class TestGuide extends React.Component {
             //     .collection('guides')
             //     .doc(guideUid);
 
-            // var collection = await db.collection("students").where("guide","==","awwLpQL9A1WKW9KX60Lz").get()
+            var collection = await db.collection("students").where("guide","==","awwLpQL9A1WKW9KX60Lz").get()
             // var collection = await db.collection("students").where("guide2","==",guide).get()//reference
-            var collection = await db.collection("students").where("coms"," array-contains",{approved:false}).get()
+            // var collection = await db.collection("students").where("coms"," array-contains",{approved:false}).get()
             var students = []
             collection.forEach(doc => {
                 const data = doc.get("coms");
