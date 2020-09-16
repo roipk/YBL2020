@@ -154,6 +154,8 @@ class Guide extends React.Component {
             return(this.GuideFeedback())
         else if(this.state.page === 'report')
         return(this.GuideAttendReport())
+        else if(this.state.page === 'student')
+            return(this.GuideAttendStudent())
         else
             return(this.menu())
     }
@@ -161,11 +163,13 @@ class Guide extends React.Component {
     menu() {
         return (
             <div id="instructor" className="sec-design">
-                <h2>Hello Guide {this.state.user.email} </h2>
+                <h2>שלום מדריך {this.state.user.name} </h2>
                 <form id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>אישור דו"ח נוכחות<span
                         className="fa fa-arrow-right"></span></button>
-                    <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('feedback')}} >מילוי משוב<span
+                    <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('feedback')}} >מילוי משוב פעילות<span
+                        className="fa fa-arrow-right"></span></button>
+                    <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('student')}} >מילוי משוב חניכים<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="logout" className="btn btn-info" >התנתק</button>
                 </form>
@@ -200,15 +204,27 @@ class Guide extends React.Component {
                         <input type="date" className="form-control" name="insert-student" id="insert-student" required/>
                     </div>
                     <div id="name-group" className="form-group">
-                        <label id="Q1" className="title-input"> נושא המפגש</label>
+                        <label id="Q1" className="title-input"> נושא הפעילות</label>
                         <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
                     </div>
                     <div id="name-group" className="form-group">
-                        <label id="Q2" className="title-input"> מה היה במפגש</label>
+                        <label id="Q1" className="title-input"> מספר הפעילות</label>
+                        <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                    </div>
+                    <div id="name-group" className="form-group">
+                        <label id="Q2" className="title-input"> מה היה בפעילות</label>
                         <input type="text" className="form-control" name="Q2" id="Q2" placeholder="Your Answer" minLength="5" required/>
                     </div>
                     <div id="name-group" className="form-group">
-                        <label id="Q3" className="title-input">עם אילו הצלחות/דילמות נפגשתי בפגש</label>
+                        <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
+                        <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                    </div>
+                    <div id="name-group" className="form-group">
+                        <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
+                        <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
+                    </div>
+                    <div id="name-group" className="form-group">
+                        <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
                         <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
                     </div>
                     <div id="name-group" className="form-group">
@@ -218,9 +234,12 @@ class Guide extends React.Component {
                     <div id ="box" className="chekbox">
                         <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
                         <form name="form1" className="chekbox" >
+                            <label>במידה מועטה מאוד<input type="radio" value="0"/></label>
                             <label>במידה מועטה<input type="radio" value="1"/></label>
                             <label>במידה בינונית<input type="radio" value="2"/></label>
                             <label>במידה רבה<input type="radio" value="3"/></label>
+                            <label>במידה רבה מאוד<input type="radio" value="4"/></label>
+
                         </form>
                     </div>
                     <br/>
@@ -236,8 +255,26 @@ class Guide extends React.Component {
         )
     }
 
-
-
+    GuideAttendStudent(){
+        return(
+            <div id="guideAttendReport" className="sec-design">
+                <div id="name-group" className="form-group">
+                    <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
+                    <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
+                    <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
+                </div>
+                <div id="name-group" className="form-group" dir="rtl">
+                    <div id="stList" className="checkboxes"></div>
+                </div>
+                <div id="name-group" className="form-group">
+                    <label id="Q4" className="title-input" htmlFor="name">יש לכתוב על כל חניך – במה בלט/ה? הצלחות שחווה/חוותה, התקדמות במישור הרגשי/חברתי וכד</label>
+                    <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
+                </div>
+                <button type="submit" id="confirm-form" className="btn btn-info" >שלח משוב</button>
+                <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
+            </div>
+        )
+    }
 
 }
 
