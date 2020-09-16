@@ -201,12 +201,12 @@ class Student extends React.Component {
 
         // if(this.state.user.email)
         //     console.log(this.state)
-        if(this.state.page ==='report')
+        // if(this.state.page ==='report')
             return(this.StudentAttendReport())
-        else if(this.state.page ==='viewReport')
-            return(this.StudentViewReport())
-        else
-            return(this.menu())
+        // else if(this.state.page ==='viewReport')
+        //     return(this.StudentViewReport())
+        // else
+        //     return(this.menu())
     }
 
 
@@ -228,7 +228,7 @@ class Student extends React.Component {
         return ( <div>
 
             <div id="attendreport" className="sec-design">
-                <h2> Hello Student {this.state.user.email} </h2>
+                <h2>שלום {this.state.user.name} </h2>
 
                     <div id="name-group" className="form-group">
                         <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
@@ -236,29 +236,29 @@ class Student extends React.Component {
                                required/>
                     </div>
 
-                    <div id="name-group" className="form-group">
-                        <input
-                            type="text"
-                            placeholder="בחר מדריך"
-                            name = "guide"
-                            value={this.state.searchTerm}
-                            onChange={(e)=>{
-                                this.hendleSerch(e);
-                                this.handleChange(e);
-                            }}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <input*/}
+                    {/*        type="text"*/}
+                    {/*        placeholder="בחר מדריך"*/}
+                    {/*        name = "guide"*/}
+                    {/*        value={this.state.searchTerm}*/}
+                    {/*        onChange={(e)=>{*/}
+                    {/*            this.hendleSerch(e);*/}
+                    {/*            this.handleChange(e);*/}
+                    {/*        }}*/}
 
 
-                        />
-                        <ul>
-                            {this.state.searchResults.map(item => (
-                                <ul key={item} onClick={()=>{this.getItem({item})}}>{item}</ul>
-                            ))}
-                        </ul>
+                    {/*    />*/}
+                    {/*    <ul>*/}
+                    {/*        {this.state.searchResults.map(item => (*/}
+                    {/*            <ul key={item} onClick={()=>{this.getItem({item})}}>{item}</ul>*/}
+                    {/*        ))}*/}
+                    {/*    </ul>*/}
 
-                    </div>
+                    {/*</div>*/}
                     <div id="topic" className="form-group">
                         <label id="insert-topic" className="title-input" htmlFor="name"> באיזה נושא המפגש
-                            עסק:</label>
+                            עסק</label>
                         <input type="text" className="form-control" name="topicMeeting" id="subject"
                                placeholder="Your Answer" minLength="5" required onChange={this.handleChange}/>
 
@@ -276,9 +276,11 @@ class Student extends React.Component {
                                 onChange={this.hendleRadioButton}
                                 row={true}
                             >
-                                <FormControlLabel value="1"  labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                                <FormControlLabel value="2"  labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                                <FormControlLabel value="3"  labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
+                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
+                                <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
+                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
                             </RadioGroup>
                         </div>
                         <br/>
@@ -293,9 +295,11 @@ class Student extends React.Component {
                                 onChange={this.hendleRadioButton}
                                 row={true}
                             >
+                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
                                 <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
                                 <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
                                 <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
                             </RadioGroup>
                         </div>
                         <br/>
@@ -311,12 +315,35 @@ class Student extends React.Component {
                                 row={true}
 
                             >
+                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
                                 <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
                                 <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
                                 <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
                             </RadioGroup>
                         </div>
                         <br/>
+                        <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה לקחת חלק פעיל במפגש היום</label>
+                        <br/>
+                        <div>
+                            <RadioGroup
+                                aria-label="Location"
+                                name="relevant"
+                                // value={location}
+                                onChange={this.hendleRadioButton}
+                                row={true}
+
+                            >
+                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
+                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
+                                <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
+                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+
+                            </RadioGroup>
+                        </div>
+                        <br/>
+
                         <div id="name-group" className="form-group">
                             <label id="feedback" className="title-input" htmlFor="name"> מה את/ה לוקח/ת מהמפגש
                                 היום</label>
@@ -324,12 +351,14 @@ class Student extends React.Component {
                                    minLength="10" onChange={this.handleChange} required/>
                         </div>
                     </div>
-                    <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>
-                    <button id="go-back" className="btn btn-info" onClick={() => {
-                        this.chooseLayout("menu")
-                    }}>חזור
+                    {/*<button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>*/}
+                <button id="logout" className="btn btn-info" >התנתק</button>
 
-                    </button>
+                {/*<button id="go-back" className="btn btn-info" onClick={() => {*/}
+                {/*        this.chooseLayout("menu")*/}
+                {/*    }}>חזור*/}
+
+                {/*    </button>*/}
 
             </div>
         </div>);
@@ -346,7 +375,7 @@ class Student extends React.Component {
                        <h2>לא נמצאו רישומי נוכחות</h2>
                     </div>
                     <button type="submit" id="confirm-form" className="btn btn-info" >רישום נוכחות</button>
-                    <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
+                <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
 
             </div>
 
