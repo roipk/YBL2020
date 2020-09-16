@@ -31,24 +31,58 @@ class TestGuide extends React.Component {
     {
         var guidePath = "awwLpQL9A1WKW9KX60Lz"
         try{
-              var collection = await db.collection("students").get()
-            var students = []
-            var selectedDate = this.state.reportDate
-            collection.forEach(async function(doc){
-                if(doc.data()["guide"] == "1234"){
-                    console.log(selectedDate)
-                    var ref=await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
-                    var user = (await db.collection("students").doc(doc.id).get()).data()
-                    console.log(ref.data())
-                    if (ref.data() && ref.data()["approved"]==false){
-                        console.log(user)
-                        students.push(user);
-                    }
-                }
+            var collection = await db.collection("students").get()
+            var students = [];
+            var selectedDate = this.state.reportDate;
 
-            });
-            console.log(students)
-            this.createCheckList(students);
+            const collectionPromises = collection.docs.map( async function(doc) {
+                        if(doc.data()["guide"] === "1234"){
+                            var ref=await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
+                            var user = (await db.collection("students").doc(doc.id).get()).data()
+                            if (ref.data() && ref.data()["approved"]===false){
+                                // students.push(user);
+                                return user
+                            }
+                        }
+                })
+
+            Promise.all(collectionPromises).then(res => {
+                // this.createCheckList(res);
+                document.getElementById("stList").innerHTML = "";
+                res.forEach(doc=>
+                {
+                    if(doc) {
+                        console.log(doc)
+                        const label=document.createElement("label");
+                        label.setAttribute("class","container")
+                        label.innerHTML=doc.fname+" "+doc.lname
+                        const inputC = document.createElement("input");
+                        inputC.setAttribute("type", "checkbox");
+                        inputC.setAttribute("value", doc.id);
+                        label.appendChild(inputC)
+                        const div= document.getElementById("stList")
+                        div.appendChild(label)
+                    }
+                })
+            })
+
+
+            //   var collection = await db.collection("students").get()
+            // var students = []
+            // var selectedDate = this.state.reportDate
+            // collection.forEach(async function(doc){
+            //     if(doc.data()["guide"] == "1234"){
+            //         console.log(selectedDate)
+            //         var ref=await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
+            //         var user = (await db.collection("students").doc(doc.id).get()).data()
+            //         console.log(ref.data())
+            //         if (ref.data() && ref.data()["approved"]==false){
+            //             console.log(user)
+            //             students.push(user);
+            //         }
+            //     }
+            //
+            // });
         }catch(error) {
             alert(error.message)
         }
@@ -118,21 +152,21 @@ class TestGuide extends React.Component {
         });
     }
 
-    createCheckList(students){
-        console.log(students,students.length)
-        for(var i=0;i<students.length;i++){
-            console.log(students[i])
-            // const label=document.createElement("label");
-            // label.setAttribute("class","container")
-            // label.innerHTML=doc.get("fname")+" "+doc.get("lname")
-            // const inputC = document.createElement("input"); 
-            // inputC.setAttribute("type", "checkbox");
-            // inputC.setAttribute("value", doc.id);
-            // label.appendChild(inputC)
-            // const div= document.getElementById("stList")
-            // div.appendChild(label)
-        }
-    }
+    // createCheckList(students){
+    //     console.log(students,students.length)
+    //     for(var i=0;i<students.length;i++){
+    //         console.log(students[i])
+    //         const label=document.createElement("label");
+    //         label.setAttribute("class","container")
+    //         label.innerHTML=doc.get("fname")+" "+doc.get("lname")
+    //         const inputC = document.createElement("input");
+    //         inputC.setAttribute("type", "checkbox");
+    //         inputC.setAttribute("value", doc.id);
+    //         label.appendChild(inputC)
+    //         const div= document.getElementById("stList")
+    //         div.appendChild(label)
+    //     }
+    // }
 
     // createCheckList(students)
     // {
