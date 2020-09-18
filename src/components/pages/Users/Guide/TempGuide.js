@@ -21,6 +21,7 @@ class TestGuide extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleSubmit2 = this.handleSubmit2.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleCheckBox = this.handleCheckBox.bind(this)
 
     }
 
@@ -41,7 +42,7 @@ class TestGuide extends React.Component {
                             var user = (await db.collection("students").doc(doc.id).get()).data()
                             if (ref.data() && ref.data()["approved"]===false){
                                 // students.push(user);
-                                return user
+                                return [user,ref.data()]
                             }
                         }
                 })
@@ -49,19 +50,31 @@ class TestGuide extends React.Component {
             Promise.all(collectionPromises).then(res => {
                 // this.createCheckList(res);
                 document.getElementById("stList").innerHTML = "";
+                var i=0
                 res.forEach(doc=>
                 {
                     if(doc) {
                         console.log(doc)
                         const label=document.createElement("label");
                         label.setAttribute("class","container")
-                        label.innerHTML=doc.fname+" "+doc.lname
+                        label.innerHTML=doc[0].fname+" "+doc[0].lname
                         const inputC = document.createElement("input");
                         inputC.setAttribute("type", "checkbox");
-                        inputC.setAttribute("value", doc.id);
+                        inputC.setAttribute("value", doc[0].fname+" "+doc[0].lname);
+                        inputC.setAttribute("id", "checkbox"+i++);
+                        inputC.addEventListener( 'change', function() {
+                            if(this.checked) {
+                                // Checkbox is checked..
+                                console.log("v",doc)
+                            } else {
+                                // Checkbox is not checked..
+                                console.log("x")
+                            }
+                        });
                         label.appendChild(inputC)
                         const div= document.getElementById("stList")
                         div.appendChild(label)
+
                     }
                 })
             })
@@ -88,6 +101,10 @@ class TestGuide extends React.Component {
         }
     }
 
+    handleCheckBox()
+    {
+        console.log("in")
+    }
     handleChange(event)
     {
         this.state.reportDate = event.target.value;
