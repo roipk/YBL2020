@@ -41,10 +41,10 @@ class TestGuide extends React.Component {
                             var data =await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate)
                             var ref =await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
                             var user = (await db.collection("students").doc(doc.id).get()).data()
-                            if (ref.data() && ref.data()["approved"]===false){
+                            // if (ref.data() && ref.data()["approved"]===false){
                                 // students.push(user);
                                 return [user,data ,ref]
-                            }
+                            // }
                         }
                 })
 
@@ -95,11 +95,18 @@ class TestGuide extends React.Component {
                         label.appendChild(inputC)
 
 
-                    if(doc[2].data()["approved"]===false)
-                        var div= document.getElementById("stListX")
+                    if(doc[2].data()["approved"]===false){
 
-                    else
+                        inputC.checked=false
+                        var div= document.getElementById("stListX")
+                    }
+
+                    else{
+                        inputC.checked=true
                         var div= document.getElementById("stListV")
+                        
+                    }
+
 
                     div.appendChild(label)
 
