@@ -21,7 +21,7 @@ class TestGuide extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleSubmit2 = this.handleSubmit2.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.handleCheckBox = this.handleCheckBox.bind(this)
+        // this.handleCheckBox = this.handleCheckBox.bind(this)
 
     }
 
@@ -38,23 +38,25 @@ class TestGuide extends React.Component {
 
             const collectionPromises = collection.docs.map( async function(doc) {
                         if(doc.data()["guide"] === "1234"){
-                            var ref=await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
+                            var data =await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate)
+                            var ref =await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
                             var user = (await db.collection("students").doc(doc.id).get()).data()
                             if (ref.data() && ref.data()["approved"]===false){
                                 // students.push(user);
-                                return [user,ref.data()]
+                                return [user,data ,ref]
                             }
                         }
                 })
 
             Promise.all(collectionPromises).then(res => {
                 // this.createCheckList(res);
-                document.getElementById("stList").innerHTML = "";
+                document.getElementById("stListX").innerHTML = "";
+                document.getElementById("stListV").innerHTML = "";
                 var i=0
                 res.forEach(doc=>
                 {
-                    if(doc) {
-                        console.log(doc)
+                    console.log(doc)
+                        // console.log(doc)
                         const label=document.createElement("label");
                         label.setAttribute("class","container")
                         label.innerHTML=doc[0].fname+" "+doc[0].lname
@@ -63,19 +65,47 @@ class TestGuide extends React.Component {
                         inputC.setAttribute("value", doc[0].fname+" "+doc[0].lname);
                         inputC.setAttribute("id", "checkbox"+i++);
                         inputC.addEventListener( 'change', function() {
+                           async function handleCheckBox(CheckBox) {
+                               await doc[1].update({
+                                   approved: CheckBox
+                               }).then(()=>{
+                                   console.log("update")
+                                   inputC.checked=CheckBox
+                                   if(CheckBox)
+                                        var div= document.getElementById("stListV")
+                                   else
+                                       var div= document.getElementById("stListX")
+                                   div.appendChild(label)
+                                   // label.remove()
+
+                               })
+                            }
+
                             if(this.checked) {
                                 // Checkbox is checked..
-                                console.log("v",doc)
+                                console.log("v")
+                                handleCheckBox(true)
+
                             } else {
                                 // Checkbox is not checked..
                                 console.log("x")
+                                handleCheckBox(false)
                             }
                         });
                         label.appendChild(inputC)
-                        const div= document.getElementById("stList")
-                        div.appendChild(label)
 
-                    }
+
+                    if(doc[2].data()["approved"]===false)
+                        var div= document.getElementById("stListX")
+
+                    else
+                        var div= document.getElementById("stListV")
+
+                    div.appendChild(label)
+
+
+
+
                 })
             })
 
@@ -85,10 +115,6 @@ class TestGuide extends React.Component {
             // var selectedDate = this.state.reportDate
             // collection.forEach(async function(doc){
             //     if(doc.data()["guide"] == "1234"){
-            //         console.log(selectedDate)
-            //         var ref=await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
-            //         var user = (await db.collection("students").doc(doc.id).get()).data()
-            //         console.log(ref.data())
             //         if (ref.data() && ref.data()["approved"]==false){
             //             console.log(user)
             //             students.push(user);
@@ -101,10 +127,6 @@ class TestGuide extends React.Component {
         }
     }
 
-    handleCheckBox()
-    {
-        console.log("in")
-    }
     handleChange(event)
     {
         this.state.reportDate = event.target.value;
@@ -146,28 +168,35 @@ class TestGuide extends React.Component {
 
     }
 
-    async checkstudents(event){
-        var selectedDate = this.state.reportDate
-        $('#stList input:checkbox').each(async function () {
-            var path = (this.checked ? $(this).val() : "");
-            try{
-                var stude = await db.collection("students").doc(path).get()
-                var data =stude.data().coms
-                if (data)
-                    data.forEach(async function(doc1){
-                        if(doc1["date"] == selectedDate && doc1["approved"]==false){
-                            //var index =data.indexOf(doc1)
-                            var usersCollection = await db.collection('students').doc(`${path}/comes/${selectedDate}`);
-                            usersCollection.update({
-                                approved:true
-                            })
-                        }
-                    });
-            }catch(error){
-                console.log(error.message)
-            }
-        });
-    }
+
+
+
+    // async checkstudents(event){
+    //     var selectedDate = this.state.reportDate
+    //     $('#stListX input:checkbox').each(async function () {
+    //         var path = (this.checked ? $(this).val() : "");
+    //         try{
+    //             var stude = await db.collection("students").doc(path).get()
+    //             var data =stude.data().coms
+    //             if (data)
+    //                 data.forEach(async function(doc1){
+    //                     if(doc1["date"] == selectedDate && doc1["approved"]==false){
+    //                         //var index =data.indexOf(doc1)
+    //                         var usersCollection = await db.collection('students').doc(`${path}/comes/${selectedDate}`);
+    //                         usersCollection.update({
+    //                             approved:true
+    //                         })
+    //                     }
+    //                 });
+    //         }catch(error){
+    //             console.log(error.message)
+    //         }
+    //     });
+    // }
+
+
+
+
 
     // createCheckList(students){
     //     console.log(students,students.length)
@@ -243,9 +272,13 @@ class TestGuide extends React.Component {
                         <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
                     </div>
                     <div id="name-group" className="form-group" dir="rtl">
-                        <label id="insert-message" className="title-input">אשר את נוכחות החניכים במפגש:</label><br/>
-                        <div id="stList" className="checkboxes"></div>
+                        <label id="insert-message" className="title-input">טרם אושר נוכחות מפגשים:</label><br/>
+                        <div id="stListX" className="checkboxes"></div>
                     </div>
+                <div id="name-group" className="form-group" dir="rtl">
+                    <label id="insert-message" className="title-input">אושר נוכחות מפגשים:</label><br/>
+                    <div id="stListV" className="checkboxes"></div>
+                </div>
                     <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
             </div>
