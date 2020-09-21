@@ -24,7 +24,7 @@ class TempStudent extends React.Component {
                     // help: 0,
                     // new: 0,
                     // relevant: 0,
-                    // relevant1: 0,
+
 
                 },
             },
