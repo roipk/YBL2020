@@ -295,9 +295,58 @@ class TestGuide extends React.Component {
                     <label id="insert-message" className="title-input">סטודנטים שהשתתפו ואושרו:</label><br/>
                     <div id="stListV" className="checkboxes"></div>
                 </div>
-                    <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>
+
+
+                <div id="name-group" className="form-group">
+                    <label id="Q1" className="title-input"> נושא הפעילות</label>
+                    <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                </div>
+                <div id="name-group" className="form-group">
+                    <label id="Q1" className="title-input"> מספר הפעילות</label>
+                    <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                </div>
+                <div id="name-group" className="form-group">
+                    <label id="Q2" className="title-input"> מה היה בפעילות</label>
+                    <input type="text" className="form-control" name="Q2" id="Q2" placeholder="Your Answer" minLength="5" required/>
+                </div>
+                <div id="name-group" className="form-group">
+                    <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
+                    <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                </div>
+                <div id="name-group" className="form-group">
+                    <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
+                    <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
+                </div>
+                <div id="name-group" className="form-group">
+                    <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
+                    <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
+                </div>
+                <div id="name-group" className="form-group">
+                    <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
+                    <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
+                </div>
+                <div id ="box" className="chekbox">
+                    <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
+                    <form name="form1" className="chekbox" >
+                        <label>במידה מועטה מאוד<input type="radio" value="0"/></label>
+                        <label>במידה מועטה<input type="radio" value="1"/></label>
+                        <label>במידה בינונית<input type="radio" value="2"/></label>
+                        <label>במידה רבה<input type="radio" value="3"/></label>
+                        <label>במידה רבה מאוד<input type="radio" value="4"/></label>
+                    </form>
+                </div>
+                    <br/>
+                    <div id="name-group" className="form-group">
+                        <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
+                        <input type="text" className="form-control" name="firstName" id="firstName" placeholder="Your Answer" minLength="10" required/>
+                    </div>
+                    {/*<button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>*/}
+                    <button type="submit" id="confirm-form" className="btn btn-info" >שלח משוב</button>
+
+                    {/*<button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>*/}
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
                 <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
+
 
             </div>
         )
