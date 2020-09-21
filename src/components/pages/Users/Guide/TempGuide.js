@@ -228,6 +228,15 @@ class TestGuide extends React.Component {
     //             console.log("in")
     //         })
     // }
+
+    loadTempPage(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
     async  logout() {
         //מסך טעינה
         await auth.signOut();
@@ -279,23 +288,28 @@ class TestGuide extends React.Component {
                         <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
                     </div>
                     <div id="name-group" className="form-group" dir="rtl">
-                        <label id="insert-message" className="title-input">טרם אושר נוכחות מפגשים:</label><br/>
+                        <label id="insert-message" className="title-input">סטודנטים שדממתינים לאישור נוכחות:</label><br/>
                         <div id="stListX" className="checkboxes"></div>
                     </div>
                 <div id="name-group" className="form-group" dir="rtl">
-                    <label id="insert-message" className="title-input">אושר נוכחות מפגשים:</label><br/>
+                    <label id="insert-message" className="title-input">סטודנטים שהשתתפו ואושרו:</label><br/>
                     <div id="stListV" className="checkboxes"></div>
                 </div>
                     <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
+                <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
+
             </div>
         )
     }
 
+
+
+
+
     GuideFeedback() {
         return(
             <div id="guideFeeadback" className="sec-design">
-                <form id="guide_form" className="form-design" name="guide_form">
                     <div id="name-group" className="form-group">
                         <label id="insert-date" className="title-input">הכנס את התאריך בו התקיים המפגש</label>
                         <input type="date" className="form-control" name="insert-student" id="insert-student" required/>
@@ -331,8 +345,8 @@ class TestGuide extends React.Component {
                     </div>
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
                     <button type="submit" id="confirm-form" className="btn btn-info" >שלח משוב</button>
-                    
-                </form>
+
+
             </div>
         )
     }

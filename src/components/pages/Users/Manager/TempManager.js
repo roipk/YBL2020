@@ -53,6 +53,15 @@ class TempManager extends React.Component {
         //סיום מסך טעינה
     }
 
+    loadTempPage(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
+
     render() {
 
         if(this.state.user.email)
@@ -60,7 +69,7 @@ class TempManager extends React.Component {
         return (
             <div id="instructor" className="sec-design">
                 <div> Hello Manager {this.state.user.email}</div>
-                <form id="Manager" className="form-design" name="student_form">
+
                     <button id="report-button" className="btn btn-info" >צפייה בדו"ח נוכחות<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="feedback-button" className="btn btn-info" >צפייה במשובי חניכים<span
@@ -69,7 +78,7 @@ class TempManager extends React.Component {
                         מדריכים<span
                             className="fa fa-arrow-right"></span></button>
                     <button id="logout" className="btn btn-info" >התנתק</button>
-                </form>
+                <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
             </div>
         );
     }

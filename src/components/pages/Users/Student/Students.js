@@ -197,6 +197,14 @@ class Student extends React.Component {
     }
 
 
+    loadTempPage(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
     render() {
 
         // if(this.state.user.email)

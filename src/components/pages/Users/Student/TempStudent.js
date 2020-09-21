@@ -114,6 +114,8 @@ class TempStudent extends React.Component {
 
     }
 
+
+
     async handleSubmit(event)
     {
         var guideUid = 'awwLpQL9A1WKW9KX60Lz'
@@ -187,6 +189,15 @@ class TempStudent extends React.Component {
         //     return(this.menu())
     }
 
+    loadTempPage(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
+
 
     menu() {
         const {  options, search, value1 } = this.state
@@ -235,8 +246,6 @@ class TempStudent extends React.Component {
 
             <div id="attendreport" className="sec-design">
                 <h2> Hello Student {this.state.user.email} </h2>
-                <form id="student_form" className="form-design" name="student_form" >
-
                     <div id="name-group" className="form-group">
                         <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
                         <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange}
@@ -337,7 +346,8 @@ class TempStudent extends React.Component {
                     }}>חזור
 
                     </button>
-                </form>
+                    <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
+
 
             </div>
         </div>);

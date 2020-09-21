@@ -90,7 +90,9 @@ class UserPage extends React.Component {
                         <button onClick={() => this.loadUser("Student")}>Enter Student</button>
                         <button onClick={() => this.loadUser("Guide")}>Enter Guide</button>
                         <button onClick={() => this.loadUser("Manager")}>Enter Manager</button>
-                        <button onClick={() => this.loadUser("Temp")}>Enter Temp</button>
+                        <button onClick={() => this.loadTempPage("TempStudent")}>Enter TempStudent</button>
+                        <button onClick={() => this.loadTempPage("TempGuide")}>Enter TempGuide</button>
+                        <button onClick={() => this.loadTempPage("TempManager")}>Enter TempManager</button>
 
                         <button onClick={() => this.loadPage(true)}>loading page</button>
                         <button onClick={() => this.loadPage(false)}>unloading page</button>
@@ -121,6 +123,14 @@ class UserPage extends React.Component {
             data: this.state.user // your data array of objects
         })
     }
+    loadTempPage(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
     userPage()
     {
         const { user , isLoaded , error} = this.state
