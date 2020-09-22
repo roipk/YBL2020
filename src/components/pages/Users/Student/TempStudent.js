@@ -53,7 +53,7 @@ class TempStudent extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.hendleSerch = this.hendleSerch.bind(this)
-        this. hendleRadioButton = this. hendleRadioButton.bind(this)
+        this.hendleRadioButton = this.hendleRadioButton.bind(this)
 
 
 
@@ -72,37 +72,54 @@ class TempStudent extends React.Component {
 
     async sendDataToFirebase(form)
     {
-        var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
+        // var team = auth.currentUser.uid
+        var path = auth.currentUser.uid
+        // var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
-            var stude =await db.collection("students").doc(path).get()
-            var studeSet =await db.collection("students").doc(path)
+            // var p = (await db.collection("students").doc(path).get()).data().Teams.id
+            // var team = (await db.collection("Teams").doc(p).get()).data().name
+            // console.log(team)
 
-            var coms =stude.data().coms
+            // var stude =await db.collection("students").doc(path).get()
+            console.log(form.date)
+            // var test = await db.collection("students").doc(path).collection("comes").where("date","==",form.date).get();
+            // console.log(test)
+            var test = await db.collection("students").doc(path).collection("comes").doc(form.date).set({
+                form: form,
+                date:form.date
+            })
 
-            if(!coms)
-            {
-                console.log(coms)
+            // var studeSet =await db.collection("students").doc(path).collection("comes").add({
+            //     form: form,
+            //     date:form.date
+            // });
 
-                coms= []
-
-            }
-            coms.push(form)
-            var test = await studeSet.set({coms:coms}, {merge:true})
-            console.log(coms)
-
-
-            // var testAdd = await stude.add({coms:form}, {merge:true})
-
-            alert("end")
-
-            // if(stude){
+            // var coms =stude.data().coms
             //
+            // if(!coms)
+            // {
+            //     console.log(coms)
             //
-            //     console.log(stude.data())
-            //     stude.data().coms= form
-            //     console.log(stude.data())
+            //     coms= []
             //
             // }
+            // coms.push(form)
+            // var test = await studeSet.set({coms:coms}, {merge:true})
+            // console.log(coms)
+            //
+            //
+            // // var testAdd = await stude.add({coms:form}, {merge:true})
+            //
+            // alert("end")
+            //
+            // // if(stude){
+            // //
+            // //
+            // //     console.log(stude.data())
+            // //     stude.data().coms= form
+            // //     console.log(stude.data())
+            // //
+            // // }
 
 
         }catch(error) {
@@ -138,12 +155,37 @@ class TempStudent extends React.Component {
         console.log(form)
     }
 
-    handleChange(event)
+    async handleChange(event)
     {
+        var name = event.target.name;
+        var value = event.target.value;
+        if(name === 'date' && event.target.value!=='' )
+        {
+            var test = await db.collection("students").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
+            if(test.exists) {
+                alert("מילאת משוב לתאריך הנוכחי נא לבחור תאריך אחר")
+                var form = this.state.form;
+                console.log(name);
 
-        var form = this.state.form
-        form[event.target.name] = event.target.value;
-        this.setState({form:form})
+                form[name] = '';
+                this.setState({form:form})
+
+            }
+            else
+            {
+                var form = this.state.form
+                form[name] = value;
+                this.setState({form:form})
+            }
+        }
+        else
+        {
+            var form = this.state.form
+            form[name] = value;
+            this.setState({form:form})
+        }
+
+
 
     }
 
@@ -229,7 +271,7 @@ class TempStudent extends React.Component {
 
             <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>רישום נוכחות<span
                 className="fa fa-arrow-right"></span></button>
-            <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('viewReport')}} >הצגת נוכחות<span
+            <button id="report-button" className="btn btn-info"  onClick={()=>{this.chooseLayout('viewReport')}} >הצגת נוכחות<span
                 className="fa fa-arrow-right"></span></button>
             <button id="go-back" className="btn btn-info" >התנתק</button>
         </div>)
@@ -243,7 +285,7 @@ class TempStudent extends React.Component {
 
                 <div id="name-group" className="form-group">
                     <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
-                    <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange}
+                    <input type="date" className="form-control" id="insert-date" value={this.state.form.date} name="date" onChange={this.handleChange}
                            required/>
                 </div>
 
