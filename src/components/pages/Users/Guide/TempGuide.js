@@ -14,7 +14,18 @@ class TestGuide extends React.Component {
             error:false,
             loading: true,
             rule:"Manager",
-            reportDate:""
+            reportDate:"",
+            form : {
+                q1:"",
+                q2:"",
+                q3:"",
+                q4:"",
+                q5:"",
+                q6:"",
+                q7:"",
+                q8:"",
+                q9:"",
+            }
         };
         
 
@@ -26,10 +37,9 @@ class TestGuide extends React.Component {
     }
 
 
-    
-
     async getDataFromFirebase(event)
     {
+        await this.checkIfFeedbackExist()
         var guidePath = "awwLpQL9A1WKW9KX60Lz"
         try{
             var collection = await db.collection("students").get()
@@ -38,7 +48,7 @@ class TestGuide extends React.Component {
 
             const collectionPromises = collection.docs.map( async function(doc) {
                         if(doc.data()["guide"] === "1234"){
-                            var data =await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate)
+                            var data = db.collection("students").doc(doc.id).collection("comes").doc(selectedDate)
                             var ref =await db.collection("students").doc(doc.id).collection("comes").doc(selectedDate).get()
                             var user = (await db.collection("students").doc(doc.id).get()).data()
                             // if (ref.data() && ref.data()["approved"]===false){
@@ -117,23 +127,48 @@ class TestGuide extends React.Component {
             })
 
 
-            //   var collection = await db.collection("students").get()
-            // var students = []
-            // var selectedDate = this.state.reportDate
-            // collection.forEach(async function(doc){
-            //     if(doc.data()["guide"] == "1234"){
-            //         if (ref.data() && ref.data()["approved"]==false){
-            //             console.log(user)
-            //             students.push(user);
-            //         }
-            //     }
-            //
-            // });
+            
         }catch(error) {
             alert(error.message)
         }
     }
+    async checkIfFeedbackExist()
+    {
+        var Path = auth.currentUser.uid
+        var selectedDate = this.state.reportDate;
+        console.log(Path)
+        try{
+            const guideRef = db.collection('guides').doc(Path);
+            const date = await db.collection("Dates").get();
+            const collectionPromises = date.docs.map( async function(doc) {
+                const team =  db.collection("Teams").where("guide","==",guideRef).get();
+                const collectionPromises1 = (await team).forEach(doc1 => {
+                    console.log(doc1.id)
+                    if(doc.data()["date"]  == selectedDate ){
+                        doc.data()["teams"].forEach(async doc2=>{
+                            if(doc2.id == doc1.id){
+                                const guideFeeadback = guideRef.collection("comes").doc(selectedDate)
 
+                            }
+                                    
+                        })
+                    }
+                })
+                
+                
+
+            })  
+
+            Promise.all(collectionPromises).then(res => {
+                    // if("teams","array-contains",team)
+                
+            })
+        }catch(error) {
+            alert(error.message)
+        }
+        
+        //var Dates = await db.collection("Dates").doc(selectedDate)
+    }
     handleChange(event)
     {
         this.state.reportDate = event.target.value;
@@ -148,7 +183,7 @@ class TestGuide extends React.Component {
     }
     handleSubmit2(event)
     {
-        this.checkstudents(event)
+        this.sendfeedback(event)
     }
 
     async componentDidMount() {
@@ -178,56 +213,10 @@ class TestGuide extends React.Component {
 
 
 
-    // async checkstudents(event){
-    //     var selectedDate = this.state.reportDate
-    //     $('#stListX input:checkbox').each(async function () {
-    //         var path = (this.checked ? $(this).val() : "");
-    //         try{
-    //             var stude = await db.collection("students").doc(path).get()
-    //             var data =stude.data().coms
-    //             if (data)
-    //                 data.forEach(async function(doc1){
-    //                     if(doc1["date"] == selectedDate && doc1["approved"]==false){
-    //                         //var index =data.indexOf(doc1)
-    //                         var usersCollection = await db.collection('students').doc(`${path}/comes/${selectedDate}`);
-    //                         usersCollection.update({
-    //                             approved:true
-    //                         })
-    //                     }
-    //                 });
-    //         }catch(error){
-    //             console.log(error.message)
-    //         }
-    //     });
-    // }
+ 
 
 
 
-
-
-    // createCheckList(students){
-    //     console.log(students,students.length)
-    //     for(var i=0;i<students.length;i++){
-    //         console.log(students[i])
-    //         const label=document.createElement("label");
-    //         label.setAttribute("class","container")
-    //         label.innerHTML=doc.get("fname")+" "+doc.get("lname")
-    //         const inputC = document.createElement("input");
-    //         inputC.setAttribute("type", "checkbox");
-    //         inputC.setAttribute("value", doc.id);
-    //         label.appendChild(inputC)
-    //         const div= document.getElementById("stList")
-    //         div.appendChild(label)
-    //     }
-    // }
-
-    // createCheckList(students)
-    // {
-    //         console.log(students)
-    //         students.forEach(doc =>{
-    //             console.log("in")
-    //         })
-    // }
 
     loadTempPage(page)
     {
@@ -280,6 +269,7 @@ class TestGuide extends React.Component {
     }
 
     GuideAttendReport(){
+        //check firebase if form exist
         return(
             <div id="guideAttendReport" className="sec-design">
                     <div id="name-group" className="form-group">
@@ -299,31 +289,31 @@ class TestGuide extends React.Component {
 
                 <div id="name-group" className="form-group">
                     <label id="Q1" className="title-input"> נושא הפעילות</label>
-                    <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                    <input type="text" className="form-control" name="Q1" id="Q1" value='${this.state.form.q1}' minLength="5" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q1" className="title-input"> מספר הפעילות</label>
-                    <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                    <input type="text" className="form-control" name="Q2" id="Q2" value={this.state.form.q2} minLength="5" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q2" className="title-input"> מה היה בפעילות</label>
-                    <input type="text" className="form-control" name="Q2" id="Q2" placeholder="Your Answer" minLength="5" required/>
+                    <input type="text" className="form-control" name="Q3" id="Q3" value={this.state.form.q3} minLength="5" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
-                    <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+                    <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="5" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
-                    <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
+                    <input type="text" className="form-control" name="Q5" id="Q5" placeholder="Your Answer" minLength="10" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
-                    <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
+                    <input type="text" className="form-control" name="Q6" id="Q6" placeholder="Your Answer" minLength="10" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
-                    <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
+                    <input type="text" className="form-control" name="Q7" id="Q7" placeholder="Your Answer" minLength="10" required/>
                 </div>
                 <div id ="box" className="chekbox">
                     <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
@@ -341,7 +331,7 @@ class TestGuide extends React.Component {
                         <input type="text" className="form-control" name="firstName" id="firstName" placeholder="Your Answer" minLength="10" required/>
                     </div>
                     {/*<button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>*/}
-                    <button type="submit" id="confirm-form" className="btn btn-info" >שלח משוב</button>
+                    <button type="submit" id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2}>שלח משוב</button>
 
                     {/*<button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>*/}
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
