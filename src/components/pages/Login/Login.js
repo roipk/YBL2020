@@ -72,7 +72,21 @@ function LoginPage(props) {
 
 
     return (
-        <main className={classes.main}>
+        // <div id="login" className="sec-design">
+        //     <h1>התחברות</h1>
+        //     <form>
+        //         <label id="email">אימייל</label>
+        //         <input type="text" name="email" id="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} minLength="5" required/>
+        //         <label id="password">סיסמא</label>
+        //         <input type="password" name="password" id="password" placeholder="password" value={password} onChange={e => setPassword(e.target.value)} required/>
+        //         <button id="LoginBtn" type="submit" variant="contained" onClick={login} className={classes.submit}>כניסה</button>
+        //         <button id="registerBtn" type="submit" variant="contained" component={Link} to="/SignUp" className={classes.submit}>הרשמה</button>
+        //         <button type="submit" variant="contained" id="HomeBtn" component={Link} to="/" className={classes.submit}>חזרה לעמוד הראשי</button>
+        //     </form>
+        // </div>
+
+
+         <main className={classes.main}>
             <Paper className={classes.paper}  style={{
                 backgroundColor: "rgba(255,255,255,0.85)",
                 borderRadius: "25px"}}>
@@ -85,7 +99,7 @@ function LoginPage(props) {
                 <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
 
                     <Grid container spacing={2}>
-                        <Grid item xs={12}>
+                        {/* <Grid item xs={12}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
                                 id="phone"
@@ -98,14 +112,16 @@ function LoginPage(props) {
                                 fullWidth
                                 label="פלאפון"
                             />
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={12}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
-                                id="email" name="email"
+                                id="email" 
+                                name="email"
+                                type="email"
                                 autoComplete="off"
-                                value={email} onChange={e => setEmail(e.target.value)}
-                                variant="outlined"
+                                value={email} 
+                                onChange={e => setEmail(e.target.value)}
                                 required
                                 fullWidth
                                 label="Email"
@@ -118,8 +134,8 @@ function LoginPage(props) {
                                 type="password"
                                 id="password"
                                 autoComplete="off"
-                                value={password} onChange={e => setPassword(e.target.value)}
-                                variant="outlined"
+                                value={password} 
+                                onChange={e => setPassword(e.target.value)}
                                 required
                                 fullWidth
                                 label="סיסמא"
@@ -141,7 +157,6 @@ function LoginPage(props) {
                         type="submit"
                         fullWidth
                         variant="contained"
-                        id="registerBtn"
                         component={Link}
                         to="/SignUp"
                         className={classes.submit}>
@@ -159,7 +174,7 @@ function LoginPage(props) {
                     </Button>
                 </form>
             </Paper>
-        </main>
+         </main>
     )
 
 

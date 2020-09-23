@@ -71,10 +71,12 @@ function SignUp(props) {
                                 inputProps={{style: {textAlign: 'center'}}}
                                 id="fname"
                                 name="fname"
+                                type="string"
                                 autoComplete="off"
-                                autoFocus value={fname}
+                                autoFocus 
+                                value={fname}
                                 onChange={e => setFname(e.target.value)}
-                                variant="outlined"
+                                variant="standard"
                                 required
                                 fullWidth
                                 label="שם פרטי"
@@ -85,10 +87,11 @@ function SignUp(props) {
                                 inputProps={{style: {textAlign: 'center'}}}
                                 id="lname"
                                 name="lname"
+                                type="string"
                                 autoComplete="off"
                                 autoFocus value={lname}
                                 onChange={e => setLname(e.target.value)}
-                                variant="outlined"
+                                variant="standard"
                                 required
                                 fullWidth
                                 label="שם משפחה"
@@ -99,10 +102,11 @@ function SignUp(props) {
                                 inputProps={{style: {textAlign: 'center'}}}
                                 id="phone"
                                 name="phone"
+                                type="tel"
                                 autoComplete="off"
                                 autoFocus value={phone}
                                 onChange={e => setPhone(e.target.value)}
-                                variant="outlined"
+                                variant="standard"
                                 required
                                 fullWidth
                                 label="פלאפון"
@@ -111,10 +115,13 @@ function SignUp(props) {
                         <Grid item xs={12}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
-                                id="email" name="email"
+                                id="email" 
+                                name="email"
+                                type="email"
                                 autoComplete="off"
-                                value={email} onChange={e => setEmail(e.target.value)}
-                                variant="outlined"
+                                value={email} 
+                                onChange={e => setEmail(e.target.value)}
+                                variant="standard"
                                 required
                                 fullWidth
                                 label="Email"
@@ -127,8 +134,9 @@ function SignUp(props) {
                                 type="password"
                                 id="password"
                                 autoComplete="off"
-                                value={password} onChange={e => setPassword(e.target.value)}
-                                variant="outlined"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
+                                variant="standard"
                                 required
                                 fullWidth
                                 label="סיסמא"

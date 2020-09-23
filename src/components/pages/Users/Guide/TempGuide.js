@@ -236,7 +236,7 @@ class TestGuide extends React.Component {
         // }
 
 
-
+        this.state.Students=null
     }
 
 
