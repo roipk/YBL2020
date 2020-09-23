@@ -4,6 +4,8 @@ import SelectInput from "@material-ui/core/Select/SelectInput";
 import $ from 'jquery';
 import {FormControlLabel, Paper, Radio, RadioGroup} from "@material-ui/core";
 import './Guide.css'
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
 
 
 class TestGuide extends React.Component {
@@ -28,6 +30,9 @@ class TestGuide extends React.Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
         this.changeBackGround = this.changeBackGround.bind(this)
+        this.approvStudent = this.approvStudent.bind(this)
+        this.saveStudentData = this.saveStudentData.bind(this)
+        this.feadbackGuide = this.feadbackGuide.bind(this)
         // this.hendleRadioButton = this.hendleRadioButton.bind(this)
         // this.handleCheckBox = this.handleCheckBox.bind(this)
 
@@ -253,7 +258,7 @@ class TestGuide extends React.Component {
         const date = this.state.date
         const collectionPromisesTeam = collection.docs.map( async function(doc) {
             var ref =await db.collection("students").doc(doc.id).collection("comes").doc(date).get()
-            var user = (await db.collection("students").doc(doc.id).get()).data()
+            var user = await db.collection("students").doc(doc.id).get()
             return [ref,user]
 
         })
@@ -262,10 +267,14 @@ class TestGuide extends React.Component {
             console.log("end prommis");
             res.forEach(doc=>{
                 var approv = false;
-                if(doc[0].exists)
+                var feedback = ''
+                if(doc[0].exists) {
                     approv = true;
-                var data = doc[1];
-                Students.push({data,approv})
+                    feedback = doc[0].data().feedbackGuide;
+                }
+                var data = doc[1].data();
+                var ref = doc[1].id;
+                Students.push({data,approv,ref,feedback})
             })
             let i;
             console.log(Students.length)
@@ -293,12 +302,6 @@ class TestGuide extends React.Component {
     handleSubmit2(event)
     {
         this.sendfeedback(event)
-    }
-
-
-    async approvedStudents()
-    {
-
     }
 
 
@@ -373,7 +376,53 @@ class TestGuide extends React.Component {
 
     }
 
- 
+    approvStudent(student)
+    {
+        for(var i=0;i<this.state.Students.length;i++)
+        {
+           if(this.state.Students[i] === student)
+           {
+               this.state.Students[i].approv = !this.state.Students[i].approv
+               this.setState({Students: this.state.Students})
+               return
+           }
+        }
+    }
+
+    feadbackGuide(event,student)
+    {
+        console.log(event.target.value)
+        for(var i=0;i<this.state.Students.length;i++)
+        {
+            if(this.state.Students[i] === student)
+            {
+                this.state.Students[i].feedback = event.target.value
+                this.setState({Students: this.state.Students})
+                return
+            }
+        }
+    }
+
+    async saveStudentData(student)
+    {
+        var sid = student.ref
+        var approved = student.approv
+        var feedback = student.feedback
+        if(!approved)
+            feedback="";
+
+        console.log(student)
+        console.log(sid)
+        console.log(feedback)
+        console.log(approved)
+        console.log(this.state.date)
+        const stud =await db.collection("students").doc(sid).collection("comes").doc(this.state.date).set({
+            approved:approved,
+            feedbackGuide:feedback
+        }, {merge:true})
+        // console.log(student.ref)
+
+    }
 
 
 
@@ -404,14 +453,14 @@ class TestGuide extends React.Component {
 
     render() {
         // console.log(this.state.date)
-        if(this.state.user.email)
-            console.log("this is email : "+this.state.user.email)
-        if(this.state.page ==='feedback')
-            return(this.GuideFeedback())
-        else if(this.state.page === 'report')
+        // if(this.state.user.email)
+        //     console.log("this is email : "+this.state.user.email)
+        // if(this.state.page ==='feedback')
+        //     return(this.GuideFeedback())
+        // else if(this.state.page === 'report')
             return(this.GuideAttendReport())
-        else
-            return(this.menu())
+        // else
+        //     return(this.menu())
     }
 
     menu() {
@@ -449,12 +498,24 @@ class TestGuide extends React.Component {
                     </div>
                     {
                         (!this.state.Students || !this.state.viewStudent)?  (<div></div>) :  (
-                        this.state.Students.map((Student,index) => (
-                        <div   key={index}>
-                        {this.Card(Student)}
-                        </div>
 
-                        ))
+                            <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                            <Grid  container
+                                   direction="row"
+                                   justify="space-between"
+                                   alignItems="center"
+                                   spacing={2}>
+                                {
+                            this.state.Students.map((Student,index) => (
+                                <Grid  item xs={6}  key={index}>
+                                    {this.Card(Student)}
+                                </Grid >
+                            ))}
+                        </Grid>
+                        </Grid>
+                        </Grid>
+
                         )
                     }
 
@@ -535,21 +596,36 @@ class TestGuide extends React.Component {
                           })
                          }>
 
-                        <div className="tx`op">
-                            <h4>{Student.data.fname + " " + Student.data.lname}</h4>
-                        </div>
-                        <div className="text-below-image">
-                            <label>הגעה <input type='checkbox' checked={Student.approv} onChange={this.changeBackGround}/></label>
-                                <div className="text"><b>email:</b> {Student.data.email}</div>
-                        </div>
-                        <br></br>
-                        {
-                            (!Student.approv)?(<div></div>):(<div>
-                                <label>משוב על החניך </label>
-                                <input type='Textarea' />
 
-                            </div>)
-                        }
+
+                        <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                                <h4>{Student.data.fname + " " + Student.data.lname}</h4>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <div className="text-below-image">
+                                    <label>הגעה <input type='checkbox' checked={Student.approv} onChange={()=>{this.approvStudent(Student)}}/></label>
+                                </div>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <div className="text"><b>email:</b> {Student.data.email}</div>
+                            </Grid>
+                            <Grid item xs={12}>
+                                {
+                                    (!Student.approv)?(<div></div>):(<div>
+                                        <label>משוב על החניך </label>
+
+                                        <input type='Textarea' value={Student.feedback} onChange={(e)=>{this.feadbackGuide(e,Student)}} />
+                                    </div>)
+                                }
+                            </Grid>
+                            <Grid item xs={6}>
+                                <button onClick={()=>{this.saveStudentData(Student)}}>שמירת שינויים</button>
+                            </Grid>
+                        </Grid>
+
+
+
 
                     </div>
                 );
