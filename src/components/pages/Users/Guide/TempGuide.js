@@ -3,6 +3,7 @@ import firebase, {auth,db} from '../../../../firebase/firebase';
 import SelectInput from "@material-ui/core/Select/SelectInput";
 import $ from 'jquery';
 import {FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import './Guide.css'
 
 
 class TestGuide extends React.Component {
@@ -24,6 +25,8 @@ class TestGuide extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         // this.handleSubmit2 = this.handleSubmit2.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.handleChangeDate = this.handleChangeDate.bind(this)
+        this.changeBackGround = this.changeBackGround.bind(this)
         // this.hendleRadioButton = this.hendleRadioButton.bind(this)
         // this.handleCheckBox = this.handleCheckBox.bind(this)
 
@@ -213,6 +216,25 @@ class TestGuide extends React.Component {
 
 
 
+    async handleChangeDate(event)
+    {
+        var name = event.target.name;
+        var value = event.target.value;
+        if(name === 'date')
+        {
+            this.setState({date:value})
+        }
+        //     var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
+        //     if(test.exists) {
+        //
+        // }
+
+
+
+    }
+
+
+
     handleSubmit(event)
     {
         this.sendDataToFirebase(this.state.form)
@@ -225,6 +247,13 @@ class TestGuide extends React.Component {
         this.sendfeedback(event)
     }
 
+
+    async approvedStudents()
+    {
+
+    }
+
+
     async sendDataToFirebase(form)
     {
         // var team = auth.currentUser.uid
@@ -232,10 +261,29 @@ class TestGuide extends React.Component {
         // var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
             console.log(form.date)
-            var test = await db.collection("guides").doc(path).collection("comes").doc(form.date).set({
+            var guide = await db.collection("guides").doc(path)
+            var newDate = guide.collection("comes").doc(form.date);
+            newDate.set({
                 form: form,
                 date:form.date
             })
+
+            var team = (await guide.get()).data();
+            // console.log(team)
+            var updateTeamDate  = await db.collection("Teams").doc(team.Team.id)
+                .collection("Dates").doc(form.date);
+
+            updateTeamDate.set(
+                {
+                    reportGuide: newDate,
+                    nameGuide: team.fname + " "+team.lname,
+                    postsStudents:[],
+                    feedbackToStudents:[]
+
+                }
+            )
+
+
             console.log("done")
 
         }catch(error) {
@@ -247,7 +295,6 @@ class TestGuide extends React.Component {
     }
 
     async componentDidMount() {
-        console.log("work")
         auth.onAuthStateChanged(user=>{
             if(user)
             {
@@ -268,10 +315,55 @@ class TestGuide extends React.Component {
             this.render()
         })
 
+        // console.log(auth.currentUser)
+
+
     }
 
 
+    async componentDidUpdate(prevProps) {
+        console.log(this.state.date)
+        if(!this.state.date)
+            return
+        var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().Team;
+        const collection = await db.collection('students').where("Team","==",team).get()
+        const Students = [];
+        const date = this.state.date
+        const collectionPromisesTeam = collection.docs.map( async function(doc) {
+                        var ref =await db.collection("students").doc(doc.id).collection("comes").doc(date).get()
+                        var user = (await db.collection("students").doc(doc.id).get()).data()
+                            return [ref,user]
 
+            })
+
+        Promise.all(collectionPromisesTeam).then(res => {
+            res.forEach(doc=>{
+                var approv = false;
+                if(doc[0].exists)
+                    approv = true;
+
+                console.log("doc",doc);
+                var data = doc[1];
+                Students.push({data,approv})
+            })
+        let i;
+            console.log(Students.length)
+        for (i=0;i<Students.length;i++)
+        {
+            if(!this.state.Students)
+            {
+                this.setState({Students: Students});
+                return
+            }
+            else if(Students[i].approv!=this.state.Students[i].approv)
+            {
+                this.setState({Students: Students});
+                return
+            }
+
+        }
+        });
+    }
 
  
 
@@ -303,6 +395,7 @@ class TestGuide extends React.Component {
 
 
     render() {
+        console.log(this.state.date)
         // if(this.state.user.email)
         //     console.log("this is email : "+this.state.user.email)
         // if(this.state.page ==='feedback')
@@ -330,74 +423,225 @@ class TestGuide extends React.Component {
 
     GuideAttendReport(){
         //check firebase if form exist
+        if(!this.state.Students)
+            return (
+                <div id="guideAttendReport" className="sec-design">
+                    <div id="name-group" className="form-group">
+                        <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
+                        <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
+                        <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    {/*חלק ישן של האישורי הגעה*/}
+                    {/*    <div id="name-group" className="form-group" dir="rtl">*/}
+                    {/*        <label id="insert-message" className="title-input">סטודנטים שדממתינים לאישור נוכחות:</label><br/>*/}
+                    {/*        <div id="stListX" className="checkboxes"></div>*/}
+                    {/*    </div>*/}
+                    {/*<div id="name-group" className="form-group" dir="rtl">*/}
+                    {/*    <label id="insert-message" className="title-input">סטודנטים שהשתתפו ואושרו:</label><br/>*/}
+                    {/*    <div id="stListV" className="checkboxes"></div>*/}
+                    {/*</div>*/}
+
+
+
+
+
+
+
+
+
+                    {/*<div>*/}
+                    {/*דוח מדריך*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="Q1" className="title-input"> נושא הפעילות</label>*/}
+                    {/*    <input type="text" className="form-control" name="Q1" id="Q1" onChange={this.handleChange} minLength="5" required/>*/}
+                    {/*</div>*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="Q1" className="title-input"> מספר הפעילות</label>*/}
+                    {/*    <input type="text" className="form-control" name="Q2" id="Q2" onChange={this.handleChange} minLength="5" required/>*/}
+                    {/*</div>*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="Q2" className="title-input"> מה היה בפעילות</label>*/}
+                    {/*    <input type="text" className="form-control" name="Q3" id="Q3" onChange={this.handleChange} minLength="5" required/>*/}
+                    {/*</div>*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>*/}
+                    {/*    <input type="text" className="form-control" name="Q4" id="Q4" onChange={this.handleChange} placeholder="Your Answer" minLength="5" required/>*/}
+                    {/*</div>*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>*/}
+                    {/*    <input type="text" className="form-control" name="Q5" id="Q5" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                    {/*</div>*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>*/}
+                    {/*    <input type="text" className="form-control" name="Q6" id="Q6" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                    {/*</div>*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>*/}
+                    {/*    <input type="text" className="form-control" name="Q7" id="Q7" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                    {/*</div>*/}
+                    {/*<br/>*/}
+                    {/*<label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label>*/}
+                    {/*<div>*/}
+                    {/*    <RadioGroup*/}
+                    {/*        aria-label="new"*/}
+                    {/*        name="q8"*/}
+                    {/*        id ='q8'*/}
+                    {/*        // value={location}*/}
+                    {/*        onChange={this.handleChange}*/}
+                    {/*        row={true}*/}
+                    {/*    >*/}
+                    {/*        <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />*/}
+                    {/*        <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה מועטה" />*/}
+                    {/*        <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה בינונית" />*/}
+                    {/*        <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה" />*/}
+                    {/*        <FormControlLabel value="5" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />*/}
+                    {/*    </RadioGroup>*/}
+                    {/*</div>*/}
+                    {/*    <br/>*/}
+                    {/*<div id="name-group" className="form-group">*/}
+                    {/*    <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>*/}
+                    {/*    <input type="text" className="form-control" name="q9" id="q9" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                    {/*</div>*/}
+
+                    {/*</div>*/}
+
+                    {/*<button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>*/}
+                    <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>שלח משוב</button>
+
+                    {/*<button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>*/}
+                    <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
+                    <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
+
+
+                </div>
+            )
+
         return(
             <div id="guideAttendReport" className="sec-design">
                     <div id="name-group" className="form-group">
                         <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                        <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
+                        <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
                         <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
                     </div>
-                    <div id="name-group" className="form-group" dir="rtl">
-                        <label id="insert-message" className="title-input">סטודנטים שדממתינים לאישור נוכחות:</label><br/>
-                        <div id="stListX" className="checkboxes"></div>
-                    </div>
-                <div id="name-group" className="form-group" dir="rtl">
-                    <label id="insert-message" className="title-input">סטודנטים שהשתתפו ואושרו:</label><br/>
-                    <div id="stListV" className="checkboxes"></div>
-                </div>
+
+                    {
+                    this.state.Students.map((Student,index) => (
+                        <div key={index}>
+                            <p>
+                            {this.Card(Student)}
+                            </p>
+                        </div>
+
+                    ))
+                    }
 
 
-                <div id="name-group" className="form-group">
-                    <label id="Q1" className="title-input"> נושא הפעילות</label>
-                    <input type="text" className="form-control" name="Q1" id="Q1" onChange={this.handleChange} minLength="5" required/>
-                </div>
-                <div id="name-group" className="form-group">
-                    <label id="Q1" className="title-input"> מספר הפעילות</label>
-                    <input type="text" className="form-control" name="Q2" id="Q2" onChange={this.handleChange} minLength="5" required/>
-                </div>
-                <div id="name-group" className="form-group">
-                    <label id="Q2" className="title-input"> מה היה בפעילות</label>
-                    <input type="text" className="form-control" name="Q3" id="Q3" onChange={this.handleChange} minLength="5" required/>
-                </div>
-                <div id="name-group" className="form-group">
-                    <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
-                    <input type="text" className="form-control" name="Q4" id="Q4" onChange={this.handleChange} placeholder="Your Answer" minLength="5" required/>
-                </div>
-                <div id="name-group" className="form-group">
-                    <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
-                    <input type="text" className="form-control" name="Q5" id="Q5" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
-                </div>
-                <div id="name-group" className="form-group">
-                    <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
-                    <input type="text" className="form-control" name="Q6" id="Q6" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
-                </div>
-                <div id="name-group" className="form-group">
-                    <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
-                    <input type="text" className="form-control" name="Q7" id="Q7" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
-                </div>
-                <br/>
-                <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label>
-                <div>
-                    <RadioGroup
-                        aria-label="new"
-                        name="q8"
-                        id ='q8'
-                        // value={location}
-                        onChange={this.handleChange}
-                        row={true}
-                    >
-                        <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                        <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                        <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                        <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                        <FormControlLabel value="5" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
-                    </RadioGroup>
-                </div>
-                    <br/>
-                    <div id="name-group" className="form-group">
-                        <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
-                        <input type="text" className="form-control" name="q9" id="q9" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
-                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {/*חלק ישן של האישורי הגעה*/}
+                {/*    <div id="name-group" className="form-group" dir="rtl">*/}
+                {/*        <label id="insert-message" className="title-input">סטודנטים שדממתינים לאישור נוכחות:</label><br/>*/}
+                {/*        <div id="stListX" className="checkboxes"></div>*/}
+                {/*    </div>*/}
+                {/*<div id="name-group" className="form-group" dir="rtl">*/}
+                {/*    <label id="insert-message" className="title-input">סטודנטים שהשתתפו ואושרו:</label><br/>*/}
+                {/*    <div id="stListV" className="checkboxes"></div>*/}
+                {/*</div>*/}
+
+
+
+
+
+
+
+
+
+                {/*<div>*/}
+                {/*דוח מדריך*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="Q1" className="title-input"> נושא הפעילות</label>*/}
+                {/*    <input type="text" className="form-control" name="Q1" id="Q1" onChange={this.handleChange} minLength="5" required/>*/}
+                {/*</div>*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="Q1" className="title-input"> מספר הפעילות</label>*/}
+                {/*    <input type="text" className="form-control" name="Q2" id="Q2" onChange={this.handleChange} minLength="5" required/>*/}
+                {/*</div>*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="Q2" className="title-input"> מה היה בפעילות</label>*/}
+                {/*    <input type="text" className="form-control" name="Q3" id="Q3" onChange={this.handleChange} minLength="5" required/>*/}
+                {/*</div>*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>*/}
+                {/*    <input type="text" className="form-control" name="Q4" id="Q4" onChange={this.handleChange} placeholder="Your Answer" minLength="5" required/>*/}
+                {/*</div>*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>*/}
+                {/*    <input type="text" className="form-control" name="Q5" id="Q5" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                {/*</div>*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>*/}
+                {/*    <input type="text" className="form-control" name="Q6" id="Q6" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                {/*</div>*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>*/}
+                {/*    <input type="text" className="form-control" name="Q7" id="Q7" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                {/*</div>*/}
+                {/*<br/>*/}
+                {/*<label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label>*/}
+                {/*<div>*/}
+                {/*    <RadioGroup*/}
+                {/*        aria-label="new"*/}
+                {/*        name="q8"*/}
+                {/*        id ='q8'*/}
+                {/*        // value={location}*/}
+                {/*        onChange={this.handleChange}*/}
+                {/*        row={true}*/}
+                {/*    >*/}
+                {/*        <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />*/}
+                {/*        <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה מועטה" />*/}
+                {/*        <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה בינונית" />*/}
+                {/*        <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה" />*/}
+                {/*        <FormControlLabel value="5" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />*/}
+                {/*    </RadioGroup>*/}
+                {/*</div>*/}
+                {/*    <br/>*/}
+                {/*<div id="name-group" className="form-group">*/}
+                {/*    <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>*/}
+                {/*    <input type="text" className="form-control" name="q9" id="q9" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                {/*</div>*/}
+
+                {/*</div>*/}
+
                     {/*<button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>*/}
                 <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>שלח משוב</button>
 
@@ -410,53 +654,86 @@ class TestGuide extends React.Component {
         )
     }
 
+    changeBackGround(event)
+    {
+        console.log(event)
 
-
-
-
-    GuideFeedback() {
-        return(
-            <div id="guideFeeadback" className="sec-design">
-                    <div id="name-group" className="form-group">
-                        <label id="insert-date" className="title-input">הכנס את התאריך בו התקיים המפגש</label>
-                        <input type="date" className="form-control" name="insert-student" id="insert-student" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q1" className="title-input"> נושא המפגש</label>
-                        <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q2" className="title-input"> מה היה במפגש</label>
-                        <input type="text" className="form-control" name="Q2" id="Q2" placeholder="Your Answer" minLength="5" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q3" className="title-input">עם אילו הצלחות/דילמות נפגשתי בפגש</label>
-                        <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
-                        <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
-                    </div>
-                    <div id ="box" className="chekbox">
-                        <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
-                        <form name="form1" className="chekbox" >
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio" value="3"/></label>
-                        </form>
-                    </div>
-                    <br/>
-                    <div id="name-group" className="form-group">
-                        <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
-                        <input type="text" className="form-control" name="firstName" id="firstName" placeholder="Your Answer" minLength="10" required/>
-                    </div>
-                    <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
-                <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>שלח משוב</button>
-
-
-            </div>
-        )
     }
+    Card(Student) {
+        console.log(Student)
+        if(Student.approv) {
+            return (
+                <div className="CardApproved">
+                    <div className="tx`op">
+                        <h4>{Student.data.fname + " " + Student.data.lname}</h4>
+                    </div>
+                    <div className="text-below-image">
+                        <label>הגעה <input type='checkbox' checked onChange={this.changeBackGround}/></label>
+                        <p className="text"><b>email:</b> {Student.data.email}</p>
+                    </div>
+                </div>
+            );
+        }
+        else
+        {
+            return (
+                <div className="CardNotApproved">
+                    <div className="top">
+                        <h4>{Student.data.fname + " " + Student.data.lname}</h4>
+                    </div>
+                    <div className="text-below-image">
+                        <label>הגעה <input type='checkbox'  onChange={this.changeBackGround}/></label>
+                        <p className="text"><b>email:</b> {Student.data.email}</p>
+                    </div>
+                </div>
+            );
+        }
+    }
+
+
+    // GuideFeedback() {
+    //     return(
+    //         <div id="guideFeeadback" className="sec-design">
+    //                 <div id="name-group" className="form-group">
+    //                     <label id="insert-date" className="title-input">הכנס את התאריך בו התקיים המפגש</label>
+    //                     <input type="date" className="form-control" name="insert-student" id="insert-student" required/>
+    //                 </div>
+    //                 <div id="name-group" className="form-group">
+    //                     <label id="Q1" className="title-input"> נושא המפגש</label>
+    //                     <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
+    //                 </div>
+    //                 <div id="name-group" className="form-group">
+    //                     <label id="Q2" className="title-input"> מה היה במפגש</label>
+    //                     <input type="text" className="form-control" name="Q2" id="Q2" placeholder="Your Answer" minLength="5" required/>
+    //                 </div>
+    //                 <div id="name-group" className="form-group">
+    //                     <label id="Q3" className="title-input">עם אילו הצלחות/דילמות נפגשתי בפגש</label>
+    //                     <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
+    //                 </div>
+    //                 <div id="name-group" className="form-group">
+    //                     <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
+    //                     <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
+    //                 </div>
+    //                 <div id ="box" className="chekbox">
+    //                     <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
+    //                     <form name="form1" className="chekbox" >
+    //                         <label>במידה מועטה<input type="radio" value="1"/></label>
+    //                         <label>במידה בינונית<input type="radio" value="2"/></label>
+    //                         <label>במידה רבה<input type="radio" value="3"/></label>
+    //                     </form>
+    //                 </div>
+    //                 <br/>
+    //                 <div id="name-group" className="form-group">
+    //                     <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
+    //                     <input type="text" className="form-control" name="firstName" id="firstName" placeholder="Your Answer" minLength="10" required/>
+    //                 </div>
+    //                 <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
+    //             <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>שלח משוב</button>
+    //
+    //
+    //         </div>
+    //     )
+    // }
 
     
 
