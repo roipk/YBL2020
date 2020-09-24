@@ -20,19 +20,30 @@ class TestGuide extends React.Component {
             rule:"Manager",
             prevDate:'',
             viewStudent: false,
+            date:"",
             form : {
+                date:"",
+                q1:"",
+                q2:"",
+                q3:"",
+                q4:"",
+                q5:"",
+                q6:"",
+                q7:"",
+                q8:"",
+                q9:""
             }
         };
         
 
         this.handleSubmit = this.handleSubmit.bind(this)
-        // this.handleSubmit2 = this.handleSubmit2.bind(this)
+        this.handleSubmitFeedback = this.handleSubmitFeedback.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
         this.changeBackGround = this.changeBackGround.bind(this)
         this.approvStudent = this.approvStudent.bind(this)
         this.saveStudentData = this.saveStudentData.bind(this)
-        this.feadbackGuide = this.feadbackGuide.bind(this)
+        this.feedbackGuide = this.feedbackGuide.bind(this)
         // this.hendleRadioButton = this.hendleRadioButton.bind(this)
         // this.handleCheckBox = this.handleCheckBox.bind(this)
 
@@ -190,6 +201,7 @@ class TestGuide extends React.Component {
     {
         var name = event.target.name;
         var value = event.target.value;
+        console.log(name, value)
         if(name === 'date' && event.target.value!=='' )
         {
             var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
@@ -228,7 +240,8 @@ class TestGuide extends React.Component {
         var value = event.target.value;
         if(name === 'date')
         {
-            this.setState({date:value,viewStudent:false})
+            this.setState({date:value,viewStudent:false});
+            this.state.date=value
         }
         //     var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
         //     if(test.exists) {
@@ -294,24 +307,19 @@ class TestGuide extends React.Component {
 
             }
         });
-        // this.sendDataToFirebase(this.state.form)
+        
+
     }
     loadPage(event){
         this.setState({loading:event})
     }
-    handleSubmit2(event)
+    handleSubmitFeedback(event)
     {
-        this.sendfeedback(event)
+        this.sendfeedback(this.state.form)
     }
-
-
-    async sendDataToFirebase(form)
-    {
-        // var team = auth.currentUser.uid
+    async sendfeedback(form){
         var path = auth.currentUser.uid
-        // var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
-            console.log(form.date)
             var guide = await db.collection("guides").doc(path)
             var newDate = guide.collection("comes").doc(form.date);
             newDate.set({
@@ -319,11 +327,19 @@ class TestGuide extends React.Component {
                 date:form.date
             })
 
+        }catch(error) {
+            alert(error.message)
+        }
+    }
+    async addDateToTeam()
+    {
+        var path = auth.currentUser.uid
+        try{
+            var guide = await db.collection("guides").doc(path)
+            var newDate = guide.collection("comes").doc(this.state.date);
             var team = (await guide.get()).data();
-            // console.log(team)
             var updateTeamDate  = await db.collection("Teams").doc(team.Team.id)
-                .collection("Dates").doc(form.date);
-
+                .collection("Dates").doc(this.state.date);
             updateTeamDate.set(
                 {
                     reportGuide: newDate,
@@ -334,9 +350,6 @@ class TestGuide extends React.Component {
                 }
             )
 
-
-            console.log("done")
-
         }catch(error) {
             alert(error.message)
         }
@@ -344,7 +357,6 @@ class TestGuide extends React.Component {
 
 
     }
-
     async componentDidMount() {
         auth.onAuthStateChanged(user=>{
             if(user)
@@ -370,8 +382,6 @@ class TestGuide extends React.Component {
 
 
     }
-
-
     async componentDidUpdate(prevProps) {
 
     }
@@ -389,7 +399,7 @@ class TestGuide extends React.Component {
         }
     }
 
-    feadbackGuide(event,student)
+    feedbackGuide(event,student)
     {
         console.log(event.target.value)
         for(var i=0;i<this.state.Students.length;i++)
@@ -405,6 +415,7 @@ class TestGuide extends React.Component {
 
     async saveStudentData(student)
     {
+        this.addDateToTeam()
         var sid = student.ref
         var approved = student.approv
         var feedback = student.feedback
@@ -420,8 +431,18 @@ class TestGuide extends React.Component {
             approved:approved,
             feedbackGuide:feedback
         }, {merge:true})
-        // console.log(student.ref)
+        var guide = await db.collection("guides").doc(auth.currentUser.uid)
+        var team = (await guide.get()).data();
+        var updateTeamDate  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date);
+        var newFeed={
+            studentName : student.data.fname+" "+ student.data.lname,
+            guideFeedback : feedback
+        }
+        updateTeamDate.update({
+                    feedbackToStudents:firebase.firestore.FieldValue.arrayUnion("newFeed")
+        });
 
+        // console.log(student.ref)
     }
 
 
@@ -455,12 +476,12 @@ class TestGuide extends React.Component {
         // console.log(this.state.date)
         // if(this.state.user.email)
         //     console.log("this is email : "+this.state.user.email)
-        // if(this.state.page ==='feedback')
-        //     return(this.GuideFeedback())
-        // else if(this.state.page === 'report')
+        if(this.state.page ==='feedback')
+            return(this.GuideFeedback())
+        else if(this.state.page === 'report')
             return(this.GuideAttendReport())
-        // else
-        //     return(this.menu())
+        else
+            return(this.menu())
     }
 
     menu() {
@@ -519,7 +540,7 @@ class TestGuide extends React.Component {
                         )
                     }
 
-                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>מעבר לדו"ח נוכחות<span className="fa fa-arrow-right"></span></button>
+                    {/* <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>מעבר לדו"ח נוכחות<span className="fa fa-arrow-right"></span></button> */}
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>
 
 
@@ -615,7 +636,7 @@ class TestGuide extends React.Component {
                                     (!Student.approv)?(<div></div>):(<div>
                                         <label>משוב על החניך </label>
 
-                                        <input type='Textarea' value={Student.feedback} onChange={(e)=>{this.feadbackGuide(e,Student)}} />
+                                        <input type='Textarea' value={Student.feedback} onChange={(e)=>{this.feedbackGuide(e,Student)}} />
                                     </div>)
                                 }
                             </Grid>
@@ -642,37 +663,37 @@ class TestGuide extends React.Component {
 
     GuideFeedback() {
         return(
-            <div id="guideFeeadback" className="sec-design">
+            <form id="guideFeeadback" className="sec-design" >
                 <div dir="rtl">
                     <label id="date"  className="title-input">הכנס את תאריך המפגש:</label>
                     <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
                 <div id="name-group" className="form-group">
                     <label id="Q1" className="title-input"> נושא הפעילות</label>
-                    <input type="text" className="form-control" name="Q1" id="Q1" onChange={this.handleChange} minLength="5" required/>
+                    <input type="text" className="form-control" name="q1" id="Q1" onChange={this.handleChange}  required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q1" className="title-input"> מספר הפעילות</label>
-                    <input type="text" className="form-control" name="Q2" id="Q2" onChange={this.handleChange} minLength="5" required/>
+                    <input type="text" className="form-control" name="q2" id="Q2" onChange={this.handleChange}  required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q2" className="title-input"> מה היה בפעילות</label>
-                    <input type="text" className="form-control" name="Q3" id="Q3" onChange={this.handleChange} minLength="5" required/>
+                    <input type="text" className="form-control" name="q3" id="Q3" onChange={this.handleChange}  required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
-                    <input type="text" className="form-control" name="Q4" id="Q4" onChange={this.handleChange} placeholder="Your Answer" minLength="5" required/>
+                    <input type="text" className="form-control" name="q4" id="Q4" onChange={this.handleChange} placeholder="Your Answer" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
-                    <input type="text" className="form-control" name="Q5" id="Q5" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
+                    <input type="text" className="form-control" name="q5" id="Q5" onChange={this.handleChange} placeholder="Your Answer" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
-                    <input type="text" className="form-control" name="Q6" id="Q6" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
+                    <input type="text" className="form-control" name="q6" id="Q6" onChange={this.handleChange} placeholder="Your Answer" required/>
                 </div>
                 <div id="name-group" className="form-group">
                     <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
-                    <input type="text" className="form-control" name="Q7" id="Q7" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
+                    <input type="text" className="form-control" name="q7" id="Q7" onChange={this.handleChange} placeholder="Your Answer" required/>
                 </div>
                 <br/>
                 <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label>
@@ -700,13 +721,12 @@ class TestGuide extends React.Component {
 
                 </div>
 
-
+                <button id="submit" className="btn btn-info" onClick={this.handleSubmitFeedback}>שלח משוב</button>
                 <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>מעבר למשובי סטודנטים<span className="fa fa-arrow-right"></span></button>
                 <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
-                {/*<button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>*/}
                 <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
 
-            </div>
+            </form>
         )
     }
 
