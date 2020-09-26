@@ -1,16 +1,13 @@
 .Card {
-    display: flex;
+    display:block;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     border-radius: 5px;
-    color: darkslategray;
-    borderRadius: 45px;
-    /*border: thin solid rgba($color: #008b8b, $alpha: 0);*/
     padding: 1em;
-    margin: 2%;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    text-align: right;
 }
 input[type=text], input[type=date] {
     color: grey;

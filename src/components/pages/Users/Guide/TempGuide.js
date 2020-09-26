@@ -40,7 +40,7 @@ class TestGuide extends React.Component {
         this.handleSubmitFeedback = this.handleSubmitFeedback.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
-        this.changeBackGround = this.changeBackGround.bind(this)
+        //this.changeBackGround = this.changeBackGround.bind(this)
         this.approvStudent = this.approvStudent.bind(this)
         this.saveStudentData = this.saveStudentData.bind(this)
         this.feedbackGuide = this.feedbackGuide.bind(this)
@@ -336,20 +336,21 @@ class TestGuide extends React.Component {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
-            var newDate = guide.collection("comes").doc(this.state.date);
             var team = (await guide.get()).data();
-            var updateTeamDate  = await db.collection("Teams").doc(team.Team.id)
-                .collection("Dates").doc(this.state.date);
-            updateTeamDate.set(
-                {
-                    reportGuide: newDate,
-                    nameGuide: team.fname + " "+team.lname,
-                    postsStudents:[],
-                    feedbackToStudents:[]
-
+            var teamCollection = await db.collection("Teams").doc(team.Team.id)
+            var newDate = teamCollection.collection("Dates").doc(this.state.date);
+            newDate.get().then(async function(doc){
+                if(!doc.exists){
+                    console.log("not exist")
+                    newDate.set({
+                        reportGuide: newDate,
+                        nameGuide: team.fname + " "+team.lname,
+                        postsStudents:[],
+                        feedbackToStudents:{}
+                    })
+                    
                 }
-            )
-
+            })   
         }catch(error) {
             alert(error.message)
         }
@@ -415,37 +416,40 @@ class TestGuide extends React.Component {
 
     async saveStudentData(student)
     {
-        this.addDateToTeam()
+        await this.addDateToTeam()
         var sid = student.ref
         var approved = student.approv
         var feedback = student.feedback
-        if(!approved)
-            feedback="";
-
-        console.log(student)
-        console.log(sid)
-        console.log(feedback)
-        console.log(approved)
-        console.log(this.state.date)
+        var guide = await db.collection("guides").doc(auth.currentUser.uid)
+        var team = (await guide.get()).data();
+        var updateTeamDate  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date).get();
+        var updateTeamDateSet  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date)
+        var name=student.data.fname+" "+ student.data.lname
+        if(approved){
+            var feedbackToStudents={}
+            feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
+            //feedbackToStudents[name]=""
+            feedbackToStudents[name]=feedback
+            updateTeamDateSet.update({
+                feedbackToStudents
+            })
+        }
+        else{
+            feedback=""
+            var feedbackToStudents={}
+            feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
+        
+            updateTeamDateSet.set({
+                feedbackToStudents:{
+                    [name]:firebase.firestore.FieldValue.delete()
+            }}, { merge: true });        
+        }
         const stud =await db.collection("students").doc(sid).collection("comes").doc(this.state.date).set({
             approved:approved,
             feedbackGuide:feedback
         }, {merge:true})
-        var guide = await db.collection("guides").doc(auth.currentUser.uid)
-        var team = (await guide.get()).data();
-        var updateTeamDate  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date);
-        var newFeed={
-            studentName : student.data.fname+" "+ student.data.lname,
-            guideFeedback : feedback
-        }
-        updateTeamDate.update({
-                    feedbackToStudents:firebase.firestore.FieldValue.arrayUnion("newFeed")
-        });
 
-        // console.log(student.ref)
     }
-
-
 
 
     loadTempPage(page)
@@ -598,23 +602,23 @@ class TestGuide extends React.Component {
         // )
     }
 
-    changeBackGround(event)
-    {
-        console.log(event)
+    // changeBackGround(event)
+    // {
+    //     console.log(event)
 
-    }
+    // }
     Card(Student) {
         if (Student) {
-            console.log(Student)
+            //console.log(Student)
                 return (
                     <div className="Card"
                          style={
                              Student.approv?(
                              {
-                        backgroundColor: "rgba(0, 255, 3, 0.7)"})://approv
-                         ({
-                             backgroundColor: "rgba(255, 0, 0, 0.7)",//not approv
-                          })
+                                backgroundColor: "rgba(153, 255, 153, 0.7)"})://approv
+                            ({
+                                backgroundColor: "rgba(255, 102, 102, 0.7)",//not approv
+                            })
                          }>
 
 
@@ -624,19 +628,20 @@ class TestGuide extends React.Component {
                                 <h4>{Student.data.fname + " " + Student.data.lname}</h4>
                             </Grid>
                             <Grid item xs={12}>
+                                <b>:אימייל<div className="text">{Student.data.email}</div></b>
+                            </Grid>
+                            <Grid item xs={12}>
                                 <div className="text-below-image">
                                     <label>הגעה <input type='checkbox' checked={Student.approv} onChange={()=>{this.approvStudent(Student)}}/></label>
                                 </div>
                             </Grid>
-                            <Grid item xs={12}>
-                                <div className="text"><b>email:</b> {Student.data.email}</div>
-                            </Grid>
+                            
                             <Grid item xs={12}>
                                 {
                                     (!Student.approv)?(<div></div>):(<div>
                                         <label>משוב על החניך </label>
 
-                                        <input type='Textarea' value={Student.feedback} onChange={(e)=>{this.feedbackGuide(e,Student)}} />
+                                        <input type='Textarea' value={Student.feedback} onChange={(e)=>{this.feedbackGuide(e,Student)}} required/>
                                     </div>)
                                 }
                             </Grid>
