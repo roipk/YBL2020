@@ -504,7 +504,6 @@ class TestGuide extends React.Component {
     }
 
     GuideAttendReport(){
-        //check firebase if form exist
             return (
                 <div id="guideAttendReport" className="sec-design">
                     <div id="name-group" className="form-group">
@@ -533,7 +532,7 @@ class TestGuide extends React.Component {
                                    spacing={2}>
                                 {
                             this.state.Students.map((Student,index) => (
-                                <Grid  item xs={6}  key={index}>
+                                <Grid  item xs={12}  key={index}>
                                     {this.Card(Student)}
                                 </Grid >
                             ))}
@@ -625,23 +624,22 @@ class TestGuide extends React.Component {
 
                         <Grid container spacing={1}>
                             <Grid item xs={12}>
-                                <h4>{Student.data.fname + " " + Student.data.lname}</h4>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <b>:אימייל<div className="text">{Student.data.email}</div></b>
+                                <b>{Student.data.fname + " " + Student.data.lname}</b><br/>
+                                {Student.data.email}<b> :אימייל</b>
                             </Grid>
                             <Grid item xs={12}>
                                 <div className="text-below-image">
-                                    <label>הגעה <input type='checkbox' checked={Student.approv} onChange={()=>{this.approvStudent(Student)}}/></label>
+                                    <label class="container">נכח/ה במפגש<input type='checkbox' checked={Student.approv} onChange={()=>{this.approvStudent(Student)}}/></label>
                                 </div>
                             </Grid>
                             
                             <Grid item xs={12}>
                                 {
                                     (!Student.approv)?(<div></div>):(<div>
-                                        <label>משוב על החניך </label>
+                                        <label>משוב על החניך 
+                                        <input type='text' value={Student.feedback} onChange={(e)=>{this.feedbackGuide(e,Student)}} required/>
+                                        </label>
 
-                                        <input type='Textarea' value={Student.feedback} onChange={(e)=>{this.feedbackGuide(e,Student)}} required/>
                                     </div>)
                                 }
                             </Grid>
