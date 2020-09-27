@@ -629,16 +629,17 @@ class TestGuide extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <div className="text-below-image">
-                                    <label class="container">נכח/ה במפגש<input type='checkbox' checked={Student.approv} onChange={()=>{this.approvStudent(Student)}}/></label>
+                                    <label className="container">נכח/ה במפגש<input type='checkbox' checked={Student.approv} onChange={()=>{this.approvStudent(Student)}}/></label>
                                 </div>
                             </Grid>
-                            
+
                             <Grid item xs={12}>
                                 {
                                     (!Student.approv)?(<div></div>):(<div>
-                                        <label>משוב על החניך 
-                                        <input type='text' value={Student.feedback} onChange={(e)=>{this.feedbackGuide(e,Student)}} required/>
+                                        <label>משוב על החניך
                                         </label>
+                                        <textarea  dir="rtl" cols="50"  rows="5" value={Student.feedback} onChange={(e)=>{this.feedbackGuide(e,Student)}} required/>
+
 
                                     </div>)
                                 }
