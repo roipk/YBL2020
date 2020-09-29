@@ -1,6 +1,7 @@
 import React from "react";
 import firebase, {auth} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
+import UserApproval from "./UserApproval";
 
 
 class TempManager extends React.Component {
@@ -76,9 +77,15 @@ class TempManager extends React.Component {
         // if(this.state.page ==='feedback')
         //     return(this.GuideFeedback())
         // else if(this.state.page === 'report')
-            return(this.AttendReport())
+        //     return(this.AttendReport())
         // else
         //     return(this.menu())
+
+        return (
+            <UserApproval>
+
+            </UserApproval>
+        )
     }
 
     menu() {
@@ -101,6 +108,7 @@ class TempManager extends React.Component {
             </div>
         );
     }
+
 
     AttendReport(){
 

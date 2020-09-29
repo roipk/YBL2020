@@ -3,10 +3,11 @@ import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } fro
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Link, withRouter } from 'react-router-dom'
-import firebase from '../../../firebase/firebase' ;
+import firebase,{db} from '../../../firebase/firebase' ;
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import '../Users/UserPage.css'
+import Select from "react-select";
 
 const useStyles = theme => ({
     main: {
@@ -44,6 +45,22 @@ const useStyles = theme => ({
     },
 })
 
+const options = []
+const teams=[];
+GetTeams()
+async function GetTeams() {
+    var nameTeams =await db.collection("Teams").get()
+    nameTeams.forEach(doc=>{
+        var team={
+            ref:doc,
+            name:doc.data().name
+        }
+        teams.push(team)
+        options.push({ value: doc.data().name, label: doc.data().name },)
+    })
+    console.log(teams)
+}
+
 function SignUp(props) {
     const { classes } = props
 
@@ -55,14 +72,17 @@ function SignUp(props) {
 
 
     return (
-        <main className={classes.main}>
+
+        <main className={classes.main} dir="rtl">
             <Paper className={classes.paper} style={{
                 backgroundColor: "rgba(255,255,255,0.85)",
                 borderRadius: "25px"}}>
                 <Avatar className={classes.avatar}>
                 </Avatar>
+
                 <Typography component="h1" variant="h5">
                     טופס הרשמה
+
                 </Typography>
                 <form className={classes.form} onSubmit={e => e.preventDefault() && false }>
                     <Grid container spacing={2}>
@@ -126,6 +146,9 @@ function SignUp(props) {
                                 fullWidth
                                 label="Email"
                             />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Select placeholder="בחר קבוצה" options={options} />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
