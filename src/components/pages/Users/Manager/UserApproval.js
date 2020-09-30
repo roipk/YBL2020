@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
-import firebase, {auth, db} from '../../../../firebase/firebase'
+import firebase, {auth, db,CreateUser} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TestGuide from "../Guide/TempGuide";
-import {FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import {Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 
 const options = [
    ]
@@ -14,33 +14,6 @@ class UserApproval extends React.Component {
         super(props);
         this.state = {
             users:[
-                {
-                    email:"test",
-                    fname:"gershon",
-                    lname:"mm",
-                    phone:"050111111222",
-                    team:"",
-                    teamName:"",
-                    type:"Guide",
-                },
-                {
-                    email:"test2",
-                    fname:"shlomo",
-                    lname:"muuuum",
-                    phone:"0566662",
-                    team:"",
-                    teamName:"",
-                    type:"Student",
-                },
-                {
-                    email:"test",
-                    fname:"tikva",
-                    lname:"ttt",
-                    phone:"05444444442",
-                    team:"",
-                    teamName:"",
-                    type:"Guide",
-                },
             ],
         };
 
@@ -63,11 +36,22 @@ class UserApproval extends React.Component {
 
 }
 
-    radio(e,index)
+
+    createUser(user)
+    {
+        console.log(this.state.users)
+        console.log(user)
+    }
+
+
+    radio(e,index,user)
 {
 
-    var student = document.getElementById("Student"+index)
-    var guide = document.getElementById("Guide"+index)
+    var student = document.getElementById("students"+index)
+    var guide = document.getElementById("guides"+index)
+
+
+    user.type = e.target.value;
 
     if(e.target === student) {
         student.checked=true;
@@ -135,17 +119,22 @@ render() {
                         <b>שם מלא: </b>  {user.fname + " " + user.lname}<br/>
                             <b> אימייל: </b> {user.email}<br/>
                             <b> טלפון: </b>{user.phone}<br/>
-                            <Select  placeholder={" נבחרה קבוצה - "+user.teamName} options={options} />
+                            <b> תפקיד: </b>{(user.type==="students")?("סטודנט"):("מדריך")}<br/>
+                            <b> קבוצה: </b>{user.teamName}<br/>
+                            <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
+                                user.team = e.value;
+                                user.teamName = e.label;
+                            }} />
                         </Grid>
-
+                        <Grid item xs={12}>
+                        <b> החלף תפקיד: </b><br/>
+                        </Grid>
                         <Grid item xs={6}>
+
                             <div>
                                 <label>
-                                    <input id ={"Student"+index} type="radio" checked={user.type==="Student"} value="Student" onChange={(e) => {
-                                        user.type = e.target.value;
-                                        console.log(user.type)
-                                        this.radio(e,index)
-
+                                    <input id ={"students"+index} type="radio" value="students" onClick={e => {
+                                        this.radio(e,index,user)
                                     }}/>
                                     סטודנט
                                 </label>
@@ -155,11 +144,8 @@ render() {
                             <div>
 
                                 <label>
-                                    <input id ={"Guide"+index}  checked={user.type==="Guide"}type="radio" value="Guide"  onChange={e => {
-                                        user.type = e.target.value;
-                                        console.log(user.type)
-                                        this.radio(e,index)
-
+                                    <input id ={"guides"+index} type="radio" value="guides"  onClick={e => {
+                                        this.radio(e,index,user)
                                     }}/>
                                     מדריך
                                 </label>
@@ -167,13 +153,16 @@ render() {
                         </Grid>
                         <Grid item xs={12}>
                             <div className="text-below-image">
-                                <label className="container">אישור בקשה<input type='checkbox' /></label>
+                                <label className="container">אישור בקשה<input type='checkbox' checked={user.approve} onChange={e=>{
+                                    user.approve = e.target.checked
+                                } }/></label>
                             </div>
 
                         </Grid>
 
                         <Grid item xs={6}>
-                            <button >אישור בקשה בודדת</button>
+
+                            <button onClick={()=>{CreateUser(user)}}>אישור בקשה בודדת</button>
                         </Grid>
                     </Grid>
 

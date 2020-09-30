@@ -17,6 +17,8 @@ class TempManager extends React.Component {
     }
 
 
+
+
     loadPage(event){
         this.setState({loading:event})
         //    this.render()

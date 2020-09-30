@@ -159,7 +159,7 @@ function SignUp(props) {
                             <div>
 
                                 <label>
-                                    <input type="radio" value="Student" checked={type==='Student'}  onChange={e => setType(e.target.value)}/>
+                                    <input type="radio" value="students" checked={type==='students'}  onChange={e => setType(e.target.value)}/>
                                     סטודנט
                                 </label>
                             </div>
@@ -168,7 +168,7 @@ function SignUp(props) {
                             <div>
 
                                 <label>
-                                    <input type="radio" value="Guide" checked={type==='Guide'} onChange={e => setType(e.target.value)}/>
+                                    <input type="radio" value="guides" checked={type==='guides'} onChange={e => setType(e.target.value)}/>
                                     מדריך
                                 </label>
                             </div>
@@ -230,6 +230,7 @@ function SignUp(props) {
                 team: team,
                 teamName: teamName,
                 type:type,
+                approve:true,
             }
             if(!fname||!lname||!email||!team||!phone) {
                 alert("נא למלא את כל השדות החובה")

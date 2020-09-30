@@ -21,13 +21,21 @@ export default firebase;
 
 
 export async function RegisterUser(email,user) {
-    console.log(user)
-    console.log(email)
     await db.collection("waitforapproval").doc(email).set(user);
     return;
 }
 export async function DeleteUser(email,) {
     await db.collection("waitforapproval").doc(email).delete();
+    return;
+}
+
+export async function CreateUser(user) {
+    console.log(user)
+    var res = await auth.createUserWithEmailAndPassword(user.email,user.phone)
+    auth.currentUser.updateProfile({displayName:user.fname+" "+ user.lname})
+    await  db.collection(user.type).doc(res.user.uid).set(user)
+    await db.collection("waitforapproval").doc(user.email).delete();
+    console.log("done the user is ready")
     return;
 }
 
