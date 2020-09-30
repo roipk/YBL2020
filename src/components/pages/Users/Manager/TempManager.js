@@ -16,7 +16,10 @@ class TempManager extends React.Component {
         };
     }
 
-
+    createUser(user)
+    {
+        console.log(user)
+    }
 
 
     loadPage(event){

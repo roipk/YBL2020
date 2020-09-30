@@ -36,7 +36,7 @@ export async function CreateUser(user) {
     await  db.collection(user.type).doc(res.user.uid).set(user)
     await db.collection("waitforapproval").doc(user.email).delete();
     console.log("done the user is ready")
-    return;
+    return true;
 }
 
 //
