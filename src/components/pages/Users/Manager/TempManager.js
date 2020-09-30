@@ -1,7 +1,8 @@
 import React from "react";
-import firebase, {auth} from '../../../../firebase/firebase'
+import firebase, {auth,db} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import UserApproval from "./UserApproval";
+import AttendReport from "./mngAttendReport"
 
 
 class TempManager extends React.Component {
@@ -76,28 +77,35 @@ class TempManager extends React.Component {
         // console.log(this.state.date)
         // if(this.state.user.email)
         //     console.log("this is email : "+this.state.user.email)
-        // if(this.state.page ==='feedback')
-        //     return(this.GuideFeedback())
-        // else if(this.state.page === 'report')
-        //     return(this.AttendReport())
-        // else
-        //     return(this.menu())
+        if(this.state.page ==='feedback')
+            return(this.GuideFeedback())
+        else if(this.state.page === 'report')
+            return(
+                <AttendReport>
 
-        return (
-            <UserApproval>
+                </AttendReport>
+            )
+        else if(this.state.page ==='userApproval')
+            return (
+                <UserApproval>
 
-            </UserApproval>
-        )
+                </UserApproval>
+            )
+        else
+            return(this.menu())
+
+        
     }
 
     menu() {
 
-        if(this.state.user.email)
-            console.log("this is email : "+this.state.user.email)
+        // if(this.state.user.email)
+        //     console.log("this is email : "+this.state.user.email)
         return (
             <div id="instructor" className="sec-design">
-                <div> Hello Manager {this.state.user.email}</div>
-
+                {/* <div> Hello Manager {this.state.user.email}</div> */}
+                    <button id="report-button" className="btn btn-info"onClick={()=>{this.chooseLayout("userApproval")}} >אישור משתמשים<span
+                        className="fa fa-arrow-right"></span></button>
                     <button id="report-button" className="btn btn-info"onClick={()=>{this.chooseLayout("report")}} >צפייה בדו"ח נוכחות<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="feedback-button" className="btn btn-info" >צפייה במשובי חניכים<span
@@ -110,31 +118,35 @@ class TempManager extends React.Component {
             </div>
         );
     }
+    
+    // async AttendReport(){
+    //     return(
+    //     <div id="instactorReport" class="sec-design">
+    //     <Grid container spacing={2}>
+    //         <Grid item xs={12}>
+                
+    //             <Grid item xs={12}>
+    //                 <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
+    //                 <input type="date" className="form-control" id="insert-date" name="date" required/>
+    //                 <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
+    //                     console.log(e.label,e.value);
+                        
+    //                 }} />
 
+    //             </Grid>
+    //             <Grid item xs={12}>
+    //                 <div className="text-below-image">
 
-    AttendReport(){
+    //                     <button >הצג</button>
+    //                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט</button>
+    //                 </div>
 
-        return(
-            <div id="guideAttendReport" className="sec-design">
-                    <div id="name-group" className="form-group">
-                        <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                        <input type="date" className="form-control" id="insert-date" name="date" required/>
-                        <label id="date" className="title-input">בחר קבוצה</label>
-                        <input type="date" className="form-control" id="insert-date" name="date" required/>
-                        <button className="btn btn-info">הצג</button>
-                    </div>
-        
-
-                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>
-        
-        
-          
-        
-        
-        
-            </div>
-        )
-    }
+    //             </Grid>
+    //         </Grid>
+    //     </Grid>
+    // </div>
+    // )
+    // }
     Card(Student) {
         if (Student) {
             //console.log(Student)
