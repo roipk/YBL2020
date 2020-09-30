@@ -4,6 +4,7 @@ import firebase, {auth} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TestGuide from "../Guide/TempGuide";
+import {FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 
 const options = [
     { value: 'chocolate', label: 'קבוצה 1' },
@@ -21,24 +22,24 @@ class UserApproval extends React.Component {
                     fname:"gershon",
                     lname:"mm",
                     phone:"050111111222",
-                    password:"",
                     team:"",
+                    type:"Guide",
                 },
                 {
                     email:"test2",
                     fname:"shlomo",
                     lname:"muuuum",
                     phone:"0566662",
-                    password:"",
                     team:"",
+                    type:"Student",
                 },
                 {
                     email:"test",
                     fname:"tikva",
                     lname:"ttt",
                     phone:"05444444442",
-                    password:"",
                     team:"",
+                    type:"Guide",
                 },
             ],
         };
@@ -104,13 +105,47 @@ render() {
                         <b>שם מלא: </b>  {user.fname + " " + user.lname}<br/>
                             <b> אימייל: </b> {user.email}<br/>
                             <b> טלפון: </b>{user.phone}<br/>
-                            <Select placeholder="בחר קבוצה" options={options} />
+                            <Select placeholder="בחר/י קבוצה מהשימה" options={options} />
+                        </Grid>
+
+                        <Grid item xs={6}>
+                            <div>
+                                <label>
+                                    <input type="radio" value="Student" checked = {user.type === 'Student'}  onChange={(e) => {
+                                        console.log(user.type ==='Student')
+                                        console.log(user.type)
+                                        user.type = e.target.value
+
+                                        console.log(user.type)
+                                        console.log(user.type ==='Student')
+
+                                    }}/>
+                                    סטודנט
+                                </label>
+                            </div>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <div>
+
+                                <label>
+                                    <input type="radio" value="Guide" checked={user.type ==='Guide'}  onChange={e => {
+                                        // console.log(user)
+                                        // user.type = e.target.value
+                                        // console.log(user)
+
+                                    }}/>
+                                    מדריך
+                                </label>
+                            </div>
                         </Grid>
                         <Grid item xs={12}>
                             <div className="text-below-image">
                                 <label className="container">אישור בקשה<input type='checkbox' /></label>
                             </div>
+
                         </Grid>
+
+
 
                         <Grid item xs={12}>
 

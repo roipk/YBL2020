@@ -20,6 +20,17 @@ export const db = firebase.firestore();
 export default firebase;
 
 
+export async function RegisterUser(email,user) {
+    console.log(user)
+    console.log(email)
+    await db.collection("waitforapproval").doc(email).set(user);
+    return;
+}
+export async function DeleteUser(email,) {
+    await db.collection("waitforapproval").doc(email).delete();
+    return;
+}
+
 //
 // class Firebase {
 //     constructor() {

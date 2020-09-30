@@ -3,7 +3,8 @@ import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } fro
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Link, withRouter } from 'react-router-dom'
-import firebase,{db} from '../../../firebase/firebase' ;
+import firebase,{db,auth,RegisterUser,DeleteUser} from '../../../firebase/firebase' ;
+
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import '../Users/UserPage.css'
@@ -45,20 +46,24 @@ const useStyles = theme => ({
     },
 })
 
-const options = []
-const teams=[];
+const options = [
+]
+// const teams=[];
 GetTeams()
 async function GetTeams() {
+    console.log("in")
     var nameTeams =await db.collection("Teams").get()
+    var i=0;
     nameTeams.forEach(doc=>{
-        var team={
-            ref:doc,
-            name:doc.data().name
-        }
-        teams.push(team)
-        options.push({ value: doc.data().name, label: doc.data().name },)
+        // var team={
+        //     ref:doc,
+        //     name:doc.data().name
+        // }
+        // teams.push(team)
+        options.push({ value: doc.ref, label: doc.data().name })
     })
-    console.log(teams)
+    console.log(options)
+
 }
 
 function SignUp(props) {
@@ -68,6 +73,8 @@ function SignUp(props) {
     const [lname, setLname] = useState('')
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
+    const [team, setTeam] = useState('')
+    const [type, setType]= useState('')
     const [password, setPassword] = useState('')
 
 
@@ -147,24 +154,45 @@ function SignUp(props) {
                                 label="Email"
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <Select placeholder="בחר קבוצה" options={options} />
+                        <Grid item xs={6}>
+                            <div>
+
+                                <label>
+                                    <input type="radio" value="Student" checked={type==='Student'}  onChange={e => setType(e.target.value)}/>
+                                    סטודנט
+                                </label>
+                            </div>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <div>
+
+                                <label>
+                                    <input type="radio" value="Guide" checked={type==='Guide'} onChange={e => setType(e.target.value)}/>
+                                    מדריך
+                                </label>
+                            </div>
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
-                                inputProps={{style: {textAlign: 'center'}}}
-                                name="password"
-                                type="password"
-                                id="password"
-                                autoComplete="off"
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                                variant="standard"
-                                required
-                                fullWidth
-                                label="סיסמא"
-                            />
+                            {/*<Select placeholder="בחר קבוצה"  />*/}
+                            <Select placeholder="בחר/י קבוצה מהרשימה" options={options} required onChange={(e)=>{
+                               setTeam(e.value)
+                            }}></Select>
                         </Grid>
+                        {/*<Grid item xs={12}>*/}
+                        {/*    <TextField*/}
+                        {/*        inputProps={{style: {textAlign: 'center'}}}*/}
+                        {/*        name="password"*/}
+                        {/*        type="password"*/}
+                        {/*        id="password"*/}
+                        {/*        autoComplete="off"*/}
+                        {/*        value={password}*/}
+                        {/*        onChange={e => setPassword(e.target.value)}*/}
+                        {/*        variant="standard"*/}
+                        {/*        required*/}
+                        {/*        fullWidth*/}
+                        {/*        label="סיסמא"*/}
+                        {/*    />*/}
+                        {/*</Grid>*/}
                     </Grid>
 
                     <Button
@@ -206,12 +234,27 @@ function SignUp(props) {
 
     async function onRegister() {
         try {
-            await firebase.register(fname, email, password)
-            props.history.replace('/user')
+            // await firebase.register(fname, email, password)
+            var newUser = {
+                fname: fname,
+                lname: lname,
+                email: email,
+                phone:phone,
+                team: team
+            }
+            if(!fname||!lname||!email||!team||!phone) {
+                alert("נא למלא את כל השדות החובה")
+                return
+            }
+            console.log(newUser)
+            await RegisterUser(email,newUser)
+            // await DeleteUser(email)
+            alert("ההרשמה בוצעה בהצלחה נא להמתין לאישור מנהל")
+            props.history.replace('/')
         } catch(error) {
             alert(error.message)
         }
     }
 }
 
-export default withRouter(withStyles(useStyles)(SignUp))
+export default withRouter(withStyles(useStyles)(SignUp));
