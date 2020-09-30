@@ -34,6 +34,12 @@ export async function CreateUser(user) {
     var res = await auth.createUserWithEmailAndPassword(user.email,user.phone)
     auth.currentUser.updateProfile({displayName:user.fname+" "+ user.lname})
     await  db.collection(user.type).doc(res.user.uid).set(user)
+    var team=await db.collection('Teams').doc(user.team.id);
+    team.set({
+        name: user.teamName,
+        guide: db.doc('guides/'+res.user.uid)
+    })
+
     await db.collection("waitforapproval").doc(user.email).delete();
     console.log("done the user is ready")
     return true;
