@@ -74,8 +74,9 @@ function SignUp(props) {
     const [email, setEmail] = useState('')
     const [phone, setPhone] = useState('')
     const [team, setTeam] = useState('')
+    const [teamName, setTeamName] = useState('')
     const [type, setType]= useState('')
-    const [password, setPassword] = useState('')
+
 
 
     return (
@@ -175,24 +176,10 @@ function SignUp(props) {
                         <Grid item xs={12}>
                             {/*<Select placeholder="בחר קבוצה"  />*/}
                             <Select placeholder="בחר/י קבוצה מהרשימה" options={options} required onChange={(e)=>{
-                               setTeam(e.value)
+                               setTeam(e.value);
+                                setTeamName(e.label);
                             }}></Select>
                         </Grid>
-                        {/*<Grid item xs={12}>*/}
-                        {/*    <TextField*/}
-                        {/*        inputProps={{style: {textAlign: 'center'}}}*/}
-                        {/*        name="password"*/}
-                        {/*        type="password"*/}
-                        {/*        id="password"*/}
-                        {/*        autoComplete="off"*/}
-                        {/*        value={password}*/}
-                        {/*        onChange={e => setPassword(e.target.value)}*/}
-                        {/*        variant="standard"*/}
-                        {/*        required*/}
-                        {/*        fullWidth*/}
-                        {/*        label="סיסמא"*/}
-                        {/*    />*/}
-                        {/*</Grid>*/}
                     </Grid>
 
                     <Button
@@ -240,7 +227,9 @@ function SignUp(props) {
                 lname: lname,
                 email: email,
                 phone:phone,
-                team: team
+                team: team,
+                teamName: teamName,
+                type:type,
             }
             if(!fname||!lname||!email||!team||!phone) {
                 alert("נא למלא את כל השדות החובה")

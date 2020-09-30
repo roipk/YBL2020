@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
-import firebase, {auth} from '../../../../firebase/firebase'
+import firebase, {auth, db} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TestGuide from "../Guide/TempGuide";
 import {FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 
 const options = [
-    { value: 'chocolate', label: 'קבוצה 1' },
-    { value: 'strawberry', label: 'קבוצה 2' },
-    { value: 'vanilla', label: 'קבוצה 3' }
-]
+   ]
 
 class UserApproval extends React.Component {
     constructor(props) {
@@ -23,6 +20,7 @@ class UserApproval extends React.Component {
                     lname:"mm",
                     phone:"050111111222",
                     team:"",
+                    teamName:"",
                     type:"Guide",
                 },
                 {
@@ -31,6 +29,7 @@ class UserApproval extends React.Component {
                     lname:"muuuum",
                     phone:"0566662",
                     team:"",
+                    teamName:"",
                     type:"Student",
                 },
                 {
@@ -39,6 +38,7 @@ class UserApproval extends React.Component {
                     lname:"ttt",
                     phone:"05444444442",
                     team:"",
+                    teamName:"",
                     type:"Guide",
                 },
             ],
@@ -46,8 +46,24 @@ class UserApproval extends React.Component {
 
     }
 
+    async componentDidMount() {
+        var approval =  await db.collection("waitforapproval").get();
+        var users = []
+        approval.forEach(doc=>{
+            users.push(doc.data())
+           this.setState({users:users})
+        })
 
-radio(e,index)
+        console.log(this.state)
+        var nameTeams =  await db.collection("Teams").get();
+        nameTeams.forEach(doc=>{
+            options.push({ value: doc.ref, label: doc.data().name })
+    })
+
+
+}
+
+    radio(e,index)
 {
 
     var student = document.getElementById("Student"+index)
@@ -59,8 +75,8 @@ radio(e,index)
 
     }
     else {
-        student.checked=false;
         guide.checked=true;
+        student.checked=false;
     }
 }
 render() {
@@ -112,7 +128,6 @@ render() {
 
     Card(user,index) {
         if (user) {
-            //console.log(user)
             return (
                 <div className="Card"  dir="rtl">
                     <Grid container spacing={1}>
@@ -120,14 +135,15 @@ render() {
                         <b>שם מלא: </b>  {user.fname + " " + user.lname}<br/>
                             <b> אימייל: </b> {user.email}<br/>
                             <b> טלפון: </b>{user.phone}<br/>
-                            <Select placeholder="בחר/י קבוצה מהשימה" options={options} />
+                            <Select  placeholder={" נבחרה קבוצה - "+user.teamName} options={options} />
                         </Grid>
 
                         <Grid item xs={6}>
                             <div>
                                 <label>
-                                    <input id ={"Student"+index} type="radio" value="Student" onChange={(e) => {
+                                    <input id ={"Student"+index} type="radio" checked={user.type==="Student"} value="Student" onChange={(e) => {
                                         user.type = e.target.value;
+                                        console.log(user.type)
                                         this.radio(e,index)
 
                                     }}/>
@@ -139,8 +155,9 @@ render() {
                             <div>
 
                                 <label>
-                                    <input id ={"Guide"+index} type="radio" value="Guide"  onChange={e => {
+                                    <input id ={"Guide"+index}  checked={user.type==="Guide"}type="radio" value="Guide"  onChange={e => {
                                         user.type = e.target.value;
+                                        console.log(user.type)
                                         this.radio(e,index)
 
                                     }}/>
@@ -155,12 +172,6 @@ render() {
 
                         </Grid>
 
-
-
-                        <Grid item xs={12}>
-
-
-                        </Grid>
                         <Grid item xs={6}>
                             <button >אישור בקשה בודדת</button>
                         </Grid>
