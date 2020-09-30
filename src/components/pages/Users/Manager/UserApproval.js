@@ -47,7 +47,22 @@ class UserApproval extends React.Component {
     }
 
 
+radio(e,index)
+{
 
+    var student = document.getElementById("Student"+index)
+    var guide = document.getElementById("Guide"+index)
+
+    if(e.target === student) {
+        student.checked=true;
+        guide.checked=false;
+
+    }
+    else {
+        student.checked=false;
+        guide.checked=true;
+    }
+}
 render() {
     return (
         <div id="guideAttendReport" className="sec-design">
@@ -62,7 +77,7 @@ render() {
                             {
                                 this.state.users.map((user,index) => (
                                     <Grid  item xs={12}  key={index}>
-                                        {this.Card(user)}
+                                        {this.Card(user,index)}
                                     </Grid >
 
                                 ))}
@@ -95,7 +110,7 @@ render() {
 
 
 
-    Card(user) {
+    Card(user,index) {
         if (user) {
             //console.log(user)
             return (
@@ -111,13 +126,9 @@ render() {
                         <Grid item xs={6}>
                             <div>
                                 <label>
-                                    <input type="radio" value="Student" checked = {user.type === 'Student'}  onChange={(e) => {
-                                        console.log(user.type ==='Student')
-                                        console.log(user.type)
-                                        user.type = e.target.value
-
-                                        console.log(user.type)
-                                        console.log(user.type ==='Student')
+                                    <input id ={"Student"+index} type="radio" value="Student" onChange={(e) => {
+                                        user.type = e.target.value;
+                                        this.radio(e,index)
 
                                     }}/>
                                     סטודנט
@@ -128,10 +139,9 @@ render() {
                             <div>
 
                                 <label>
-                                    <input type="radio" value="Guide" checked={user.type ==='Guide'}  onChange={e => {
-                                        // console.log(user)
-                                        // user.type = e.target.value
-                                        // console.log(user)
+                                    <input id ={"Guide"+index} type="radio" value="Guide"  onChange={e => {
+                                        user.type = e.target.value;
+                                        this.radio(e,index)
 
                                     }}/>
                                     מדריך
