@@ -85,14 +85,14 @@ class TempManager extends React.Component {
         else if(this.state.page === 'report')
             return(
                 <AttendReport>
-
                 </AttendReport>
             )
         else if(this.state.page ==='userApproval')
             return (
                 <UserApproval>
-
                 </UserApproval>
+
+
             )
         else
             return(this.menu())

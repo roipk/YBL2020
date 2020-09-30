@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TestGuide from "../Guide/TempGuide";
 import {Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
+import TempManager from "./TempManager";
 
 const options = [
    ]
@@ -17,6 +18,15 @@ class UserApproval extends React.Component {
 
         };
         var users = []
+    }
+
+
+    chooseLayout(page)
+    {
+        this.setState({
+            page:page,
+        })
+        this.render()
     }
 
 
@@ -90,9 +100,33 @@ class UserApproval extends React.Component {
     }
 }
 render() {
+        
+    if(this.state.page ==='menu')
+        return(
+            <TempManager>
+
+            </TempManager>
+        )
         if(this.state.users) {
+            if(this.state.users.length === 0)
+            {
+                return (
+                    <div id="guideAttendReport" className="sec-design" dir="rtl">
+                        <div id="name-group" className="form-group">
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    אין משתמשים חדשים
+                                </Grid>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט</button>
+                            </Grid>
+                        </div>
+                    </div>
+                )
+            }
             return (
-                <div id="guideAttendReport" className="sec-design">
+                <div id="guideAttendReport" className="sec-design" dir="rtl">
                     <div id="name-group" className="form-group">
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -115,14 +149,9 @@ render() {
                                     <div className="text-below-image">
                                         <button>אישור בקשות מסומנות</button>
                                     </div>
-
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <div className="text-below-image">
-
-                                        <button>אישור כל הבקשות</button>
-                                    </div>
-
+                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט</button>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -138,11 +167,11 @@ render() {
         else
         {
            return (
-               <div id="guideAttendReport" className="sec-design">
+               <div id="guideAttendReport" className="sec-design" dir="rtl">
                    <div id="name-group" className="form-group">
                        <Grid container spacing={2}>
                            <Grid item xs={12}>
-                               אין משתמשים חדשים
+                               טוען משתמשים
                            </Grid>
                        </Grid>
                    </div>
