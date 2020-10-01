@@ -3,6 +3,7 @@ import firebase, {auth,db} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import UserApproval from "./UserApproval";
 import AttendReport from "./mngAttendReport"
+import UpdatesFirebase from "./UpdatesFirebase";
 
 
 class TempManager extends React.Component {
@@ -94,6 +95,13 @@ class TempManager extends React.Component {
 
 
             )
+        else if(this.state.page ==='update')
+            return (
+                <UpdatesFirebase>
+                </UpdatesFirebase>
+
+
+            )
         else
             return(this.menu())
 
@@ -109,9 +117,12 @@ class TempManager extends React.Component {
                 {/* <div> Hello Manager {this.state.user.email}</div> */}
                     <button id="report-button" className="btn btn-info"onClick={()=>{this.chooseLayout("userApproval")}} >אישור משתמשים<span
                         className="fa fa-arrow-right"></span></button>
-                    <button id="report-button" className="btn btn-info"onClick={()=>{this.chooseLayout("report")}} >צפייה בדו"ח נוכחות<span
+                <button id="report-button" className="btn btn-info"onClick={()=>{this.chooseLayout("update")}} >עדכון ופעולות<span
                         className="fa fa-arrow-right"></span></button>
-                    <button id="feedback-button" className="btn btn-info" >צפייה במשובי חניכים<span
+
+                <button id="report-button" className="btn btn-info"onClick={()=>{this.chooseLayout("report")}} >צפייה בדו"ח נוכחות<span
+                        className="fa fa-arrow-right"></span></button>
+                <button id="feedback-button" className="btn btn-info" >צפייה במשובי חניכים<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="feedback-button" className="btn btn-info" >צפייה במשובי
                         מדריכים<span
