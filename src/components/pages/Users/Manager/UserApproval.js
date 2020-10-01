@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
-import firebase, {auth, db,CreateUser} from '../../../../firebase/firebase'
+import firebase, {auth, db,CreateUser, DeleteUser} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TestGuide from "../Guide/TempGuide";
@@ -234,7 +234,9 @@ render() {
                         </Grid>
 
                         <Grid item xs={6}>
-                            <button onClick={()=>{
+                            <button
+                                style={{backgroundColor: "rgb(50,248,6)"}}
+                                onClick={()=>{
                                 CreateUser(user).then(()=>{
                                 var newUsers = []
                                 this.state.users.forEach((user,i)=>{
@@ -243,7 +245,21 @@ render() {
                                 })
                                 this.setState({users:newUsers})
                                 })
-                            }}>אישור בקשה בודדת</button>
+                            }}>אישור בקשה </button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <button
+                                style={{backgroundColor: "rgb(248,6,6)"}}
+                                onClick={()=>{
+                                DeleteUser(user.email).then(()=>{
+                                    var newUsers = []
+                                    this.state.users.forEach((user,i)=>{
+                                        if(index!==i)
+                                            newUsers.push(user)
+                                    })
+                                    this.setState({users:newUsers})
+                                })
+                            }}>דחיית בקשה</button>
                         </Grid>
                     </Grid>
 

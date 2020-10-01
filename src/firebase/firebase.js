@@ -40,7 +40,8 @@ export async function CreateUser(user) {
         guide: db.doc('guides/'+res.user.uid)
     })
 
-    await db.collection("waitforapproval").doc(user.email).delete();
+    // await db.collection("waitforapproval").doc(user.email).delete();
+    await DeleteUser(user.email)
     console.log("done the user is ready")
     return true;
 }
