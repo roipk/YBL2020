@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import firebase from "../../../../firebase/firebase";
 
-class Users extends Component {
+class FeedbackGuides extends Component {
 
     constructor() {
         super();
@@ -14,26 +14,32 @@ class Users extends Component {
             }
     }
 
-
+    BackToMain()
+    {
+        this.props.history.push({
+            pathname: `/TempManager`,
+            // this.chooseLayout("userApproval")
+        })
+    }
 
 
     render() {
         return(
-        <div id="studentFeedback" class="sec-design">
-            <form id="studentFeedback" class="form-design" name="student_form" method="POST">
-            <div id="name-group" class="form-group">
-                <label id="insert-student" class="title-input" for="name">שלום מנהל,
+        <div id="studentFeedback" className="sec-design">
+            <form id="studentFeedback" className="form-design" name="student_form" method="POST">
+            <div id="name-group" className="form-group">
+                <label id="insert-student" className="title-input" for="name">שלום מנהל,
                 על מנת לצפות במשוב בחר תאריך:          
                 </label>
-                <input type="date" class="form-control" name="insert-student" id="insert-student" />
-                <button id="viewReport" class="btn btn-info">הצג<span
-                class="fa fa-arrow-right"></span></button>
+                <input type="date" className="form-control" name="insert-student" id="insert-student" />
+                <button id="viewReport" className="btn btn-info">הצג<span
+                className="fa fa-arrow-right"></span></button>
                 </div>
-            <div id="name-group" class="form-group" dir="rtl">
-                <div  class="report">
+            <div id="name-group" className="form-group" dir="rtl">
+                <div  className="report">
                 </div>
             </div>
-            <button id="go-back" class="btn btn-info" onClick="loadMenu()">חזור</button>
+            <button id="go-back" className="btn btn-info" onClick={()=>{this.BackToMain()}}>חזור</button>
             </form>
         </div>
         )
@@ -42,4 +48,4 @@ class Users extends Component {
 
 
 
-export default Users;
+export default FeedbackGuides;

@@ -21,12 +21,12 @@ class UserApproval extends React.Component {
     }
 
 
-    chooseLayout(page)
+    BackToMain()
     {
-        this.setState({
-            page:page,
+        this.props.history.push({
+            pathname: `/TempManager`,
+            // this.chooseLayout("userApproval")
         })
-        this.render()
     }
 
 
@@ -73,11 +73,6 @@ class UserApproval extends React.Component {
     }
 
 
-    createUser(user)
-    {
-        console.log(this.users)
-        console.log(user)
-    }
 
 
     radio(e,index,user)
@@ -128,7 +123,7 @@ render() {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>
-                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
                             </Grid>
                         </div>
                     </div>
@@ -160,14 +155,14 @@ render() {
                                     </div>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט</button>
+                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </div>
 
 
-                    {/*<button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>*/}
+                    {/*<button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>*/}
 
 
                 </div>
@@ -201,7 +196,7 @@ render() {
                         <b>שם מלא: </b>  {user.fname + " " + user.lname}<br/>
                             <b> אימייל: </b> {user.email}<br/>
                             <b> טלפון: </b>{user.phone}<br/>
-                            <b> תפקיד: </b>{(user.type==="students")?("סטודנט"):("מדריך")}<br/>
+                            <b> תפקיד: </b>{(user.type==="students")?("חניך"):("מדריך")}<br/>
                             <b> קבוצה: </b>{user.teamName}<br/>
                             <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
                                 user.team = e.value;

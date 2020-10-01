@@ -22,18 +22,20 @@ class UpdatesFirebase extends Component {
         this.handleChangeDate = this.handleChangeDate.bind(this)
         this.handleChange = this.handleChange.bind(this)
     }
-    chooseLayout(page)
-    {
-        this.setState({
-            page:page,
-        })
-        this.render()
-    }
+
     async handleChange(event)
     {
 
         var value = event.target.value;
         this.setState({teamName:value})
+    }
+
+    BackToMain()
+    {
+        this.props.history.push({
+            pathname: `/TempManager`,
+            // this.chooseLayout("userApproval")
+        })
     }
 
     render() {
@@ -59,49 +61,6 @@ class UpdatesFirebase extends Component {
         console.log("in");
         var team = await db.collection("Teams").doc(this.state.teamPath).get();
         console.log(team)
-        // const collection = await db.collection('students').where("Team","==",team).get()
-        // const Students = [];
-        // const date = this.state.date
-        // const collectionPromisesTeam = collection.docs.map( async function(doc) {
-        //      var ref =await db.collection("students").doc(doc.id).collection("comes").doc(date).get()
-        //      var user = await db.collection("students").doc(doc.id).get()
-        //     return [ref,user]
-
-        // })
-
-        // Promise.all(collectionPromisesTeam).then(res => {
-        //     console.log("end prommis");
-        //     res.forEach(doc=>{
-        //         var approv = false;
-        //         var feedback = ''
-        //         if(doc[0].exists) {
-        //             approv = true;
-        //             feedback = doc[0].data().feedbackGuide;
-        //         }
-        //         var data = doc[1].data();
-        //         var ref = doc[1].id;
-        //         Students.push({data,approv,ref,feedback})
-        //     })
-        //     let i;
-        //     console.log(Students.length)
-        //     this.setState({viewStudent: !this.state.viewStudent});
-        //     for (i=0;i<Students.length;i++)
-        //     {
-        //         if(!this.state.Students)
-        //         {
-        //             this.setState({Students: Students});
-        //             return
-        //         }
-        //         else if(Students[i].approv!=this.state.Students[i].approv)
-        //         {
-        //             this.setState({Students: Students});
-        //             return
-        //         }
-
-        //     }
-        // });
-
-
     }
     async componentDidMount() {
         var nameTeams =  await db.collection("Teams").get();
@@ -136,7 +95,7 @@ class UpdatesFirebase extends Component {
 
                                 <button onClick={this.handleSubmit} >רשימת מדריכים</button>
                                 <div></div>
-                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
                             </div>
 
                         </Grid>

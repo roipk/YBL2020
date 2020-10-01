@@ -1,28 +1,16 @@
 import React from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase'
-import Grid from "@material-ui/core/Grid";
-import UserApproval from "./UserApproval";
-import AttendReport from "./mngAttendReport"
-import UpdatesFirebase from "./UpdatesFirebase";
+import firebase, {auth,db} from '../../../firebase/firebase'
 
 
-class TempManager extends React.Component {
+
+class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoad:false,
-            user: props.location,
-            error:false,
-            loading: true,
-            rule:"Manager",
+
         };
     }
 
-
-    loadPage(event){
-        this.setState({loading:event})
-        //    this.render()
-    }
 
     async componentDidMount() {
         auth.onAuthStateChanged(user=>{
@@ -95,25 +83,18 @@ class TempManager extends React.Component {
         );
     }
 
-    loadTempPage(path)
-    {
-        this.props.history.push({
-            pathname: `/${path}`,
-            data: this.state.user
-        })
-    }
+
 
     ChangePage(path) {
 
         this.props.history.push({
             pathname: `${this.props.location.pathname}/${path}`,
-            data: this.state.user
         })
-
+        return
     }
-    
+
 
 }
 
 
-export  default  TempManager;
+export  default  Profile;

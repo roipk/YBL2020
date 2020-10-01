@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState, useEffect} from 'react'
 import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -46,25 +46,22 @@ const useStyles = theme => ({
     },
 })
 
+
 const options = [
 ]
-// const teams=[];
-GetTeams()
-async function GetTeams() {
-    console.log("in")
-    var nameTeams =await db.collection("Teams").get()
-    var i=0;
-    nameTeams.forEach(doc=>{
-        // var team={
-        //     ref:doc,
-        //     name:doc.data().name
-        // }
-        // teams.push(team)
-        options.push({ value: doc.ref, label: doc.data().name })
-    })
-    console.log(options)
 
+
+
+async function GetTeams() {
+        if (options.length <= 0) {
+            var nameTeams = await db.collection("Teams").get()
+            nameTeams.forEach(doc => {
+                options.push({value: doc.ref, label: doc.data().name})
+            })
+            console.log(options)
+        }
 }
+
 
 function SignUp(props) {
     const { classes } = props
@@ -103,7 +100,10 @@ function SignUp(props) {
                                 autoComplete="off"
                                 autoFocus 
                                 value={fname}
-                                onChange={e => setFname(e.target.value)}
+                                onChange={e => {
+                                    setFname(e.target.value)
+                                    GetTeams()
+                                }}
                                 variant="standard"
                                 required
                                 fullWidth
@@ -118,7 +118,10 @@ function SignUp(props) {
                                 type="string"
                                 autoComplete="off"
                                 autoFocus value={lname}
-                                onChange={e => setLname(e.target.value)}
+                                onChange={e => {
+                                    setLname(e.target.value)
+                                    GetTeams()
+                                }}
                                 variant="standard"
                                 required
                                 fullWidth
@@ -133,7 +136,10 @@ function SignUp(props) {
                                 type="tel"
                                 autoComplete="off"
                                 autoFocus value={phone}
-                                onChange={e => setPhone(e.target.value)}
+                                onChange={e => {
+                                    setPhone(e.target.value)
+                                    GetTeams()
+                                }}
                                 variant="standard"
                                 required
                                 fullWidth
@@ -148,7 +154,10 @@ function SignUp(props) {
                                 type="email"
                                 autoComplete="off"
                                 value={email} 
-                                onChange={e => setEmail(e.target.value)}
+                                onChange={e => {
+                                    setEmail(e.target.value)
+                                    GetTeams()
+                                }}
                                 variant="standard"
                                 required
                                 fullWidth
@@ -173,9 +182,9 @@ function SignUp(props) {
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} hidden={options.length<=0}>
                             {/*<Select placeholder="בחר קבוצה"  />*/}
-                            <Select placeholder="בחר/י קבוצה מהרשימה" options={options} required onChange={(e)=>{
+                            <Select placeholder="בחר/י קבוצה מהרשימה"   options={options} required onChange={(e)=>{
                                setTeam(e.value);
                                 setTeamName(e.label);
                             }}></Select>

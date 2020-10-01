@@ -20,14 +20,14 @@ class AttendReport extends Component {
             this.handleSubmit = this.handleSubmit.bind(this)
             this.handleChangeDate = this.handleChangeDate.bind(this)
     }
-    chooseLayout(page)
-    {
-        this.setState({
-            page:page,
-        })
-        this.render()
-    }
 
+
+    BackToMain()
+    {
+        this.props.history.push({
+            pathname: `/TempManager`,
+        })
+    }
 
     render() {
         console.log(this.state.date)
@@ -52,48 +52,6 @@ class AttendReport extends Component {
         console.log("in");
         var team = await db.collection("Teams").doc(this.state.teamPath).get();
         console.log(team)
-        // const collection = await db.collection('students').where("Team","==",team).get()
-        // const Students = [];
-        // const date = this.state.date
-        // const collectionPromisesTeam = collection.docs.map( async function(doc) {
-        //      var ref =await db.collection("students").doc(doc.id).collection("comes").doc(date).get()
-        //      var user = await db.collection("students").doc(doc.id).get()
-        //     return [ref,user]
-
-        // })
-
-        // Promise.all(collectionPromisesTeam).then(res => {
-        //     console.log("end prommis");
-        //     res.forEach(doc=>{
-        //         var approv = false;
-        //         var feedback = ''
-        //         if(doc[0].exists) {
-        //             approv = true;
-        //             feedback = doc[0].data().feedbackGuide;
-        //         }
-        //         var data = doc[1].data();
-        //         var ref = doc[1].id;
-        //         Students.push({data,approv,ref,feedback})
-        //     })
-        //     let i;
-        //     console.log(Students.length)
-        //     this.setState({viewStudent: !this.state.viewStudent});
-        //     for (i=0;i<Students.length;i++)
-        //     {
-        //         if(!this.state.Students)
-        //         {
-        //             this.setState({Students: Students});
-        //             return
-        //         }
-        //         else if(Students[i].approv!=this.state.Students[i].approv)
-        //         {
-        //             this.setState({Students: Students});
-        //             return
-        //         }
-
-        //     }
-        // });
-        
 
     }
     async componentDidMount() {
@@ -116,7 +74,7 @@ class AttendReport extends Component {
     attendReport() {
 
         return(
-            <div id="instactorReport" class="sec-design">
+            <div id="instactorReport" className="sec-design">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         
@@ -134,7 +92,7 @@ class AttendReport extends Component {
 
                                 <button onClick={this.handleSubmit} >הצג</button>
                                 <div></div>
-                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
                             </div>
 
                         </Grid>
