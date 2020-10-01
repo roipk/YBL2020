@@ -85,6 +85,7 @@ class UserApproval extends React.Component {
 
     var student = document.getElementById("students"+index)
     var guide = document.getElementById("guides"+index)
+    var manager = document.getElementById("managers"+index)
 
 
     user.type = e.target.value;
@@ -92,11 +93,19 @@ class UserApproval extends React.Component {
     if(e.target === student) {
         student.checked=true;
         guide.checked=false;
+        manager.checked=false;
+
+    }
+    else if(e.target === guide) {
+        student.checked=false;
+        guide.checked=true;
+        manager.checked=false;
 
     }
     else {
-        guide.checked=true;
         student.checked=false;
+        guide.checked=false;
+        manager.checked=true;
     }
 }
 render() {
@@ -202,7 +211,7 @@ render() {
                         <Grid item xs={12}>
                         <b> החלף תפקיד: </b><br/>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
 
                             <div>
                                 <label>
@@ -213,11 +222,22 @@ render() {
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                             <div>
 
                                 <label>
                                     <input id ={"guides"+index} type="radio" value="guides"  onClick={e => {
+                                        this.radio(e,index,user)
+                                    }}/>
+                                    מדריך
+                                </label>
+                            </div>
+                        </Grid>
+                        <Grid item xs={4}>
+                            <div>
+
+                                <label>
+                                    <input id ={"managers"+index} type="radio" value="managers"  onClick={e => {
                                         this.radio(e,index,user)
                                     }}/>
                                     מדריך

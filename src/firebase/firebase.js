@@ -46,6 +46,12 @@ export async function CreateUser(user) {
     return true;
 }
 
+export async function CreateNewTeam(team) {
+    await  db.collection("Teams").doc().set({name:team})
+    console.log("done")
+}
+
+
 //
 // class Firebase {
 //     constructor() {

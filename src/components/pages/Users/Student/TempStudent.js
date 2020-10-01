@@ -400,7 +400,7 @@ class TempStudent extends React.Component {
                     <div id="name-group" className="form-group">
                         <label id="feedback" className="title-input" htmlFor="name"> מה את/ה לוקח/ת מהמפגש
                             היום</label>
-                        <input type="text" className="form-control" name="feedback" id="Q4" placeholder="Your Answer"
+                        <input type="text" className="form-control" name="feedback" id="Q4" placeholder="התשובה שלך"
                                minLength="10" onChange={this.handleChange} required/>
                     </div>
                 </div>
