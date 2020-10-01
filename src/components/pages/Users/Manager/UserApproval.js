@@ -218,7 +218,7 @@ render() {
                                     <input id ={"students"+index} type="radio" value="students" onClick={e => {
                                         this.radio(e,index,user)
                                     }}/>
-                                    סטודנט
+                                    חניך
                                 </label>
                             </div>
                         </Grid>
@@ -240,7 +240,7 @@ render() {
                                     <input id ={"managers"+index} type="radio" value="managers"  onClick={e => {
                                         this.radio(e,index,user)
                                     }}/>
-                                    מדריך
+                                    מנהל
                                 </label>
                             </div>
                         </Grid>
