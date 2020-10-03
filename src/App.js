@@ -7,7 +7,7 @@ import LoadPage from "./AllPages";
 function App() {
   return (
       <div>
-          <img alt={require('../src/layout/images/title.png')} />
+          <img alt="true" src={require('../src/layout/images/title.png')} />
      <LoadPage/>
       </div>
   );
