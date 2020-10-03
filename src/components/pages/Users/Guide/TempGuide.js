@@ -265,7 +265,8 @@ class TestGuide extends React.Component {
         }
         this.setState({prevDate:this.state.date});
         console.log("in");
-        var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().Team;
+        var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().team;
+        console.log(team)
         const collection = await db.collection('students').where("Team","==",team).get()
         const Students = [];
         const date = this.state.date
