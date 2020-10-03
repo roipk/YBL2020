@@ -31,11 +31,14 @@ code {
   padding: 5%;
   width: 40%;
 }
+
 #studentList{
   background-color: azure;
   text-align: right;
   display:inline;
   float: right;
+  width: 90%;
+  padding: 5%;
 }
 
 button{

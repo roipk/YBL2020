@@ -41,19 +41,20 @@ class AttendReport extends Component {
     }
     async handleSubmit(event)
     {
-        console.log(this.state.teamPath.id)
-        if(!this.state.date) {
-            return;
+        $("#studentList").replaceWith("<div id='studentList'></div>")
+        if(!this.state.date ||  !this.state.teamPath) {
+            alert("נא למלא את כל השדות החובה")
+            return
         }
-        console.log("in");
-        var team = await db.collection("Teams").doc(this.state.teamPath).get();
+        var team = await db.collection("Teams").doc(this.state.teamPath.id).get();
         console.log(team)
-        const collection = await db.collection('students').where("Team","==",this.state.teamPath).get()
+        const collection = await db.collection('students').where("team","==",this.state.teamPath).get()
         console.log(collection)
         const Students = [];
         const date = this.state.date
         const collectionPromisesTeam = collection.docs.map( async function(doc) {
             var ref =await db.collection("students").doc(doc.id).collection("comes").doc(date).get()
+            console.log(ref)
             var user = await db.collection("students").doc(doc.id).get()
             return [ref,user]
 
@@ -113,21 +114,20 @@ class AttendReport extends Component {
             <div id="instactorReport" className="sec-design">
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        
                         <Grid item xs={12}>
                             <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
                             <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
                             <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
                                 console.log(e.label,e.value);
-                                this.setState({teamPath:e.value.id})
-                            }} />
+                                this.setState({teamPath:e.value})
+                            }} required/>
 
                         </Grid>
                         <Grid item xs={12}>
                             <div className="text-below-image">
 
                                 <button onClick={this.handleSubmit} >הצג</button>
-                                <div></div>
+                                <div id="studentList"></div>
                                 <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                             </div>
 
