@@ -16,11 +16,12 @@ class TempStudent extends React.Component {
             page:'menu',
             rule:"Student",
             form:{
+                approved: true,
                 guide: "",
                 date: "",
                 feedback: "",
                 topicMeeting: "",
-                feeedbackMeeting: {
+                feedbackMeeting: {
                     // help: 0,
                     // new: 0,
                     // relevant: 0,
@@ -74,6 +75,12 @@ class TempStudent extends React.Component {
     {
         // var team = auth.currentUser.uid
         var path = auth.currentUser.uid
+        var team=await db.collection("students").doc(path).get()
+        var teamID=team.data().team.id
+        team=await db.collection("Teams").doc(teamID).get()
+        var guide=team.data().guide
+        this.state.form.guide=guide
+
         // var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
             // var p = (await db.collection("students").doc(path).get()).data().Teams.id
@@ -148,9 +155,9 @@ class TempStudent extends React.Component {
     hendleRadioButton(event)
     {
         var form = this.state.form
-        var feeedbackMeeting= form.feeedbackMeeting
-        feeedbackMeeting[event.target.name] = event.target.value;
-        form.feeedbackMeeting=feeedbackMeeting
+        var feedbackMeeting= form.feedbackMeeting
+        feedbackMeeting[event.target.name] = event.target.value;
+        form.feedbackMeeting=feedbackMeeting
         this.setState({form:form})
         console.log(form)
     }

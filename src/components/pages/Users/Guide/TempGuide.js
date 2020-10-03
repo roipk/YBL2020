@@ -267,7 +267,7 @@ class TestGuide extends React.Component {
         console.log("in");
         var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().team;
         console.log(team)
-        const collection = await db.collection('students').where("Team","==",team).get()
+        const collection = await db.collection('students').where("team","==",team).get()
         const Students = [];
         const date = this.state.date
         const collectionPromisesTeam = collection.docs.map( async function(doc) {
@@ -338,7 +338,7 @@ class TestGuide extends React.Component {
         try{
             var guide = await db.collection("guides").doc(path)
             var team = (await guide.get()).data();
-            var teamCollection = await db.collection("Teams").doc(team.Team.id)
+            var teamCollection = await db.collection("Teams").doc(team.team.id)
             var newDate = teamCollection.collection("Dates").doc(this.state.date);
             newDate.get().then(async function(doc){
                 if(!doc.exists){
@@ -423,11 +423,12 @@ class TestGuide extends React.Component {
         var feedback = student.feedback
         var guide = await db.collection("guides").doc(auth.currentUser.uid)
         var team = (await guide.get()).data();
-        var updateTeamDate  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date).get();
-        var updateTeamDateSet  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date)
+        var updateTeamDate  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date).get();
+        var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
         if(approved){
             var feedbackToStudents={}
+            console.log(updateTeamDate.data())
             feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
             //feedbackToStudents[name]=""
             feedbackToStudents[name]=feedback
