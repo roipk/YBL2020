@@ -166,7 +166,7 @@ class Guide extends React.Component {
         return (
             <div id="instructor" className="sec-design">
                 <h2>שלום מדריך {this.state.user.name} </h2>
-                <form id="instructor_menu" className="form-design" name="student_form" method="POST">
+                <div id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>אישור דו"ח נוכחות<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('feedback')}} >מילוי משוב פעילות<span
@@ -174,7 +174,7 @@ class Guide extends React.Component {
                     <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('student')}} >מילוי משוב חניכים<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="logout" className="btn btn-info" >התנתק</button>
-                </form>
+                </div>
             </div>
         )
     }
@@ -200,7 +200,7 @@ class Guide extends React.Component {
     GuideFeedback() {
         return(
             <div id="guideFeeadback" className="sec-design">
-                <form id="guide_form" className="form-design" name="guide_form">
+                <div id="guide_form" className="form-design" name="guide_form">
                     <div id="name-group" className="form-group">
                         <label id="insert-date" className="title-input">הכנס את התאריך בו התקיים המפגש</label>
                         <input type="date" className="form-control" name="insert-student" id="insert-student" required/>
@@ -235,14 +235,14 @@ class Guide extends React.Component {
                     </div>
                     <div id ="box" className="chekbox">
                         <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
-                        <form name="form1" className="chekbox" >
+                        <div name="form1" className="chekbox" >
                             <label>במידה מועטה מאוד<input type="radio" value="0"/></label>
                             <label>במידה מועטה<input type="radio" value="1"/></label>
                             <label>במידה בינונית<input type="radio" value="2"/></label>
                             <label>במידה רבה<input type="radio" value="3"/></label>
                             <label>במידה רבה מאוד<input type="radio" value="4"/></label>
 
-                        </form>
+                        </div>
                     </div>
                     <br/>
                     <div id="name-group" className="form-group">
@@ -252,7 +252,7 @@ class Guide extends React.Component {
                     <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
                     <button type="submit" id="confirm-form" className="btn btn-info" >שלח משוב</button>
 
-                </form>
+                </div>
             </div>
         )
     }

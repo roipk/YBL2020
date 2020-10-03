@@ -18,7 +18,7 @@ class FeedbackGuides extends Component {
     render() {
         return(
         <div id="studentFeedback" className="sec-design">
-            <form id="studentFeedback" className="form-design" name="student_form" method="POST">
+            <div id="studentFeedback" className="form-design" name="student_form" method="POST">
             <div id="name-group" className="form-group">
                 <label id="insert-student" className="title-input" for="name">שלום מנהל,
                 על מנת לצפות במשוב בחר תאריך:          
@@ -32,7 +32,7 @@ class FeedbackGuides extends Component {
                 </div>
             </div>
             <button id="go-back" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
-            </form>
+            </div>
         </div>
         )
     }

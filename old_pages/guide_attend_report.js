@@ -17,7 +17,7 @@ function loadInstactorReport() {
       `
         <section id="data-change">
         <div id="instactorReport" class="sec-design">
-          <form id="InstactorStudentReport" class="form-design" name="student_form">
+          <div id="InstactorStudentReport" class="form-design" name="student_form">
             <div id="name-group" class="form-group">
               <label id="insert-student" class="title-input" for="name">הכנס את תאריך המפגש:</label>
               <input type="date" class="form-control" name="insert-student" id="insert-date2" max=${today}>
@@ -31,7 +31,7 @@ function loadInstactorReport() {
             </div>
             <button type="submit" id="confirm-form" class="btn btn-info" onClick="repConfirmation()">אשר<spanclass="fa fa-arrow-right"></span></button>
             <button id="go-back" class="btn btn-info" onClick="loadMenu()">חזור</button>
-          </form>
+          </div>
         </div>
       </section>
             `

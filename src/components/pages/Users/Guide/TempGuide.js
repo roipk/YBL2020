@@ -62,7 +62,7 @@ class TestGuide extends React.Component {
         return (
             <div id="instructor" className="sec-design">
                 <h2>Hello Guide {this.state.user.email} </h2>
-                <form id="instructor_menu" className="form-design" name="student_form" method="POST">
+                <div id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{NextPage(this.props,"Reports",this.state.user)}}>אישור דו"ח נוכחות<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Feedback",this.state.user)}} >מילוי משוב<span
@@ -74,7 +74,7 @@ class TestGuide extends React.Component {
                             data: this.state.user // your data array of objects
                         })}} >חזרה לדף בדיקות<span
                         className="fa fa-arrow-right"></span></button>
-                </form>
+                </div>
             </div>
         )
     }

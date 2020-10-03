@@ -96,7 +96,7 @@ function LoginPage(props) {
                 <Typography component="h1" variant="h5">
                     התחברות
                 </Typography>
-                <form className={classes.form} onSubmit={e => e.preventDefault() && false}>
+                <div className={classes.form} onSubmit={e => e.preventDefault() && false}>
 
                     <Grid container spacing={2}>
                         {/* <Grid item xs={12}>
@@ -172,7 +172,7 @@ function LoginPage(props) {
                         className={classes.submit}>
                         חזרה לעמוד הראשי
                     </Button>
-                </form>
+                </div>
             </Paper>
          </main>
     )

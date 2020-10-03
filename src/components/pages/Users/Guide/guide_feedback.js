@@ -275,34 +275,34 @@ class GuideFeedback extends React.Component {
             <div id="guideFeeadback" className="sec-design" >
                 <div dir="rtl">
                     <label id="date"  className="title-input">הכנס את תאריך המפגש:</label>
-                    <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
-                    <div id="name-group" className="form-group">
+                    <input type="date"  id="insert-date" name="date" onChange={this.handleChange} required/>
+                    <div id="name-group">
                         <label id="Q1L" className="title-input"> נושא הפעילות</label>
-                        <input type="text" className="form-control" name="q1" id="q1i" onChange={this.handleChange}  required/>
+                        <input type="text"  name="q1" id="q1i" onChange={this.handleChange}  required/>
                     </div>
-                    <div id="name-group" className="form-group">
+                    <div id="name-group">
                         <label id="Q2L" className="title-input"> מספר הפעילות</label>
-                        <input type="text" className="form-control" name="q2" id="q2i" onChange={this.handleChange}  required/>
+                        <input type="text" name="q2" id="q2i" onChange={this.handleChange}  required/>
                     </div>
-                    <div id="name-group" className="form-group">
+                    <div id="name-group" >
                         <label id="Q3L" className="title-input"> מה היה בפעילות</label>
-                        <input type="text" className="form-control" name="q3" id="q3i" onChange={this.handleChange}  required/>
+                        <input type="text" name="q3" id="q3i" onChange={this.handleChange}  required/>
                     </div>
-                    <div id="name-group" className="form-group">
+                    <div id="name-group" >
                         <label id="Q4L" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
-                        <input type="text" className="form-control" name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <input type="text"  name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>
                     </div>
-                    <div id="name-group" className="form-group">
+                    <div id="name-group" >
                         <label id="Q5L" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
-                        <input type="text" className="form-control" name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <input type="text"  name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>
                     </div>
-                    <div id="name-group" className="form-group">
+                    <div id="name-group" >
                         <label id="Q6L" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
-                        <input type="text" className="form-control" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>
                     </div>
-                    <div id="name-group" className="form-group">
+                    <div id="name-group" >
                         <label id="Q7L" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
-                        <input type="text" className="form-control" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <input type="text" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>
                     </div>
                     <br/>
                     <label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</h4></label>
@@ -340,9 +340,9 @@ class GuideFeedback extends React.Component {
                         </RadioGroup>
                     </div>
                     <br/>
-                    <div id="name-group" className="form-group">
+                    <div id="name-group" >
                         <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
-                        <input type="text" className="form-control" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
+                        <input type="text" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
                     </div>
 
                 </div>

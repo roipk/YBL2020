@@ -88,7 +88,7 @@ function SignUp(props) {
                     טופס הרשמה
 
                 </Typography>
-                <form className={classes.form} onSubmit={e => e.preventDefault() && false }>
+                <div className={classes.form} onSubmit={e => e.preventDefault() && false }>
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField
@@ -222,7 +222,7 @@ function SignUp(props) {
                         className={classes.submit}>
                         חזרה לעמוד הראשי
                     </Button>
-                </form>
+                </div>
             </Paper>
         </main>
     )

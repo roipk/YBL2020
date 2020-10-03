@@ -60,7 +60,7 @@ class Manager extends React.Component {
         return (
             <div id="instructor" className="sec-design">
                 <div> Hello Manager {this.state.user.email}</div>
-                <form id="Manager" className="form-design" name="student_form">
+                <div id="Manager" className="form-design" name="student_form">
                     <button id="report-button" className="btn btn-info" >צפייה בדו"ח נוכחות<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="feedback-button" className="btn btn-info" >צפייה במשובי חניכים<span
@@ -69,7 +69,7 @@ class Manager extends React.Component {
                         מדריכים<span
                             className="fa fa-arrow-right"></span></button>
                     <button id="go-back" className="btn btn-info" >התנתק</button>
-                </form>
+                </div>
             </div>
         );
     }

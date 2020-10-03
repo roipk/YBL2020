@@ -15,7 +15,7 @@ class test_g_f extends Component {
     render() {
         return(
             <div id="guideFeeadback" class="sec-design1">
-                <form id="guide_form" class="form-design" name="guide_form">
+                <div id="guide_form" class="form-design" name="guide_form">
                     <div id="name-group" class="form-group">
                         <label id="insert-date" class="title-input">הכנס את התאריך בו התקיים המפגש:</label>
                         <input type="date" class="form-control" name="insert-student" id="insert-student" required/>
@@ -38,11 +38,11 @@ class test_g_f extends Component {
                     </div>
                     <div id ="box" class="chekbox" onSubmit="return checkRadio()">
                         <label id="insert-name" class="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות:</label><br/>
-                        <form name="form1" class="chekbox" onSubmit="return checkRadio()">
+                        <div name="form1" class="chekbox" onSubmit="return checkRadio()">
                             <input type="radio" name="time" value="1"/>במידה מועטה<br/>
                             <input type="radio" name="time" value="2"/>במידה בינונית<br/>
                             <input type="radio" name="time" value="3"/>במידה רבה<br/>
-                        </form>
+                        </div>
                     </div>
                     <div id="name-group" class="form-group">
                         <label id="insert-name" class="title-input" for="name">שאלות ומחשבות לשיחת הדרכה הבאה:</label>
@@ -50,7 +50,7 @@ class test_g_f extends Component {
                     </div>
                     <button type="submit" id="confirm-form" class="btn btn-info" onClick="fBConfirmation()">שלח משוב</button>
                     <button id="go-back" class="btn btn-info" onClick="guideLoadMenu()">חזור לתפריט</button>
-                </form>
+                </div>
             </div>
         )
     }

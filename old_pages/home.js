@@ -5,7 +5,7 @@ function homepage() {
 
                <section id="data-change">
                    <div class="sec-design">
-                       <form class="form-design">
+                       <div class="form-design">
                            <div style="text-align: center;">כניסת משתמשים:</div>
                             <div style="text-align: center;">
             <button type="submit" id="confirm1" onClick="login(1)" class="btn btn-info">כניסת חניך<span class="fa fa-arrow-right"></span></button>
@@ -21,7 +21,7 @@ function homepage() {
             </div>
                            
 
-                       </form>
+                       </div>
                    </div>
                </section>
        `
