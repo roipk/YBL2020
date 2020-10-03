@@ -21,10 +21,10 @@ class UserApproval extends React.Component {
     }
 
 
-    BackToMain()
+    BackPage()
     {
         this.props.history.push({
-            pathname: `/TempManager`,
+            pathname: `./`,
             // this.chooseLayout("userApproval")
         })
     }
@@ -123,7 +123,7 @@ render() {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>
-                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
                             </Grid>
                         </div>
                     </div>
@@ -155,7 +155,7 @@ render() {
                                     </div>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
+                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
                                 </Grid>
                             </Grid>
                         </Grid>

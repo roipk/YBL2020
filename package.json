@@ -25,7 +25,7 @@
     "semantic-ui-react": "^1.2.1"
   },
   "scripts": {
-    "deploy": "firebase deploy",
+    "deploy": "npm run build && firebase deploy",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

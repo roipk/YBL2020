@@ -30,10 +30,10 @@ class UpdatesFirebase extends Component {
         this.setState({teamName:value})
     }
 
-    BackToMain()
+    BackPage()
     {
         this.props.history.push({
-            pathname: `/TempManager`,
+            pathname: `./`,
             // this.chooseLayout("userApproval")
         })
     }
@@ -95,7 +95,7 @@ class UpdatesFirebase extends Component {
 
                                 <button onClick={this.handleSubmit} >רשימת מדריכים</button>
                                 <div></div>
-                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
                             </div>
 
                         </Grid>

@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "ybl2020",
-    "ybl": "ybl-project-b5e04"
+    "default": "ybl-project-b5e04"
   }
 }

@@ -22,10 +22,10 @@ class AttendReport extends Component {
     }
 
 
-    BackToMain()
+    BackPage()
     {
         this.props.history.push({
-            pathname: `/TempManager`,
+            pathname: `./`,
         })
     }
 
@@ -92,7 +92,7 @@ class AttendReport extends Component {
 
                                 <button onClick={this.handleSubmit} >הצג</button>
                                 <div></div>
-                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
                             </div>
 
                         </Grid>

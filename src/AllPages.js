@@ -45,7 +45,7 @@ function LoadPage() {
                     <Route exact path="/Guide/:id" component={Guides} />
                     <Route exact path="/Manager/:id" component={Managers} />
 
-                    {/*guide pages*/}
+                    {/*Student pages*/}
                     <Route exact path="/TempStudent" component={TempStudent} />
                     <Route exact path="/TempStudent/Feedback" component={StudentFeedback} />
                     <Route exact path="/TempStudent/Profile" component={Profile} />

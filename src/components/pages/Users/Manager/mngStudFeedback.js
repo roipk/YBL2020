@@ -14,10 +14,10 @@ class FeedbackStudents extends Component {
             }
     }
 
-    BackToMain()
+    BackPage()
     {
         this.props.history.push({
-            pathname: `/TempManager`,
+            pathname: `./`,
             // this.chooseLayout("userApproval")
         })
     }
@@ -51,7 +51,7 @@ class FeedbackStudents extends Component {
                         </table>
                         </div>
                     </div>
-                    <button id="go-back" className="btn btn-info" onClick={()=>{this.BackToMain()}}>חזור</button>
+                    <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
                 </form>
             </div>
         )

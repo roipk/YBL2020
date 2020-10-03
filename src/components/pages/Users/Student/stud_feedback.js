@@ -60,10 +60,11 @@ class StudentFeedback extends React.Component {
 
     }
 
-    BackToMain()
+    BackPage()
     {
         this.props.history.push({
-            pathname: `/TempStudent`,
+            pathname: `./`,
+            data: this.state.user,
             // this.chooseLayout("userApproval")
         })
     }
@@ -82,9 +83,12 @@ class StudentFeedback extends React.Component {
             console.log(form.date)
             // var test = await db.collection("students").doc(path).collection("comes").where("date","==",form.date).get();
             // console.log(test)
-            var test = await db.collection("students").doc(path).collection("comes").doc(form.date).set({
+            await db.collection("students").doc(path).collection("comes").doc(form.date).set({
                 form: form,
                 date:form.date
+            }).then(()=>{
+                alert(" תודה, המשוב נשלח בהצלחה")
+                this.BackPage();
             })
 
             // var studeSet =await db.collection("students").doc(path).collection("comes").add({
@@ -191,6 +195,7 @@ class StudentFeedback extends React.Component {
     {
         console.log(this.state.form)
         this.sendDataToFirebase(this.state.form)
+
 
     }
     loadPage(event){
@@ -404,7 +409,7 @@ class StudentFeedback extends React.Component {
                 </div>
                 {/*<button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>*/}
                 <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>דווח נוכחות ושלח משוב</button>
-                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackToMain()}}>חזרה לתפריט</button>
+                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
                 <button id="logout" className="btn btn-info" >התנתק</button>
 
                 {/*<button id="go-back" className="btn btn-info" onClick={() => {*/}
@@ -428,7 +433,7 @@ class StudentFeedback extends React.Component {
                     <h2>לא נמצאו רישומי נוכחות</h2>
                 </div>
                 <button type="submit" id="confirm-form" className="btn btn-info" >רישום נוכחות</button>
-                <button id="go-back" className="btn btn-info"  onClick={()=>{this.BackToMain()}}>חזור</button>
+                <button id="go-back" className="btn btn-info"  onClick={()=>{this.BackPage()}}>חזור</button>
 
             </div>
 

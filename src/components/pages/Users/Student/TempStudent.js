@@ -1,5 +1,5 @@
 import React ,{ useState, useEffect } from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase'
+import firebase, {auth, db, checkUser, signOut} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import Grid from "@material-ui/core/Grid";
 
@@ -19,7 +19,7 @@ class TempStudent extends React.Component {
 
 
     async componentDidMount() {
-        auth.onAuthStateChanged(user=>{
+         auth.onAuthStateChanged(user=>{
             if(user)
             {
                 this.setState({
@@ -85,7 +85,7 @@ class TempStudent extends React.Component {
 
     render() {
 
-        return ( 
+        return (
             <div id="instructor" className="sec-design" dir="rtl">
                 <h2> שלום {this.state.user.email} </h2>
                 <form id="instructor_menu" className="form-design" name="student_form" method="POST">
@@ -93,7 +93,13 @@ class TempStudent extends React.Component {
                         className="fa fa-arrow-right"></span></button>
                     <button id="report-button" className="btn btn-info" onClick={()=>{this.ChangePage('Profile')}} >פרופיל<span
                         className="fa fa-arrow-right"></span></button>
-                    <button id="logout" className="btn btn-info" >התנתק</button>
+                    <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
+                    <button id="report-button" className="btn btn-info" onClick={()=>{
+                        this.props.history.push({
+                        pathname: `User`,
+                        data: this.state.user // your data array of objects
+                    })}} >חזרה לדף בדיקות<span
+                        className="fa fa-arrow-right"></span></button>
                 </form>
             </div>
         )

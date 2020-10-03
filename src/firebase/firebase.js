@@ -51,6 +51,16 @@ export async function CreateNewTeam(team) {
     console.log("done")
 }
 
+export async function checkUser() {
+   const user =await auth.onAuthStateChanged();
+   return user
+}
+
+export async function signOut() {
+   await auth.signOut();
+    return
+}
+
 
 //
 // class Firebase {

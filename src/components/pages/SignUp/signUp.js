@@ -169,7 +169,7 @@ function SignUp(props) {
 
                                 <label>
                                     <input type="radio" value="students" checked={type==='students'}  onChange={e => setType(e.target.value)}/>
-                                    סטודנט
+                                    חניך
                                 </label>
                             </div>
                         </Grid>

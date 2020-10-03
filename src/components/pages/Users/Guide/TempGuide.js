@@ -1,11 +1,8 @@
 import React from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase';
-import SelectInput from "@material-ui/core/Select/SelectInput";
-import $ from 'jquery';
-import {FormControlLabel, Paper, Radio, RadioGroup} from "@material-ui/core";
+import firebase, {auth, db, signOut} from '../../../../firebase/firebase';
+import {FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import './Guide.css'
 import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 
 
 class TestGuide extends React.Component {
@@ -207,7 +204,7 @@ class TestGuide extends React.Component {
             var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
             if(test.exists) {
                 alert("מילאת משוב לתאריך הנוכחי נא לבחור תאריך אחר")
-                var form = this.state.form;
+                form = this.state.form;
                 console.log(name);
 
                 form[name] = '';
@@ -216,7 +213,7 @@ class TestGuide extends React.Component {
             }
             else
             {
-                var form = this.state.form
+                form = this.state.form
                 form[name] = value;
                 this.setState({form:form})
             }
@@ -497,7 +494,13 @@ class TestGuide extends React.Component {
                         className="fa fa-arrow-right"></span></button>
                     <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('feedback')}} >מילוי משוב<span
                         className="fa fa-arrow-right"></span></button>
-                    <button id="logout" className="btn btn-info" >התנתק</button>
+                    <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
+                    <button id="report-button" className="btn btn-info" onClick={()=>{
+                        this.props.history.push({
+                            pathname: `User`,
+                            data: this.state.user // your data array of objects
+                        })}} >חזרה לדף בדיקות<span
+                        className="fa fa-arrow-right"></span></button>
                 </form>
             </div>
         )
@@ -726,7 +729,7 @@ class TestGuide extends React.Component {
                 </div>
 
                 <button id="submit" className="btn btn-info" onClick={this.handleSubmitFeedback}>שלח משוב</button>
-                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>מעבר למשובי סטודנטים<span className="fa fa-arrow-right"></span></button>
+                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>מעבר למשובי חניכים<span className="fa fa-arrow-right"></span></button>
                 <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
                 <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
 

@@ -17,6 +17,23 @@ import ClipLoader from "react-spinners/ClipLoader";
 //   border-color: red;
 // `;
 
+
+export function BackPage()
+{
+    this.props.history.push({
+        pathname: `./`,
+        data: this.state.user,
+    })
+}
+export function NextPage(path)
+{
+    this.props.history.push({
+        pathname: `/${path}`,
+        data: this.state.user,
+    })
+}
+
+
 class UserPage extends React.Component {
     constructor(props) {
         super(props);
