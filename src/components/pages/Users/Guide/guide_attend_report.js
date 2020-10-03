@@ -108,8 +108,9 @@ class GuideReports extends React.Component {
         }
         this.setState({prevDate:this.state.date});
         console.log("in");
-        var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().Team;
-        const collection = await db.collection('students').where("Team","==",team).get()
+        var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().team;
+        const collection = await db.collection('students').where("team","==",team).get()
+        console.log(collection)
         const Students = [];
         const date = this.state.date
         const collectionPromisesTeam = collection.docs.map( async function(doc) {
@@ -253,11 +254,12 @@ class GuideReports extends React.Component {
         var feedback = student.feedback
         var guide = await db.collection("guides").doc(auth.currentUser.uid)
         var team = (await guide.get()).data();
-        var updateTeamDate  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date).get();
-        var updateTeamDateSet  = await db.collection("Teams").doc(team.Team.id).collection("Dates").doc(this.state.date)
+        var updateTeamDate  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date).get();
+        var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
         if(approved){
             var feedbackToStudents={}
+            console.log(updateTeamDate.data())
             feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
             //feedbackToStudents[name]=""
             feedbackToStudents[name]=feedback

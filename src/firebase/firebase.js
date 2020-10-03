@@ -33,6 +33,11 @@ export async function CreateUser(user) {
     console.log(user)
     var res = await auth.createUserWithEmailAndPassword(user.email,user.phone)
     auth.currentUser.updateProfile({displayName:user.fname+" "+ user.lname})
+    if(user.type==="testers") {
+        await db.collection("students").doc(res.user.uid).set(user)
+        await db.collection("guides").doc(res.user.uid).set(user)
+        await db.collection("managers").doc(res.user.uid).set(user)
+    }
     await  db.collection(user.type).doc(res.user.uid).set(user)
     var team=await db.collection('Teams').doc(user.team.id);
     team.set({

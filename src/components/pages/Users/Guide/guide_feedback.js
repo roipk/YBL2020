@@ -55,7 +55,7 @@ class GuideFeedback extends React.Component {
         if(name === 'date' && event.target.value!=='' )
         {
             var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
-            if(test.data().locked) {
+            if(test.data() && test.data().locked) {
                 alert("המשוב לתאריך הנוכחי נחתם נא לבחור תאריך אחר")
 
                 document.getElementById(e.id).value=''
@@ -114,7 +114,7 @@ class GuideFeedback extends React.Component {
         this.setState({prevDate:this.state.date});
         console.log("in");
         var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().Team;
-        const collection = await db.collection('students').where("Team","==",team).get()
+        const collection = await db.collection('students').where("team","==",team).get()
         const Students = [];
         const date = this.state.date
         const collectionPromisesTeam = collection.docs.map( async function(doc) {
@@ -166,11 +166,12 @@ class GuideFeedback extends React.Component {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
+            await this.addDateToTeam(form.date);
             var newDate = guide.collection("comes").doc(form.date);
             newDate.set({
                 form: form,
                 date:form.date
-            }).then(()=>{
+            }).then(async ()=>{
                 alert("הטופס נשלח בהצלחה ניתן לשנות פרטים עד לחתימת המנהל")
                 window.location.reload(true);
 
@@ -180,14 +181,16 @@ class GuideFeedback extends React.Component {
             alert(error.message)
         }
     }
-    async addDateToTeam()
+    async addDateToTeam(date)
     {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
             var team = (await guide.get()).data();
-            var teamCollection = await db.collection("Teams").doc(team.Team.id)
-            var newDate = teamCollection.collection("Dates").doc(this.state.date);
+            var teamCollection = await db.collection("Teams").doc(team.team.id)
+            console.log(team.team.id)
+            console.log(date)
+            var newDate = teamCollection.collection("Dates").doc(date);
             newDate.get().then(async function(doc){
                 if(!doc.exists){
                     console.log("not exist")

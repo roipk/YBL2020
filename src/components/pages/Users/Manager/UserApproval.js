@@ -74,6 +74,7 @@ class UserApproval extends React.Component {
     var student = document.getElementById("students"+index)
     var guide = document.getElementById("guides"+index)
     var manager = document.getElementById("managers"+index)
+    var tester = document.getElementById("testers"+index)
 
 
     user.type = e.target.value;
@@ -82,18 +83,28 @@ class UserApproval extends React.Component {
         student.checked=true;
         guide.checked=false;
         manager.checked=false;
+        tester.checked=false;
 
     }
     else if(e.target === guide) {
         student.checked=false;
         guide.checked=true;
         manager.checked=false;
+        tester.checked=false;
+
+    }
+    else if(e.target === manager) {
+        student.checked=false;
+        guide.checked=true;
+        manager.checked=false;
+        tester.checked=false;
 
     }
     else {
         student.checked=false;
         guide.checked=false;
-        manager.checked=true;
+        manager.checked=false;
+        tester.checked=true;
     }
 }
 render() {
@@ -189,7 +200,14 @@ render() {
                         <b>שם מלא: </b>  {user.fname + " " + user.lname}<br/>
                             <b> אימייל: </b> {user.email}<br/>
                             <b> טלפון: </b>{user.phone}<br/>
-                            <b> תפקיד: </b>{(user.type==="students")?("חניך"):("מדריך")}<br/>
+                            {
+                                (user.type === "students") ?
+                                    (<b> תפקיד: חניך </b>):(user.type === "guides")?
+                                    (<b> תפקיד: מדריך </b>):(user.type === "managers")?
+                                        (<b> תפקיד: מנהל </b>):(<b> תפקיד: בודק </b>)
+
+                            }
+                            <br/>
                             <b> קבוצה: </b>{user.teamName}<br/>
                             <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
                                 user.team = e.value;
@@ -199,7 +217,7 @@ render() {
                         <Grid item xs={12}>
                         <b> החלף תפקיד: </b><br/>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
 
                             <div>
                                 <label>
@@ -210,7 +228,7 @@ render() {
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <div>
 
                                 <label>
@@ -221,7 +239,7 @@ render() {
                                 </label>
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={3}>
                             <div>
 
                                 <label>
@@ -229,6 +247,17 @@ render() {
                                         this.radio(e,index,user)
                                     }}/>
                                     מנהל
+                                </label>
+                            </div>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <div>
+
+                                <label>
+                                    <input id ={"testers"+index} type="radio" value="testers"  onClick={e => {
+                                        this.radio(e,index,user)
+                                    }}/>
+                                    בודק
                                 </label>
                             </div>
                         </Grid>

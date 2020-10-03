@@ -16,19 +16,7 @@ class StudentFeedback extends React.Component {
             loading: true,
             page:'menu',
             rule:"Student",
-            form:{
-                guide: "",
-                date: "",
-                feedback: "",
-                topicMeeting: "",
-                feeedbackMeeting: {
-                    // help: 0,
-                    // new: 0,
-                    // relevant: 0,
-
-
-                },
-            },
+            form:{},
             searchTerm:"",
             searchResults:[],
 
@@ -42,8 +30,6 @@ class StudentFeedback extends React.Component {
                 { key: 2, text: 'banana', value: 2 },
                 { key: 3, text: 'kabuk', value: 3 },
             ]
-
-
         };
 
         this.handleChange1 = (e, { value }) => this.setState({ value })
