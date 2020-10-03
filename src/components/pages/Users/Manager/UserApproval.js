@@ -4,6 +4,8 @@ import  { db,CreateUser, DeleteUser} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TempManager from "./TempManager";
+import {BackPage} from "../UserPage";
+
 
 const options = [
    ]
@@ -19,13 +21,6 @@ class UserApproval extends React.Component {
     }
 
 
-    BackPage()
-    {
-        this.props.history.push({
-            pathname: `./`,
-            // this.chooseLayout("userApproval")
-        })
-    }
 
 
     async componentDidUpdate(prevProps, prevState, snapshot) {
@@ -121,7 +116,7 @@ render() {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12}>
-                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                             </Grid>
                         </div>
                     </div>
@@ -153,7 +148,7 @@ render() {
                                     </div>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
+                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                                 </Grid>
                             </Grid>
                         </Grid>

@@ -1,7 +1,6 @@
 import React from "react";
 import  {auth} from '../../../../firebase/firebase'
 
-
 class TempManager extends React.Component {
     constructor(props) {
         super(props);

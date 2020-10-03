@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {db,CreateNewTeam} from "../../../../firebase/firebase";
 import Grid from "@material-ui/core/Grid";
 import TempManager from "./TempManager";
+import {BackPage} from "../UserPage";
 var options = []
 class UpdatesFirebase extends Component {
 
@@ -28,13 +29,6 @@ class UpdatesFirebase extends Component {
         this.setState({teamName:value})
     }
 
-    BackPage()
-    {
-        this.props.history.push({
-            pathname: `./`,
-            // this.chooseLayout("userApproval")
-        })
-    }
 
     render() {
         console.log(this.state.date)
@@ -93,7 +87,7 @@ class UpdatesFirebase extends Component {
 
                                 <button onClick={this.handleSubmit} >רשימת מדריכים</button>
                                 <div></div>
-                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                             </div>
 
                         </Grid>

@@ -2,6 +2,7 @@ import React from "react";
 import  {auth,db} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
+import {BackPage} from "../UserPage";
 
 
 class StudentFeedback extends React.Component {
@@ -60,14 +61,6 @@ class StudentFeedback extends React.Component {
 
     }
 
-    BackPage()
-    {
-        this.props.history.push({
-            pathname: `./`,
-            data: this.state.user,
-            // this.chooseLayout("userApproval")
-        })
-    }
 
     async sendDataToFirebase(form)
     {
@@ -88,7 +81,7 @@ class StudentFeedback extends React.Component {
                 date:form.date
             }).then(()=>{
                 alert(" תודה, המשוב נשלח בהצלחה")
-                this.BackPage();
+                BackPage(this.props,this.state.user);
             })
 
             // var studeSet =await db.collection("students").doc(path).collection("comes").add({
@@ -409,7 +402,7 @@ class StudentFeedback extends React.Component {
                 </div>
                 {/*<button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>*/}
                 <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>דווח נוכחות ושלח משוב</button>
-                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
+                <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                 <button id="logout" className="btn btn-info" >התנתק</button>
 
                 {/*<button id="go-back" className="btn btn-info" onClick={() => {*/}
@@ -433,7 +426,7 @@ class StudentFeedback extends React.Component {
                     <h2>לא נמצאו רישומי נוכחות</h2>
                 </div>
                 <button type="submit" id="confirm-form" className="btn btn-info" >רישום נוכחות</button>
-                <button id="go-back" className="btn btn-info"  onClick={()=>{this.BackPage()}}>חזור</button>
+                <button id="go-back" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
 
             </div>
 

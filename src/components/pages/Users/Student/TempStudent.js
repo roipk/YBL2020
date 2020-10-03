@@ -1,5 +1,6 @@
 import React from "react";
 import  {auth, signOut} from '../../../../firebase/firebase'
+import {NextPage} from "../UserPage";
 
 
 class TempStudent extends React.Component {
@@ -72,14 +73,7 @@ class TempStudent extends React.Component {
         this.render()
     }
 
-    ChangePage(path) {
 
-        this.props.history.push({
-            pathname: `${this.props.location.pathname}/${path}`,
-            data: this.state.user
-        })
-
-    }
 
     render() {
 
@@ -87,9 +81,9 @@ class TempStudent extends React.Component {
             <div id="instructor" className="sec-design" dir="rtl">
                 <h2> שלום {this.state.user.email} </h2>
                 <form id="instructor_menu" className="form-design" name="student_form" method="POST">
-                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.ChangePage("Feedback")}}>מילוי משוב<span
+                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{NextPage(this.props,"Feedback",this.state.user)}}>מילוי משוב<span
                         className="fa fa-arrow-right"></span></button>
-                    <button id="report-button" className="btn btn-info" onClick={()=>{this.ChangePage('Profile')}} >פרופיל<span
+                    <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Profile",this.state.user)}} >פרופיל<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
                     <button id="report-button" className="btn btn-info" onClick={()=>{

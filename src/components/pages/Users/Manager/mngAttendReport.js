@@ -3,6 +3,8 @@ import {db} from "../../../../firebase/firebase";
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import TempManager from "./TempManager";
+import {BackPage} from "../UserPage";
+
 var options = []
 class AttendReport extends Component {
 
@@ -21,12 +23,6 @@ class AttendReport extends Component {
     }
 
 
-    BackPage()
-    {
-        this.props.history.push({
-            pathname: `./`,
-        })
-    }
 
     render() {
         console.log(this.state.date)
@@ -91,7 +87,7 @@ class AttendReport extends Component {
 
                                 <button onClick={this.handleSubmit} >הצג</button>
                                 <div></div>
-                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                             </div>
 
                         </Grid>

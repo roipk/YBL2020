@@ -15,18 +15,18 @@ import ClipLoader from "react-spinners/ClipLoader";
 // `;
 
 
-export function BackPage()
+export function BackPage(prop,data)
 {
-    this.props.history.push({
-        pathname: `./`,
-        data: this.state.user,
+    prop.history.push({
+        pathname: `${prop.history.goBack()}`,
+        data: data,
     })
 }
-export function NextPage(path)
+export function NextPage(prop,path,data)
 {
-    this.props.history.push({
-        pathname: `/${path}`,
-        data: this.state.user,
+    prop.history.push({
+        pathname: `${prop.location.pathname}/${path}`,
+        data: data,
     })
 }
 

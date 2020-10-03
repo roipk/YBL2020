@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import {BackPage} from "../UserPage";
 class FeedbackStudents extends Component {
 
     constructor() {
@@ -13,13 +13,7 @@ class FeedbackStudents extends Component {
             }
     }
 
-    BackPage()
-    {
-        this.props.history.push({
-            pathname: `./`,
-            // this.chooseLayout("userApproval")
-        })
-    }
+
 
 
     render() {
@@ -50,7 +44,7 @@ class FeedbackStudents extends Component {
                         </table>
                         </div>
                     </div>
-                    <button id="go-back" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזור</button>
+                    <button id="go-back" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
                 </form>
             </div>
         )

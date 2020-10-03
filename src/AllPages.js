@@ -25,6 +25,8 @@ import FeedbackGuides from "./components/pages/Users/Manager/mngGuideFeedback";
 import UpdatesFirebase from "./components/pages/Users/Manager/UpdatesFirebase";
 import StudentFeedback from "./components/pages/Users/Student/stud_feedback";
 import Profile from "./components/pages/Users/profile";
+import GuideReports from "./components/pages/Users/Guide/guide_attend_report";
+import GuideFeedback from "./components/pages/Users/Guide/guide_feedback";
 
 function LoadPage() {
     return (
@@ -53,6 +55,8 @@ function LoadPage() {
 
                     {/*guide pages*/}
                     <Route exact path="/TempGuide" component={TempGuide} />
+                    <Route exact path="/TempGuide/Reports" component={GuideReports} />
+                    <Route exact path="/TempGuide/Feedback" component={GuideFeedback} />
 
 
                     {/*managers pages*/}
