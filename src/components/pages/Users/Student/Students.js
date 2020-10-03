@@ -1,5 +1,5 @@
-import React ,{ useState, useEffect } from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase'
+import React  from "react";
+import  {auth,db} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 
@@ -51,7 +51,7 @@ class Student extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.hendleSerch = this.hendleSerch.bind(this)
-        this. hendleRadioButton = this. hendleRadioButton.bind(this)
+        this.hendleRadioButton = this.hendleRadioButton.bind(this)
 
 
 
@@ -85,7 +85,7 @@ class Student extends React.Component {
 
             }
             coms.push(form)
-            var test = await studeSet.set({coms:coms}, {merge:true})
+            await studeSet.set({coms:coms}, {merge:true})
             console.log(coms)
 
 
@@ -219,7 +219,6 @@ class Student extends React.Component {
 
 
     menu() {
-        const {  options, search, value1 } = this.state
 
         return (<div id="instructor" className="sec-design">
             <h2>Hello Student {this.state.user.email} </h2>

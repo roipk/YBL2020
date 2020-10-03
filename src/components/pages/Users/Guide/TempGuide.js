@@ -196,6 +196,7 @@ class TestGuide extends React.Component {
 
     async handleChange(event)
     {
+        var form=''
         var name = event.target.name;
         var value = event.target.value;
         console.log(name, value)
@@ -220,7 +221,7 @@ class TestGuide extends React.Component {
         }
         else
         {
-            var form = this.state.form
+            form = this.state.form
             form[name] = value;
             this.setState({form:form})
         }
@@ -296,7 +297,7 @@ class TestGuide extends React.Component {
                     this.setState({Students: Students});
                     return
                 }
-                else if(Students[i].approv!=this.state.Students[i].approv)
+                else if(Students[i].approv!==this.state.Students[i].approv)
                 {
                     this.setState({Students: Students});
                     return
@@ -386,12 +387,14 @@ class TestGuide extends React.Component {
 
     approvStudent(student)
     {
-        for(var i=0;i<this.state.Students.length;i++)
+
+        var Students =  this.state.Students;
+        for(var i=0;i<Students.length;i++)
         {
-           if(this.state.Students[i] === student)
+           if(Students[i] === student)
            {
-               this.state.Students[i].approv = !this.state.Students[i].approv
-               this.setState({Students: this.state.Students})
+               Students[i].approv = !Students[i].approv;
+               this.setState({Students:Students})
                return
            }
         }
@@ -399,13 +402,14 @@ class TestGuide extends React.Component {
 
     feedbackGuide(event,student)
     {
-        console.log(event.target.value)
-        for(var i=0;i<this.state.Students.length;i++)
+        var Students = this.state.Students;
+        console.log(event.target.value);
+        for(var i=0;i<Students.length;i++)
         {
-            if(this.state.Students[i] === student)
+            if(Students[i] === student)
             {
-                this.state.Students[i].feedback = event.target.value
-                this.setState({Students: this.state.Students})
+                Students[i].feedback = event.target.value
+                this.setState({Students: Students})
                 return
             }
         }
@@ -433,7 +437,7 @@ class TestGuide extends React.Component {
         }
         else{
             feedback=""
-            var feedbackToStudents={}
+            feedbackToStudents={}
             feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
         
             updateTeamDateSet.set({
@@ -441,7 +445,7 @@ class TestGuide extends React.Component {
                     [name]:firebase.firestore.FieldValue.delete()
             }}, { merge: true });        
         }
-        const stud =await db.collection("students").doc(sid).collection("comes").doc(this.state.date).set({
+        await db.collection("students").doc(sid).collection("comes").doc(this.state.date).set({
             approved:approved,
             feedbackGuide:feedback
         }, {merge:true})

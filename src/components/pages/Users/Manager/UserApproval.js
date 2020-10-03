@@ -1,10 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Select from 'react-select'
-import firebase, {auth, db,CreateUser, DeleteUser} from '../../../../firebase/firebase'
+import  { db,CreateUser, DeleteUser} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
-import TestGuide from "../Guide/TempGuide";
-import {Button, FormControlLabel, Radio, RadioGroup} from "@material-ui/core";
 import TempManager from "./TempManager";
 
 const options = [
@@ -17,7 +15,7 @@ class UserApproval extends React.Component {
         this.state = {
 
         };
-        var users = []
+
     }
 
 
@@ -42,7 +40,7 @@ class UserApproval extends React.Component {
         console.log(this.state.users)
         for (i=0;i<usersList.length;i++)
         {
-            if(usersList[i].email!=this.state.users[i].email)
+            if(usersList[i].email!==this.state.users[i].email)
             {
                 this.setState({users: usersList});
                 return

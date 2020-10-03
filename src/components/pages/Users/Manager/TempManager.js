@@ -1,9 +1,5 @@
 import React from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase'
-import Grid from "@material-ui/core/Grid";
-import UserApproval from "./UserApproval";
-import AttendReport from "./mngAttendReport"
-import UpdatesFirebase from "./UpdatesFirebase";
+import  {auth} from '../../../../firebase/firebase'
 
 
 class TempManager extends React.Component {

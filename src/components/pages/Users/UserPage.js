@@ -1,11 +1,8 @@
 import React from "react";
-import firebase, {auth} from '../../../firebase/firebase'
+import  {auth} from '../../../firebase/firebase'
 import {Button} from "@material-ui/core";
-import { Link } from "react-router-dom";
-import { withRouter} from 'react-router'
-import User from './Student/Students'
 
-// import { css } from "@emotion/core";
+
 import ClipLoader from "react-spinners/ClipLoader";
 
 
@@ -150,7 +147,7 @@ class UserPage extends React.Component {
 
     userPage()
     {
-        const { user , isLoaded , error} = this.state
+        const { user , error} = this.state
         if(error)
             return (<h1>{error}</h1>)
 

@@ -1,5 +1,5 @@
-import React ,{ useState, useEffect } from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase'
+import React from "react";
+import  {auth,db} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 
@@ -159,6 +159,7 @@ class StudentFeedback extends React.Component {
 
     async handleChange(event)
     {
+        var form ="";
         var name = event.target.name;
         var value = event.target.value;
         if(name === 'date' && event.target.value!=='' )
@@ -166,7 +167,7 @@ class StudentFeedback extends React.Component {
             var test = await db.collection("students").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
             if(test.exists) {
                 alert("מילאת משוב לתאריך הנוכחי נא לבחור תאריך אחר")
-                var form = this.state.form;
+                form = this.state.form;
                 console.log(name);
 
                 form[name] = '';
@@ -175,14 +176,14 @@ class StudentFeedback extends React.Component {
             }
             else
             {
-                var form = this.state.form
+                form = this.state.form
                 form[name] = value;
                 this.setState({form:form})
             }
         }
         else
         {
-            var form = this.state.form
+            form = this.state.form
             form[name] = value;
             this.setState({form:form})
         }
@@ -267,7 +268,6 @@ class StudentFeedback extends React.Component {
 
 
     menu() {
-        const {  options, search, value1 } = this.state
 
         return (<div id="instructor" className="sec-design">
             <h2>Hello Student {this.state.user.email} </h2>

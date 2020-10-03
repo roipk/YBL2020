@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import firebase, {auth} from "../../../../firebase/firebase";
+import  {auth} from "../../../../firebase/firebase";
 
 class test_g_a_r extends Component {
 

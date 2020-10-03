@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import firebase ,{db} from "../../../../firebase/firebase";
+import {db} from "../../../../firebase/firebase";
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import TempManager from "./TempManager";
-import { ContactSupport } from "@material-ui/icons";
 var options = []
 class AttendReport extends Component {
 
@@ -83,7 +82,7 @@ class AttendReport extends Component {
                             <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
                             <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
                                 console.log(e.label,e.value);
-                                this.state.teamPath=e.value.id
+                                this.setState({teamPath:e.value.id})
                             }} />
 
                         </Grid>

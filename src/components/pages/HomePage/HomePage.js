@@ -1,8 +1,7 @@
 import React from 'react'
-import { Typography, Paper, Avatar, Button } from '@material-ui/core'
-import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
+import {  Paper, Button } from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
-import {Link, Switch} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import {auth} from "../../../firebase/firebase";
 
 const styles = theme => ({

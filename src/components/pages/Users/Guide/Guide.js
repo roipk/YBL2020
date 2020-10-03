@@ -1,6 +1,5 @@
 import React from "react";
-import firebase, {auth,db} from '../../../../firebase/firebase';
-import SelectInput from "@material-ui/core/Select/SelectInput";
+import  {auth,db} from '../../../../firebase/firebase';
 import $ from 'jquery';
 
 
@@ -29,7 +28,7 @@ class Guide extends React.Component {
 
     async getDataFromFirebase(event)
     {
-        var guidePath = "awwLpQL9A1WKW9KX60Lz"
+        // var guidePath = "awwLpQL9A1WKW9KX60Lz"
         try{
 
             // var guideUid = 'awwLpQL9A1WKW9KX60Lz'
@@ -45,7 +44,7 @@ class Guide extends React.Component {
                 const data = doc.get("coms");
                 if (data)
                     data.forEach(doc1 =>{
-                        if(doc1["date"] == this.state.reportDate && doc1["approved"]==false){
+                        if(doc1["date"] === this.state.reportDate && doc1["approved"]===false){
                             console.log(doc)
                             students.push(doc);
                             return false;
@@ -60,7 +59,8 @@ class Guide extends React.Component {
 
     handleChange(event)
     {
-        this.state.reportDate = event.target.value;
+        // this.state.reportDate = event.target.value;
+        this.setState({reportDate: event.target.value})
     }
 
     handleSubmit(event)
@@ -108,8 +108,8 @@ class Guide extends React.Component {
                 var data =stude.data().coms
                 if (data)
                     data.forEach(doc1 =>{
-                        if(doc1["date"] == selectedDate && doc1["approved"]==false){
-                            var index =data.indexOf(doc1)
+                        if(doc1["date"] === selectedDate && doc1["approved"]===false){
+                            // var index =data.indexOf(doc1)
                             var usersCollection = this.afs.collection('students', ref => ref.where('coms', 'array-contains', {'date':selectedDate }) );
                             console.log(usersCollection)
                         }

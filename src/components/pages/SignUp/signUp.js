@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react'
-import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import React, {useState} from 'react'
+import { Typography, Paper, Avatar, Button} from '@material-ui/core'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Link, withRouter } from 'react-router-dom'
-import firebase,{db,auth,RegisterUser,DeleteUser} from '../../../firebase/firebase' ;
+import {db,RegisterUser} from '../../../firebase/firebase' ;
 
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";

@@ -1,7 +1,5 @@
-import React ,{ useState, useEffect } from "react";
-import firebase, {auth, db, checkUser, signOut} from '../../../../firebase/firebase'
-import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
-import Grid from "@material-ui/core/Grid";
+import React from "react";
+import  {auth, signOut} from '../../../../firebase/firebase'
 
 
 class TempStudent extends React.Component {

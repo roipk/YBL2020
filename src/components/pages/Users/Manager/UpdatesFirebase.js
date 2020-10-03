@@ -1,9 +1,7 @@
 import React, { Component } from "react";
-import firebase ,{db,CreateNewTeam} from "../../../../firebase/firebase";
-import Select from 'react-select'
+import {db,CreateNewTeam} from "../../../../firebase/firebase";
 import Grid from "@material-ui/core/Grid";
 import TempManager from "./TempManager";
-import { ContactSupport } from "@material-ui/icons";
 var options = []
 class UpdatesFirebase extends Component {
 

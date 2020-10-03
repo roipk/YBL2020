@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
+import { Typography, Paper, Avatar, Button} from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Link, withRouter } from 'react-router-dom'
-import firebase ,{auth} from '../../../firebase/firebase' ;
+import {auth} from '../../../firebase/firebase' ;
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 
@@ -66,7 +66,7 @@ function LoginPage(props) {
 
 
     const [email, setEmail] = useState('')
-    const [phone, setPhone] = useState('')
+    // const [phone, setPhone] = useState('')
     const [password, setPassword] = useState('')
 
 
@@ -184,8 +184,8 @@ function LoginPage(props) {
         try {
             var user = await auth.signInWithEmailAndPassword(email, password).catch(function(error) {
                 // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
+                // var errorCode = error.code;
+                // var errorMessage = error.message;
                 // ...
             });
             console.log(user.user.email)
