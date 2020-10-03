@@ -4,7 +4,6 @@ import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import TempManager from "./TempManager";
 import $ from 'jquery'
-import { ContactSupport } from "@material-ui/icons";
 import {BackPage} from "../UserPage";
 
 var options = []
@@ -72,7 +71,7 @@ class AttendReport extends Component {
             for (i=0;i<Students.length;i++)
             {
                 try{
-                    if(Students[i].ref.approved==true){
+                    if(Students[i].ref.approved===true){
                         console.log(Students[i].ref)
                         console.log(Students[i].data.fname+" "+Students[i].data.lname)
                         var lable=document.createElement("lable");

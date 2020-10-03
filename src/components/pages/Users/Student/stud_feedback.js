@@ -64,58 +64,16 @@ class StudentFeedback extends React.Component {
 
     async sendDataToFirebase(form)
     {
-        // var team = auth.currentUser.uid
         var path = auth.currentUser.uid
-        // var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
         try{
-            // var p = (await db.collection("students").doc(path).get()).data().Teams.id
-            // var team = (await db.collection("Teams").doc(p).get()).data().name
-            // console.log(team)
-
-            // var stude =await db.collection("students").doc(path).get()
-            console.log(form.date)
-            // var test = await db.collection("students").doc(path).collection("comes").where("date","==",form.date).get();
-            // console.log(test)
             await db.collection("students").doc(path).collection("comes").doc(form.date).set({
+                approved:true,
                 form: form,
                 date:form.date
             }).then(()=>{
-                alert(" תודה, המשוב נשלח בהצלחה")
-                BackPage(this.props,this.state.user);
+                alert(" תודה, הטופס נשלח בהצלחה")
+                window.location.reload(true);
             })
-
-            // var studeSet =await db.collection("students").doc(path).collection("comes").add({
-            //     form: form,
-            //     date:form.date
-            // });
-
-            // var coms =stude.data().coms
-            //
-            // if(!coms)
-            // {
-            //     console.log(coms)
-            //
-            //     coms= []
-            //
-            // }
-            // coms.push(form)
-            // var test = await studeSet.set({coms:coms}, {merge:true})
-            // console.log(coms)
-            //
-            //
-            // // var testAdd = await stude.add({coms:form}, {merge:true})
-            //
-            // alert("end")
-            //
-            // // if(stude){
-            // //
-            // //
-            // //     console.log(stude.data())
-            // //     stude.data().coms= form
-            // //     console.log(stude.data())
-            // //
-            // // }
-
 
         }catch(error) {
             alert(error.message)
