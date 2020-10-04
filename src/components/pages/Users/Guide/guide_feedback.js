@@ -60,7 +60,7 @@ class GuideFeedback extends React.Component {
 
                 document.getElementById(e.id).value=''
                 form = this.state.form;
-                // console.log(name);
+                console.log(name);
 
                 form[name] = '';
                 this.setState({form:form})
@@ -138,7 +138,7 @@ class GuideFeedback extends React.Component {
                 Students.push({data,approv,ref,feedback})
             })
             let i;
-            // console.log(Students.length)
+            console.log(Students.length)
             this.setState({viewStudent: !this.state.viewStudent});
             for (i=0;i<Students.length;i++)
             {
@@ -194,7 +194,7 @@ class GuideFeedback extends React.Component {
                     newDate.set({
                         reportGuide: formGuide,
                         nameGuide: team.fname + " "+team.lname,
-                        postsStudents:[],
+                        postStudents:{},
                         feedbackToStudents:{}
                     })
                 }

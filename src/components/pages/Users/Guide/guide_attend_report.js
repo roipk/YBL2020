@@ -177,7 +177,7 @@ class GuideReports extends React.Component {
                     newDate.set({
                         reportGuide:report,
                         nameGuide: team.fname + " "+team.lname,
-                        postsStudents:[],
+                        postStudents:{},
                         feedbackToStudents:{}
                     })
 
@@ -187,7 +187,7 @@ class GuideReports extends React.Component {
                     newDate.update({
                         reportGuide:report,
                         nameGuide: team.fname + " "+team.lname,
-                        postsStudents:[],
+                        postStudents:{},
                         feedbackToStudents:{}
                     })
                 }
@@ -246,7 +246,6 @@ class GuideReports extends React.Component {
     feedbackGuide(event,student)
     {
         var Students = this.state.Students;
-        console.log(event.target.value);
         for(var i=0;i<Students.length;i++)
         {
             if(Students[i] === student)
@@ -262,6 +261,9 @@ class GuideReports extends React.Component {
     {
         await this.addDateToTeam()
         var sid = student.ref
+        var form = await db.collection("students").doc(sid).collection("comes").doc(this.state.date)
+        var postStudent = (await form.get()).data().form.topicMeeting
+        console.log(postStudent)
         var approved = student.approv
         var feedback = student.feedback
         var guide = await db.collection("guides").doc(auth.currentUser.uid)
@@ -269,20 +271,31 @@ class GuideReports extends React.Component {
         var updateTeamDate  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date).get();
         var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
+
         if(approved){
             var feedbackToStudents={}
+            var postStudents={}
             if(updateTeamDate.data() && updateTeamDate.data()["feedbackToStudents"]) {
+                postStudents = updateTeamDate.data()["postStudents"]
                 feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
+                postStudents[name] = postStudent
                 feedbackToStudents[name]=feedback
+
                 updateTeamDateSet.update({
-                    feedbackToStudents:feedbackToStudents
+                    feedbackToStudents:feedbackToStudents,
+                    guideName: team.fname+' '+team.lname,
+                    postStudents: postStudents
                 })
             }
             else
             {
                 feedbackToStudents[name]=feedback
+                postStudents[name] = postStudent
                 updateTeamDateSet.set({
-                    feedbackToStudents:feedbackToStudents
+                    feedbackToStudents:feedbackToStudents,
+                    guideName: team.fname+' '+team.lname,
+                    postStudents: postStudents,
+
                 })
             }
         }
@@ -296,9 +309,10 @@ class GuideReports extends React.Component {
                     [name]:firebase.firestore.FieldValue.delete()
                 }}, { merge: true });
         }
-        await db.collection("students").doc(sid).collection("comes").doc(this.state.date).set({
+        await form.set({
             approved:approved,
-            feedbackGuide:feedback
+            feedbackGuide:feedback,
+            guideName: team.fname+' '+team.lname
         }, {merge:true})
 
     }

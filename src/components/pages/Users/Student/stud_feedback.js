@@ -16,7 +16,9 @@ class StudentFeedback extends React.Component {
             loading: true,
             page:'menu',
             rule:"Student",
-            form:{},
+            date:'',
+            form:{
+            },
             searchTerm:"",
             searchResults:[],
 
@@ -52,10 +54,10 @@ class StudentFeedback extends React.Component {
     {
         var path = auth.currentUser.uid
         try{
-            await db.collection("students").doc(path).collection("comes").doc(form.date).set({
+            await db.collection("students").doc(path).collection("comes").doc(this.state.date).set({
                 approved:true,
                 form: form,
-                date:form.date
+                date:this.state.date
             }).then(()=>{
                 alert(" תודה, הטופס נשלח בהצלחה")
                 window.location.reload(true);
@@ -86,13 +88,16 @@ class StudentFeedback extends React.Component {
     }
     hendleRadioButton(event)
     {
+        var feeedbackMeeting=''
         var form = this.state.form
-        var feeedbackMeeting= form.feeedbackMeeting
+        if(form.feeedbackMeeting)
+            feeedbackMeeting= form.feeedbackMeeting
+        else
+            feeedbackMeeting={}
         feeedbackMeeting[event.target.name] = event.target.value;
         form.feeedbackMeeting=feeedbackMeeting
         this.setState({form:form})
-        console.log(form)
-    }
+     }
 
     async handleChange(event)
     {
@@ -102,26 +107,22 @@ class StudentFeedback extends React.Component {
         if(name === 'date' && event.target.value!=='' )
         {
             var test = await db.collection("students").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
-            if(test.exists) {
+            if(test.exists && test.data().form) {
                 alert("מילאת משוב לתאריך הנוכחי נא לבחור תאריך אחר")
                 form = this.state.form;
-                console.log(name);
-
-                form[name] = '';
-                this.setState({form:form})
-
+                this.setState({date:''})
             }
             else
             {
-                form = this.state.form
-                form[name] = value;
-                this.setState({form:form})
+                this.setState({date:value})
             }
         }
         else
         {
             form = this.state.form
             form[name] = value;
+            // this.setState({form:form})
+            // this.state.form = form
             this.setState({form:form})
         }
 
@@ -131,7 +132,6 @@ class StudentFeedback extends React.Component {
 
     handleSubmit(event)
     {
-        console.log(this.state.form)
         this.sendDataToFirebase(this.state.form)
 
 
@@ -142,7 +142,6 @@ class StudentFeedback extends React.Component {
     }
 
     async componentDidMount() {
-        console.log("work")
         auth.onAuthStateChanged(user=>{
             if(user)
             {
@@ -225,7 +224,7 @@ class StudentFeedback extends React.Component {
 
                 <div id="name-group" className="form-group">
                     <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
-                    <input type="date" className="form-control" id="insert-date" value={this.state.form.date} name="date" onChange={this.handleChange}
+                    <input type="date" className="form-control" id="insert-date" value={this.state.date} name="date" onChange={this.handleChange}
                            required/>
                 </div>
 
