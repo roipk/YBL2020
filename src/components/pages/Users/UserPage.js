@@ -153,7 +153,7 @@ class UserPage extends React.Component {
 
         return(
             <div>
-                hello {user.email}
+               שלום {user.displayName}
             {/*    <span>*/}
             {/*    {isLoaded ? <Users user={user} isLoaded={isLoaded}/> : <div/>}*/}
             {/*</span>*/}
