@@ -51,7 +51,7 @@ class GuideFeedback extends React.Component {
         var name = event.target.name;
         var value = event.target.value;
         var e = event.target
-        console.log(name, value)
+        // console.log(name, value)
         if(name === 'date' && event.target.value!=='' )
         {
             var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
@@ -60,7 +60,7 @@ class GuideFeedback extends React.Component {
 
                 document.getElementById(e.id).value=''
                 form = this.state.form;
-                console.log(name);
+                // console.log(name);
 
                 form[name] = '';
                 this.setState({form:form})
@@ -138,7 +138,7 @@ class GuideFeedback extends React.Component {
                 Students.push({data,approv,ref,feedback})
             })
             let i;
-            console.log(Students.length)
+            // console.log(Students.length)
             this.setState({viewStudent: !this.state.viewStudent});
             for (i=0;i<Students.length;i++)
             {
@@ -166,12 +166,12 @@ class GuideFeedback extends React.Component {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
-            await this.addDateToTeam(form.date);
-            var newDate = guide.collection("comes").doc(form.date);
+            var newDate = await guide.collection("comes").doc(form.date);
             newDate.set({
                 form: form,
                 date:form.date
             }).then(async ()=>{
+                await this.addDateToTeam(guide,form.date);
                 alert("הטופס נשלח בהצלחה ניתן לשנות פרטים עד לחתימת המנהל")
                 window.location.reload(true);
 
@@ -181,26 +181,28 @@ class GuideFeedback extends React.Component {
             alert(error.message)
         }
     }
-    async addDateToTeam(date)
+    async addDateToTeam(guide,date)
     {
-        var path = auth.currentUser.uid
+        var formGuide = (await guide.get()).ref
         try{
-            var guide = await db.collection("guides").doc(path)
             var team = (await guide.get()).data();
             var teamCollection = await db.collection("Teams").doc(team.team.id)
-            console.log(team.team.id)
-            console.log(date)
             var newDate = teamCollection.collection("Dates").doc(date);
             newDate.get().then(async function(doc){
                 if(!doc.exists){
                     console.log("not exist")
                     newDate.set({
-                        reportGuide: newDate,
+                        reportGuide: formGuide,
                         nameGuide: team.fname + " "+team.lname,
                         postsStudents:[],
                         feedbackToStudents:{}
                     })
-
+                }
+                else {
+                    newDate.update({
+                        reportGuide: formGuide,
+                        nameGuide: team.fname + " " + team.lname
+                    })
                 }
             })
         }catch(error) {

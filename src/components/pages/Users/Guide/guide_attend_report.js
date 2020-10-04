@@ -165,23 +165,35 @@ class GuideReports extends React.Component {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
+            var report = await  guide.collection(this.state.date).ref;
+            if(!report)
+                report=''
+            console.log(report)
             var team = (await guide.get()).data();
-            var teamCollection = await db.collection("Teams").doc(team.Team.id)
+            var teamCollection = await db.collection("Teams").doc(team.team.id)
             var newDate = teamCollection.collection("Dates").doc(this.state.date);
             newDate.get().then(async function(doc){
                 if(!doc.exists){
-                    console.log("not exist")
                     newDate.set({
-                        reportGuide: newDate,
+                        reportGuide:report,
                         nameGuide: team.fname + " "+team.lname,
                         postsStudents:[],
                         feedbackToStudents:{}
                     })
 
                 }
+                else
+                {
+                    newDate.update({
+                        reportGuide:report,
+                        nameGuide: team.fname + " "+team.lname,
+                        postsStudents:[],
+                        feedbackToStudents:{}
+                    })
+                }
             })
         }catch(error) {
-            alert(error.message)
+
         }
 
 
@@ -259,13 +271,20 @@ class GuideReports extends React.Component {
         var name=student.data.fname+" "+ student.data.lname
         if(approved){
             var feedbackToStudents={}
-            console.log(updateTeamDate.data())
-            feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
-            //feedbackToStudents[name]=""
-            feedbackToStudents[name]=feedback
-            updateTeamDateSet.update({
-                feedbackToStudents
-            })
+            if(updateTeamDate.data() && updateTeamDate.data()["feedbackToStudents"]) {
+                feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
+                feedbackToStudents[name]=feedback
+                updateTeamDateSet.update({
+                    feedbackToStudents:feedbackToStudents
+                })
+            }
+            else
+            {
+                feedbackToStudents[name]=feedback
+                updateTeamDateSet.set({
+                    feedbackToStudents:feedbackToStudents
+                })
+            }
         }
         else{
             feedback=""
