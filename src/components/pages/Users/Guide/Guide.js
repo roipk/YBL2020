@@ -20,6 +20,7 @@ class Guide extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleSubmit2 = this.handleSubmit2.bind(this)
         this.handleChange = this.handleChange.bind(this)
+       
 
     }
 
