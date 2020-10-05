@@ -66,6 +66,81 @@ export async function signOut() {
     return
 }
 
+export async function getGuide(uid) {
+    var guide = await db.collection("guides").doc(uid);
+    console.log(guide);
+    return guide;
+}
+
+export async function getGuideData(uid) {
+    var guideData = await (await db.collection("guides").doc(uid).get()).data();
+    console.log(guideData);
+    return guideData;
+}
+
+export async function getGuideFormByDate(uid, date) {
+    var guideData = await (await db.collection("guides").doc(uid).collection("comes").doc(date).get()).data();
+    console.log(guideData);
+    return guideData;
+}
+
+export async function getPathData(path) {
+    var guideData =await (await db.doc(path).get()).data();
+    console.log(guideData);
+    return guideData;
+}
+
+export async function getGuideForms(uid) {
+    var forms = [];
+    var guideData = await db.collection("guides").doc(uid).collection("comes").get();
+    console.log(guideData.docs[0].data());
+    guideData.docs.forEach(doc=>{
+        forms.push(doc.data());
+    })
+    console.log(forms);
+    return forms;
+}
+
+export async function getStudent(uid) {
+    var student = await db.collection("students").doc(uid);
+    console.log(student);
+    return student;
+}
+
+export async function getStudentData(uid) {
+    var studentData = await (await db.collection("students").doc(uid).get()).data();
+    console.log(studentData);
+    return studentData;
+}
+
+export async function getStudentFormByDate(uid, date) {
+    var studentFormByDate = await (await db.collection("students").doc(uid).collection("comes").doc(date).get()).data();
+    console.log(studentFormByDate);
+    return studentFormByDate;
+}
+
+export async function getStudentForms(uid) {
+    var forms = [];
+    var studentData = await db.collection("students").doc(uid).collection("comes").get();
+    console.log(studentData.docs[0].data());
+    studentData.docs.forEach(doc=>{
+        forms.push(doc.data());
+    })
+    console.log(forms);
+    return forms;
+}
+
+export async function getManager(uid) {
+    var manager = await db.collection("managers").doc(uid);
+    console.log(manager);
+    return manager;
+}
+
+export async function getManagerData(uid) {
+    var managerData = await (await db.collection("managers").doc(uid).get()).data();
+    console.log(managerData);
+    return managerData;
+}
 
 //
 // class Firebase {

@@ -1,5 +1,5 @@
 import React from "react";
-import {auth, signOut} from '../../../../firebase/firebase';
+import  {auth, getGuideForms, getPathData, signOut} from '../../../../firebase/firebase';
 import './Guide.css'
 import {NextPage} from "../UserPage";
 
@@ -30,9 +30,9 @@ class TestGuide extends React.Component {
                 q9:""
             }
         };
+       
+        getPathData("Teams/FgMtMMfD72JGd2qYJ9VD/Dates/2020-10-10")
     }
-
-
 
     async componentDidMount() {
         auth.onAuthStateChanged(user=>{
