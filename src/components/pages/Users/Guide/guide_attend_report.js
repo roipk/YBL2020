@@ -160,7 +160,7 @@ class GuideReports extends React.Component {
 
 
 
-    async addDateToTeam()
+    async addDataToTeam()
     {
         var path = auth.currentUser.uid
         try{
@@ -174,21 +174,29 @@ class GuideReports extends React.Component {
             var newDate = teamCollection.collection("Dates").doc(this.state.date);
             newDate.get().then(async function(doc){
                 if(!doc.exists){
+                    console.log("create form")
                     newDate.set({
                         reportGuide:report,
                         nameGuide: team.fname + " "+team.lname,
                         postStudents:{},
-                        feedbackToStudents:{}
+                        feedbackToStudents:{},
+                        formStudents:{
+                            q1:[0,0,0,0,0],
+                            q2:[0,0,0,0,0],
+                            q3:[0,0,0,0,0],
+                            q4:[0,0,0,0,0],
+                        }
                     })
 
                 }
                 else
                 {
+                    console.log("form not empty")
                     newDate.update({
                         reportGuide:report,
                         nameGuide: team.fname + " "+team.lname,
                         postStudents:{},
-                        feedbackToStudents:{}
+
                     })
                 }
             })
@@ -259,11 +267,10 @@ class GuideReports extends React.Component {
 
     async saveStudentData(student)
     {
-        await this.addDateToTeam()
+        await this.addDataToTeam()
         var sid = student.ref
         var form = await db.collection("students").doc(sid).collection("comes").doc(this.state.date)
-        var postStudent = (await form.get()).data().form.topicMeeting
-        console.log(postStudent)
+        var dataStudent = (await form.get()).data().form
         var approved = student.approv
         var feedback = student.feedback
         var guide = await db.collection("guides").doc(auth.currentUser.uid)
@@ -275,26 +282,38 @@ class GuideReports extends React.Component {
         if(approved){
             var feedbackToStudents={}
             var postStudents={}
+            var formStudents={}
             if(updateTeamDate.data() && updateTeamDate.data()["feedbackToStudents"]) {
                 postStudents = updateTeamDate.data()["postStudents"]
                 feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
-                postStudents[name] = postStudent
+                console.log("update form")
+                formStudents = await updateTeamDate.data()['formStudents']
+                postStudents[name] = dataStudent.topicMeeting
                 feedbackToStudents[name]=feedback
+                console.log(formStudents)
+                formStudents['q1'][parseInt(dataStudent.feeedbackMeeting['q1'])]++;
+                formStudents['q2'][parseInt(dataStudent.feeedbackMeeting['q2'])]++;
+                formStudents['q3'][parseInt(dataStudent.feeedbackMeeting['q3'])]++;
+                formStudents['q4'][parseInt(dataStudent.feeedbackMeeting['q4'])]++;
 
+                console.log(formStudents)
                 updateTeamDateSet.update({
                     feedbackToStudents:feedbackToStudents,
                     guideName: team.fname+' '+team.lname,
-                    postStudents: postStudents
+                    postStudents: postStudents,
+                    formStudents:formStudents
                 })
             }
             else
             {
-                feedbackToStudents[name]=feedback
-                postStudents[name] = postStudent
+                feedbackToStudents[name]=feedback;
+                postStudents[name] = dataStudent.topicMeeting;
+                formStudents = dataStudent.formStudents;
                 updateTeamDateSet.set({
                     feedbackToStudents:feedbackToStudents,
                     guideName: team.fname+' '+team.lname,
                     postStudents: postStudents,
+                    formStudents:formStudents
 
                 })
             }

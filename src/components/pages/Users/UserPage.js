@@ -83,8 +83,8 @@ class UserPage extends React.Component {
 
     render() {
 
-        if(this.state.user.email)
-            console.log("this is email : "+this.state.user.email)
+        // if(this.state.user.email)
+        //     console.log("this is email : "+this.state.user.email)
             return (
                 <div className="sec-design">
                 {!this.state.user.email? (null):(
