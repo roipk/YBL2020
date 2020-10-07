@@ -18,6 +18,7 @@ class StudentFeedback extends React.Component {
             rule:"Student",
             date:'',
             form:{
+                canUpdate : true,
             },
             searchTerm:"",
             searchResults:[],
@@ -268,11 +269,11 @@ class StudentFeedback extends React.Component {
                             onChange={this.hendleRadioButton}
                             row={true}
                         >
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="5" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
                         </RadioGroup>
                     </div>
                     <br/>
@@ -287,11 +288,11 @@ class StudentFeedback extends React.Component {
                             onChange={this.hendleRadioButton}
                             row={true}
                         >
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="5" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
                         </RadioGroup>
                     </div>
                     <br/>
@@ -307,11 +308,11 @@ class StudentFeedback extends React.Component {
                             row={true}
 
                         >
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="5" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
                         </RadioGroup>
                     </div>
                     <br/>
@@ -326,11 +327,11 @@ class StudentFeedback extends React.Component {
                             row={true}
 
                         >
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="5" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
 
                         </RadioGroup>
                     </div>

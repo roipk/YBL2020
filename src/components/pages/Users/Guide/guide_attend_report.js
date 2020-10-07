@@ -125,13 +125,15 @@ class GuideReports extends React.Component {
             res.forEach(doc=>{
                 var approv = false;
                 var feedback = ''
+                var originFeedback = ''
                 if(doc[0].exists) {
                     approv = true;
                     feedback = doc[0].data().feedbackGuide;
+                    originFeedback = feedback;
                 }
                 var data = doc[1].data();
                 var ref = doc[1].id;
-                Students.push({data,approv,ref,feedback})
+                Students.push({data,approv,ref,feedback,originFeedback})
             })
             let i;
             console.log(Students.length)
@@ -165,10 +167,6 @@ class GuideReports extends React.Component {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
-            var report = await  guide.collection(this.state.date).ref;
-            if(!report)
-                report=''
-            console.log(report)
             var team = (await guide.get()).data();
             var teamCollection = await db.collection("Teams").doc(team.team.id)
             var newDate = teamCollection.collection("Dates").doc(this.state.date);
@@ -176,7 +174,6 @@ class GuideReports extends React.Component {
                 if(!doc.exists){
                     console.log("create form")
                     newDate.set({
-                        reportGuide:report,
                         nameGuide: team.fname + " "+team.lname,
                         postStudents:{},
                         feedbackToStudents:{},
@@ -188,16 +185,6 @@ class GuideReports extends React.Component {
                         }
                     })
 
-                }
-                else
-                {
-                    console.log("form not empty")
-                    newDate.update({
-                        reportGuide:report,
-                        nameGuide: team.fname + " "+team.lname,
-                        postStudents:{},
-
-                    })
                 }
             })
         }catch(error) {
@@ -270,7 +257,9 @@ class GuideReports extends React.Component {
         await this.addDataToTeam()
         var sid = student.ref
         var form = await db.collection("students").doc(sid).collection("comes").doc(this.state.date)
-        var dataStudent = (await form.get()).data().form
+        var dataStudent = (await form.get()).data()
+        if(dataStudent && dataStudent.form)
+            dataStudent = dataStudent.form
         var approved = student.approv
         var feedback = student.feedback
         var guide = await db.collection("guides").doc(auth.currentUser.uid)
@@ -279,45 +268,61 @@ class GuideReports extends React.Component {
         var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
 
-        if(approved){
-            var feedbackToStudents={}
-            var postStudents={}
-            var formStudents={}
-            if(updateTeamDate.data() && updateTeamDate.data()["feedbackToStudents"]) {
-                postStudents = updateTeamDate.data()["postStudents"]
-                feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
-                console.log("update form")
-                formStudents = await updateTeamDate.data()['formStudents']
-                postStudents[name] = dataStudent.topicMeeting
-                feedbackToStudents[name]=feedback
-                console.log(formStudents)
-                formStudents['q1'][parseInt(dataStudent.feeedbackMeeting['q1'])]++;
-                formStudents['q2'][parseInt(dataStudent.feeedbackMeeting['q2'])]++;
-                formStudents['q3'][parseInt(dataStudent.feeedbackMeeting['q3'])]++;
-                formStudents['q4'][parseInt(dataStudent.feeedbackMeeting['q4'])]++;
+        if(approved) {
+            var feedbackToStudents = {}
+            var postStudents = {}
+            var formStudents = {}
 
-                console.log(formStudents)
-                updateTeamDateSet.update({
-                    feedbackToStudents:feedbackToStudents,
-                    guideName: team.fname+' '+team.lname,
-                    postStudents: postStudents,
-                    formStudents:formStudents
-                })
-            }
-            else
-            {
-                feedbackToStudents[name]=feedback;
-                postStudents[name] = dataStudent.topicMeeting;
-                formStudents = dataStudent.formStudents;
+
+            if (dataStudent === undefined) {
+                feedbackToStudents[name] = feedback;
                 updateTeamDateSet.set({
-                    feedbackToStudents:feedbackToStudents,
-                    guideName: team.fname+' '+team.lname,
-                    postStudents: postStudents,
-                    formStudents:formStudents
+                    feedbackToStudents: feedbackToStudents,
+                }, { merge: true });
+            } else {
+                if (!updateTeamDate.data()) {
+                    feedbackToStudents[name] = feedback;
+                    postStudents[name] = dataStudent.topicMeeting;
+                    formStudents = dataStudent.formStudents;
+                    updateTeamDateSet.set({
+                        feedbackToStudents: feedbackToStudents,
+                        // guideName: team.fname+' '+team.lname,
+                        postStudents: postStudents,
+                        formStudents: formStudents
+                    }, { merge: true });
+                } else {
+                    if (updateTeamDate.data()["postStudents"]) {
+                        postStudents = updateTeamDate.data()["postStudents"]
+                        postStudents[name] = dataStudent.topicMeeting
+                    }
+                    if (updateTeamDate.data()["feedbackToStudents"]) {
+                        feedbackToStudents = updateTeamDate.data()["feedbackToStudents"]
+                        feedbackToStudents[name] = feedback
 
-                })
+                    }
+                    if (updateTeamDate.data()["formStudents"]) {
+                        // console.log("formStudents")
+                        formStudents = await updateTeamDate.data()['formStudents']
+                        if (dataStudent.canUpdate) {
+                            formStudents['q1'][parseInt(dataStudent.feeedbackMeeting['q1'])]++;
+                            formStudents['q2'][parseInt(dataStudent.feeedbackMeeting['q2'])]++;
+                            formStudents['q3'][parseInt(dataStudent.feeedbackMeeting['q3'])]++;
+                            formStudents['q4'][parseInt(dataStudent.feeedbackMeeting['q4'])]++;
+                        }
+                    }
+
+                    console.log(formStudents)
+                    updateTeamDateSet.update({
+                        // guideName: team.fname + ' ' + team.lname,
+                        postStudents: postStudents,
+                        feedbackToStudents: feedbackToStudents,
+                        formStudents: formStudents
+                    })
+
+                }
             }
         }
+
         else{
             feedback=""
             feedbackToStudents={}
@@ -328,12 +333,25 @@ class GuideReports extends React.Component {
                     [name]:firebase.firestore.FieldValue.delete()
                 }}, { merge: true });
         }
-        await form.set({
-            approved:approved,
-            feedbackGuide:feedback,
-            guideName: team.fname+' '+team.lname
-        }, {merge:true})
 
+
+        if(dataStudent && dataStudent.canUpdate)
+        {
+            dataStudent.canUpdate = false
+            await form.set({
+                approved: approved,
+                form:dataStudent,
+                feedbackGuide: feedback,
+                guideName: team.fname + ' ' + team.lname
+            }, {merge: true})
+        }
+        else {
+            await form.set({
+                approved: approved,
+                feedbackGuide: feedback,
+                guideName: team.fname + ' ' + team.lname
+            }, {merge: true})
+        }
     }
 
 
@@ -391,8 +409,7 @@ class GuideReports extends React.Component {
 
     Card(Student) {
         if (Student) {
-            //console.log(Student)
-                return (
+             return (
                     <div className="Card"
                          style={
                              Student.approv?(
@@ -427,7 +444,7 @@ class GuideReports extends React.Component {
                                     </div>)
                                 }
                             </Grid>
-                            <Grid item xs={6}>
+                            <Grid item xs={6} hidden={Student.feedback === Student.originFeedback}>
                                 <button onClick={()=>{this.saveStudentData(Student)}}>שמירת שינויים</button>
                             </Grid>
                         </Grid>

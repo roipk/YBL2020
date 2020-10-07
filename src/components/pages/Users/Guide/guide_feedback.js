@@ -195,13 +195,18 @@ class GuideFeedback extends React.Component {
                         reportGuide: formGuide,
                         nameGuide: team.fname + " "+team.lname,
                         postStudents:{},
-                        feedbackToStudents:{}
+                        feedbackToStudents:{},
+                        formStudents:{
+                            q1:[0,0,0,0,0],
+                            q2:[0,0,0,0,0],
+                            q3:[0,0,0,0,0],
+                            q4:[0,0,0,0,0],
+                        }
                     })
                 }
                 else {
                     newDate.update({
                         reportGuide: formGuide,
-                        nameGuide: team.fname + " " + team.lname
                     })
                 }
             })
