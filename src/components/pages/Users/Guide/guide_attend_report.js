@@ -127,13 +127,15 @@ class GuideReports extends React.Component {
                 var feedback = ''
                 var originFeedback = ''
                 if(doc[0].exists) {
-                    approv = true;
+                    approv = doc[0].data().approved;
                     feedback = doc[0].data().feedbackGuide;
                     originFeedback = feedback;
+
                 }
+                var originCheckBox = approv
                 var data = doc[1].data();
                 var ref = doc[1].id;
-                Students.push({data,approv,ref,feedback,originFeedback})
+                Students.push({data,approv,ref,feedback,originFeedback,originCheckBox})
             })
             let i;
             console.log(Students.length)
@@ -252,9 +254,26 @@ class GuideReports extends React.Component {
         }
     }
 
+
+    async saveAllStudent(Students)
+    {
+        alert("המערכת מתחילה בשמירה יש ללחוץ אישור להתחלה והמתנה להודעה נוספת")
+        for(var i=0;i<Students.length;i++)
+        {
+           Students[i] = await this.saveStudentData(Students[i])
+        }
+        alert("כל השינויים בוצעו בהצלחה")
+        return Students
+    }
+
     async saveStudentData(student)
     {
+        console.log("in1")
+        if(student.feedback === student.originFeedback && student.originCheckBox === student.approv) {
+            return
+        }
         await this.addDataToTeam()
+        console.log("in2")
         var sid = student.ref
         var form = await db.collection("students").doc(sid).collection("comes").doc(this.state.date)
         var dataStudent = (await form.get()).data()
@@ -267,20 +286,22 @@ class GuideReports extends React.Component {
         var updateTeamDate  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date).get();
         var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
-
+        console.log("in3")
         if(approved) {
             var feedbackToStudents = {}
             var postStudents = {}
             var formStudents = {}
 
-
+            console.log("in4")
             if (dataStudent === undefined) {
                 feedbackToStudents[name] = feedback;
                 updateTeamDateSet.set({
                     feedbackToStudents: feedbackToStudents,
                 }, { merge: true });
             } else {
+                console.log("in5")
                 if (!updateTeamDate.data()) {
+                    console.log("in6")
                     feedbackToStudents[name] = feedback;
                     postStudents[name] = dataStudent.topicMeeting;
                     formStudents = dataStudent.formStudents;
@@ -291,17 +312,22 @@ class GuideReports extends React.Component {
                         formStudents: formStudents
                     }, { merge: true });
                 } else {
+                    console.log("in7")
                     if (updateTeamDate.data()["postStudents"]) {
+                        console.log("in8")
                         postStudents = updateTeamDate.data()["postStudents"]
-                        postStudents[name] = dataStudent.topicMeeting
+                        if(dataStudent.topicMeeting)
+                            postStudents[name] = dataStudent.topicMeeting
                     }
                     if (updateTeamDate.data()["feedbackToStudents"]) {
+                        console.log("in9")
                         feedbackToStudents = updateTeamDate.data()["feedbackToStudents"]
                         feedbackToStudents[name] = feedback
 
                     }
                     if (updateTeamDate.data()["formStudents"]) {
                         // console.log("formStudents")
+                        console.log("in10")
                         formStudents = await updateTeamDate.data()['formStudents']
                         if (dataStudent.canUpdate) {
                             formStudents['q1'][parseInt(dataStudent.feeedbackMeeting['q1'])]++;
@@ -324,10 +350,11 @@ class GuideReports extends React.Component {
         }
 
         else{
+            console.log("in11")
             feedback=""
             feedbackToStudents={}
             feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
-
+            console.log('not approved')
             updateTeamDateSet.set({
                 feedbackToStudents:{
                     [name]:firebase.firestore.FieldValue.delete()
@@ -352,6 +379,10 @@ class GuideReports extends React.Component {
                 guideName: team.fname + ' ' + team.lname
             }, {merge: true})
         }
+        student.originFeedback = student.feedback
+        student.originCheckBox = student.approv
+        console.log("done")
+        return  student
     }
 
 
@@ -374,7 +405,7 @@ class GuideReports extends React.Component {
                         else
                             this.handleSubmit()
 
-                    }}>{!this.state.viewStudent?("הצג"):("הסתר")}
+                    }}>{!this.state.viewStudent?("הצג חניכים"):("הסתר חניכים")}
                     </button>
                 </div>
                 {
@@ -400,6 +431,11 @@ class GuideReports extends React.Component {
                     )
                 }
 
+                <button id="feedback-button" className="btn btn-info" hidden={!this.state.viewStudent} onClick={async ()=>{
+                    var students = await this.saveAllStudent( this.state.Students)
+                    this.setState({Students:students})
+
+                }}>שמירת כל השינויים<span className="fa fa-arrow-right"></span></button>
                 <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>
 
             </div>
@@ -429,7 +465,10 @@ class GuideReports extends React.Component {
                             </Grid>
                             <Grid item xs={12}>
                                 <div className="text-below-image">
-                                    <label className="container">נכח/ה במפגש<input type='checkbox' checked={Student.approv} onChange={()=>{this.approvStudent(Student)}}/></label>
+                                    <label className="container">נכח/ה במפגש<input type='checkbox' checked={Student.approv} onChange={()=>{
+                                        this.approvStudent(Student)
+
+                                    }}/></label>
                                 </div>
                             </Grid>
 
@@ -444,13 +483,24 @@ class GuideReports extends React.Component {
                                     </div>)
                                 }
                             </Grid>
-                            <Grid item xs={6} hidden={Student.feedback === Student.originFeedback}>
-                                <button onClick={()=>{this.saveStudentData(Student)}}>שמירת שינויים</button>
+                            <Grid item xs={6} hidden={Student.feedback === Student.originFeedback && Student.originCheckBox === Student.approv}>
+                                <button onClick={async ()=>{
+                                    var allStudent=[]
+                                    allStudent.push(Student)
+                                    allStudent = await this.saveAllStudent(allStudent)
+                                    var s = this.state.Students
+                                    for(var i=0;i<s.length;i++)
+                                    {
+                                        if(s[i] === Student)
+                                        {
+                                           s[i] = allStudent[0]
+                                            this.setState({Students: s})
+                                        }
+                                    }
+
+                                }}>שמירת שינויים</button>
                             </Grid>
                         </Grid>
-
-
-
 
                     </div>
                 );
