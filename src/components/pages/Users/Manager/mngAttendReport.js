@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {db} from "../../../../firebase/firebase";
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
-import TempManager from "./TempManager";
 import $ from 'jquery'
 import {BackPage} from "../UserPage";
 
@@ -26,18 +25,35 @@ class AttendReport extends Component {
 
 
     render() {
-        console.log(this.state.date)
-        if(this.state.page ==='menu')
-            return(
-                <TempManager>
 
-                </TempManager>
-            )
-        
-        else
-            return(this.attendReport())
+        return(
+            <div id="instactorReport" className="sec-design">
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Grid item xs={12}>
+                            <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
+                            <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
+                            <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
+                                console.log(e.label,e.value);
+                                this.setState({teamPath:e.value})
+                            }} required/>
 
-        
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div className="text-below-image">
+
+                                <button onClick={this.handleSubmit} >הצג דוח נוכחות</button>
+                                {/*<div id="studentList"></div>*/}
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </div>
+
+        )
     }
     async handleSubmit(event)
     {
@@ -126,11 +142,12 @@ class AttendReport extends Component {
                         <Grid item xs={12}>
                             <div className="text-below-image">
 
-                                <button onClick={this.handleSubmit} >הצג</button>
+                                <button onClick={this.handleSubmit} >הצג משהו</button>
                                 <div id="studentList"></div>
-                                <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                             </div>
-
+                        </Grid>
+                        <Grid item xs={12}>
+                            <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                         </Grid>
                     </Grid>
                 </Grid>

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import {db,CreateNewTeam} from "../../../../firebase/firebase";
 import Grid from "@material-ui/core/Grid";
-import TempManager from "./TempManager";
 import {BackPage} from "../UserPage";
 import Select from "react-select";
 var options = []

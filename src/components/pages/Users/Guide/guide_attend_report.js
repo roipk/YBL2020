@@ -1,5 +1,5 @@
 import React from "react";
-import firebase, {auth, db, getGuide} from '../../../../firebase/firebase';
+import firebase, {auth, db} from '../../../../firebase/firebase';
 import './Guide.css'
 import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";

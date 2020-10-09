@@ -1,87 +1,83 @@
-import React from 'react'
-import {  Paper, Button } from '@material-ui/core'
-import withStyles from '@material-ui/core/styles/withStyles'
-import {Link} from 'react-router-dom'
+import React from "react";
+import Grid from "@material-ui/core/Grid";
+import {Button} from "@material-ui/core";
+import {Link} from "react-router-dom";
+import '../Users/UserPage.css'
 import {auth} from "../../../firebase/firebase";
 
-const styles = theme => ({
-    main: {
-        width: 'auto',
-        display: 'block', // Fix IE 11 issue.
-        marginLeft: theme.spacing(3),
-        marginRight: theme.spacing(3),
-        [theme.breakpoints.up(400 + theme.spacing(3) * 2)]: {
-            width: 400,
 
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
-    },
-    paper: {
-        marginTop: theme.spacing(40),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`,
-    },
-    avatar: {
-        margin: theme.spacing(),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    submit: {
-        marginTop: theme.spacing(3),
-    },
-})
 
-function HomePage(props) {
-    const { classes } = props
-    test();
+class HomePage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
 
-     async function test(){
+
+    }
+    async componentDidMount() {
         await auth.onAuthStateChanged(user => {
             if(user) {
-                props.history.push({
-                    pathname: '/User',
-                    data: user // your data array of objects
-                })
+                this.setState({user:user})
+                // this.props.history.push({
+                //     pathname: '/User',
+                //     data: user // your data array of objects
+                // })
             }
         })
     }
 
-    return (
-        <main className={classes.main}>
-            <Paper className={classes.paper}style={{
-                backgroundColor: "rgba(255,255,255,0.85)",
-                borderRadius: "25px"}}>
-                {/*<Avatar className={classes.avatar}>*/}
-                {/*    <VerifiedUserOutlined />*/}
-                {/*</Avatar>*/}
-                <Button
-                    id="LoginBtn"
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="secondary"
-                    component={Link}
-                    to="/login"
-                    className={classes.submit}>
-                    כניסת משתמשים
-                </Button>
-                <Button
-                    id="registerBtn"
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    color="secondary"
-                    component={Link}
-                    to="/SignUp"
-                    className={classes.submit}>
-                    הרשמה
-                </Button>
+    render() {
+        return (
+            <div id="instructor" className="sec-design" dir='rtl'>
+                <div id="instructor_menu" className="form-design" name="student_form">
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <div>
 
-            </Paper>
-        </main>
-    )
+                                <Button
+                                    type="submit"
+                                    style={{style: {margin: '10px'}}}
+                                    fullWidth
+                                    variant="contained"
+                                    id="LoginBtn"
+                                    onClick={()=>{
+                                        if(this.state.user)
+                                        {
+                                            this.props.history.push({
+                                                pathname: '/User',
+                                                data: this.state.user // your data array of objects
+                                            })
+                                        }
+                                        else{
+                                            this.props.history.push({
+                                                pathname: '/Login',
+                                            })
+                                        }
+                                    }}>
+                                    כניסת משתמשים
+                                </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    id="registerBtn"
+                                    component={Link}
+                                    to="/SignUp">
+                                    הרשמה
+                                </Button>
+                            </div>
+                        </Grid>
+                    </Grid>
+                </div>
+
+            </div>
+        )
+    }
 }
 
-export default withStyles(styles)(HomePage)
+export  default  HomePage;

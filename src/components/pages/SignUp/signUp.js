@@ -1,94 +1,77 @@
-import React, {useState} from 'react'
-import { Typography, Paper, Avatar, Button} from '@material-ui/core'
-import withStyles from '@material-ui/core/styles/withStyles'
-import { Link, withRouter } from 'react-router-dom'
-import {db,RegisterUser} from '../../../firebase/firebase' ;
-
+import React from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import '../Users/UserPage.css'
 import Select from "react-select";
-
-const useStyles = theme => ({
-    main: {
-        width: 'auto',
-        display: 'block', // Fix IE 11 issue.
-        marginLeft: theme.spacing(3),
-        marginRight: theme.spacing(3),
-        [theme.breakpoints.up(400 + theme.spacing(3) * 2)]: {
-            width: 400,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-
-        },
-    },
-    paper: {
-        marginTop:theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`,
-    },
-    avatar: {
-        margin: theme.spacing(1),
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing(3),
-    },
-    submit: {
-        marginTop:theme.spacing(3),
-    },
-    TextField: {
-        alignItems: 'center',
-    },
-})
+import {Button} from "@material-ui/core";
+import {Link} from "react-router-dom";
+import {db, RegisterUser} from "../../../firebase/firebase";
+import '../Users/UserPage.css'
 
 
 const options = [
 ]
+let op = false
+
+class SignUp extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            fname:'',
+            lname:'',
+            email:'',
+            phone:'',
+            team:'',
+            teamName:'',
+            type:'',
+        };
 
 
+    }
 
-async function GetTeams() {
-        if (options.length <= 0) {
-            var nameTeams = await db.collection("Teams").get()
+
+    async  GetTeams() {
+        if (!op) {
+            op=true
+            var nameTeams = await db.collection("Teams")
+                .orderBy('name','asc')
+                .get()
             nameTeams.forEach(doc => {
                 options.push({value: doc.ref, label: doc.data().name})
             })
             console.log(options)
+
         }
-}
+    }
+
+    async onRegister() {
+        try {
+            // await firebase.register(fname, email, password)
+
+            console.log(this.state)
+            if(!this.state.fname||!this.state.lname||!this.state.email||!this.state.team||!this.state.phone) {
+                alert("נא למלא את כל השדות החובה")
+                return
+            }
+            await this.setState({approve:true})
+            await RegisterUser(this.state.email,this.state)
+            // await DeleteUser(email)
+            alert("ההרשמה בוצעה בהצלחה נא להמתין לאישור מנהל")
+            this.props.history.push({
+                pathname: `/`,
+            })
+        } catch(error) {
+            alert(error.message)
+        }
+    }
 
 
-function SignUp(props) {
-    const { classes } = props
-
-    const [fname, setFname] = useState('')
-    const [lname, setLname] = useState('')
-    const [email, setEmail] = useState('')
-    const [phone, setPhone] = useState('')
-    const [team, setTeam] = useState('')
-    const [teamName, setTeamName] = useState('')
-    const [type, setType]= useState('')
 
 
-
-    return (
-
-        <main className={classes.main} dir="rtl">
-            <Paper className={classes.paper} style={{
-                backgroundColor: "rgba(255,255,255,0.85)",
-                borderRadius: "25px"}}>
-                <Avatar className={classes.avatar}>
-                </Avatar>
-
-                <Typography component="h1" variant="h5">
-                    טופס הרשמה
-
-                </Typography>
-                <div className={classes.form} onSubmit={e => e.preventDefault() && false }>
+    render() {
+        return (
+            <div id="instructor" className="sec-design" dir='rtl'>
+                <h2>טופס הרשמה</h2>
+                <div id="instructor_menu" className="form-design" name="student_form">
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField
@@ -97,11 +80,11 @@ function SignUp(props) {
                                 name="fname"
                                 type="string"
                                 autoComplete="off"
-                                autoFocus 
-                                value={fname}
+                                autoFocus
+                                value={this.state.fname}
                                 onChange={e => {
-                                    setFname(e.target.value)
-                                    GetTeams()
+                                    this.setState({fname:e.target.value})
+                                    this.GetTeams()
                                 }}
                                 variant="standard"
                                 required
@@ -116,10 +99,10 @@ function SignUp(props) {
                                 name="lname"
                                 type="string"
                                 autoComplete="off"
-                                autoFocus value={lname}
+                                value={this.state.lname}
                                 onChange={e => {
-                                    setLname(e.target.value)
-                                    GetTeams()
+                                    this.setState({lname:e.target.value})
+                                    this.GetTeams()
                                 }}
                                 variant="standard"
                                 required
@@ -134,10 +117,10 @@ function SignUp(props) {
                                 name="phone"
                                 type="tel"
                                 autoComplete="off"
-                                autoFocus value={phone}
+                                value={this.state.phone}
                                 onChange={e => {
-                                    setPhone(e.target.value)
-                                    GetTeams()
+                                    this.setState({phone:e.target.value})
+                                    this.GetTeams()
                                 }}
                                 variant="standard"
                                 required
@@ -148,14 +131,14 @@ function SignUp(props) {
                         <Grid item xs={12}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
-                                id="email" 
+                                id="email"
                                 name="email"
                                 type="email"
                                 autoComplete="off"
-                                value={email} 
+                                value={this.state.email}
                                 onChange={e => {
-                                    setEmail(e.target.value)
-                                    GetTeams()
+                                    this.setState({email:e.target.value})
+                                    this.GetTeams()
                                 }}
                                 variant="standard"
                                 required
@@ -167,7 +150,8 @@ function SignUp(props) {
                             <div>
 
                                 <label>
-                                    <input type="radio" value="students" checked={type==='students'}  onChange={e => setType(e.target.value)}/>
+                                    <input type="radio" value="students" checked={this.state.type==='students'}  onChange={e =>
+                                        this.setState({type:e.target.value})}/>
                                     חניך
                                 </label>
                             </div>
@@ -176,83 +160,73 @@ function SignUp(props) {
                             <div>
 
                                 <label>
-                                    <input type="radio" value="guides" checked={type==='guides'} onChange={e => setType(e.target.value)}/>
+                                    <input type="radio" value="guides" checked={this.state.type==='guides'} onChange={e =>
+                                        this.setState({type:e.target.value})}/>
                                     מדריך
                                 </label>
                             </div>
                         </Grid>
                         <Grid item xs={12} hidden={options.length<=0}>
                             {/*<Select placeholder="בחר קבוצה"  />*/}
-                            <Select placeholder="בחר/י קבוצה מהרשימה"   options={options} required onChange={(e)=>{
-                               setTeam(e.value);
-                                setTeamName(e.label);
-                            }}></Select>
+                            {/*<Select  placeholder={" בחר קבוצה " }options={options} onChange={(e)=>{*/}
+                            {/*    console.log(e.label,e.value);*/}
+                            {/*    this.setState({team:e.value,teamName:e.label})*/}
+                            {/*}} required/>*/}
+
+                            <Select options={options} />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <div>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    id="registerBtn"
+                                    onClick={()=>{this.onRegister()}}
+                                    register="true">
+
+                                    הרשמה
+                                </Button>
+                            </div>
+                        </Grid>
+
+
+                        <Grid item xs={12}>
+                            <div>
+
+                                <Button
+                                    type="submit"
+                                    style={{style: {margin: '10px'}}}
+                                    fullWidth
+                                    variant="contained"
+                                    id="LoginBtn"
+                                    component={Link}
+                                    to="/Login">
+                                    כבר יש לך משתמש? התחברות
+                                </Button>
+                            </div>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <div>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    id="HomeBtn"
+                                    component={Link}
+                                    to="/">
+                                    חזרה לעמוד הראשי
+                                </Button>
+                            </div>
                         </Grid>
                     </Grid>
-
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        id="registerBtn"
-                        onClick={onRegister}
-                        className={classes.submit}
-                        register="true">
-
-                        הרשמה
-                    </Button>
-
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        id="LoginBtn"
-                        component={Link}
-                        to="/Login"
-                        className={classes.submit}>
-                        כבר יש לך משתמש? התחברות
-                    </Button>
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        id="HomeBtn"
-                        component={Link}
-                        to="/"
-                        className={classes.submit}>
-                        חזרה לעמוד הראשי
-                    </Button>
                 </div>
-            </Paper>
-        </main>
-    )
 
-    async function onRegister() {
-        try {
-            // await firebase.register(fname, email, password)
-            var newUser = {
-                fname: fname,
-                lname: lname,
-                email: email,
-                phone:phone,
-                team: team,
-                teamName: teamName,
-                type:type,
-                approve:true,
-            }
-            if(!fname||!lname||!email||!team||!phone) {
-                alert("נא למלא את כל השדות החובה")
-                return
-            }
-            console.log(newUser)
-            await RegisterUser(email,newUser)
-            // await DeleteUser(email)
-            alert("ההרשמה בוצעה בהצלחה נא להמתין לאישור מנהל")
-            props.history.replace('/')
-        } catch(error) {
-            alert(error.message)
-        }
+            </div>
+        )
     }
 }
 
-export default withRouter(withStyles(useStyles)(SignUp));
+export  default  SignUp;

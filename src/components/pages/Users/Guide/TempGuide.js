@@ -1,5 +1,5 @@
 import React from "react";
-import  {auth, getGuideForms, getPathData, signOut} from '../../../../firebase/firebase';
+import  {auth, getPathData, signOut} from '../../../../firebase/firebase';
 import './Guide.css'
 import {NextPage} from "../UserPage";
 
