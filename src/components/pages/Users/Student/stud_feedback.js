@@ -257,8 +257,9 @@ class StudentFeedback extends React.Component {
 
                 </div>
                 <div id="box" className="chekbox" >
-                    <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה המפגש היום חידש
-                        לך/למדת דברים חדשים</label>
+                    <label id="checkbox" className="title-input" htmlFor="name">
+                        באיזה מידה המפגש היום חידש לך / למדת דברים חדשים?
+                    </label>
                     <br/>
 
                     <div>
@@ -277,8 +278,9 @@ class StudentFeedback extends React.Component {
                         </RadioGroup>
                     </div>
                     <br/>
-                    <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה אתה מרגיש שהמפגש
-                        יעזור לך בעתיד</label>
+                    <label id="checkbox" className="title-input" htmlFor="name">
+                        באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד?
+                    </label>
                     <br/>
                     <div>
                         <RadioGroup
@@ -296,8 +298,9 @@ class StudentFeedback extends React.Component {
                         </RadioGroup>
                     </div>
                     <br/>
-                    <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה נושא המפגש היה
-                        רלוונטי עבורך</label>
+                    <label id="checkbox" className="title-input" htmlFor="name">
+                        באיזה מידה נושא המפגש היה רלוונטי עבורך?
+                    </label>
                     <br/>
                     <div>
                         <RadioGroup
@@ -316,7 +319,9 @@ class StudentFeedback extends React.Component {
                         </RadioGroup>
                     </div>
                     <br/>
-                    <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה לקחת חלק פעיל במפגש היום</label>
+                    <label id="checkbox" className="title-input" htmlFor="name">
+                        באיזה מידה לקחת חלק פעיל במפגש היום?
+                    </label>
                     <br/>
                     <div>
                         <RadioGroup

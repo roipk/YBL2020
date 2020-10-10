@@ -32,6 +32,23 @@ code {
   width: 40%;
 }
 
+.feedback-design{
+  margin: auto;
+  margin-top: 20%;
+  margin-bottom: 20%;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  padding: 5%;
+  width: 60%;
+
+}
+
+hr {
+  background-color: #37300f;
+height: 5px;
+}
+
 #studentList{
   background-color: azure;
   text-align: right;

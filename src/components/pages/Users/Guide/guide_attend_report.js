@@ -168,23 +168,29 @@ class GuideReports extends React.Component {
     {
         var path = auth.currentUser.uid
         try{
-            var guide = await db.collection("guides").doc(path)
+            var dateForm=this.state.date
+            var {year,month,day} =this.parser(dateForm)
+            var date = new Date()
+            date.setFullYear(year,month-1,day)
+            var guide = await db.collection("guides").doc(path);
             var team = (await guide.get()).data();
-            var teamCollection = await db.collection("Teams").doc(team.team.id)
-            var newDate = teamCollection.collection("Dates").doc(this.state.date);
+            var teamCollection = await db.collection("Teams").doc(team.team.id);
+            var newDate = teamCollection.collection("Dates").doc(dateForm);
             newDate.get().then(async function(doc){
                 if(!doc.exists){
                     console.log("create form")
                     newDate.set({
-                        nameGuide: team.fname + " "+team.lname,
-                        postStudents:{},
-                        feedbackToStudents:{},
                         formStudents:{
                             q1:[0,0,0,0,0],
                             q2:[0,0,0,0,0],
                             q3:[0,0,0,0,0],
                             q4:[0,0,0,0,0],
-                        }
+                        },
+                        date:date,
+                        nameGuide: team.fname + " "+team.lname,
+                        postStudents:{},
+                        feedbackToStudents:{},
+
                     })
 
                 }
@@ -266,6 +272,35 @@ class GuideReports extends React.Component {
         return Students
     }
 
+    parser(date)
+    {
+        var year=''
+        var month = ''
+        var day = ''
+        var j=0;
+        for(var i =0; i<date.length; i++)
+        {
+            if(j===0 && date[i]!=='-')
+            {
+                year+=date[i]
+            }
+            else if(j===1 && date[i]!=='-')
+            {
+                month+=date[i]
+            }
+            else if(j===2 && date[i]!=='-')
+            {
+                day+=date[i]
+            }
+            else
+                j++
+
+        }
+        year = parseInt(year)
+        month=parseInt(month)
+        day= parseInt(day)
+        return {year,month,day}
+    }
     async saveStudentData(student)
     {
         console.log("in1")
@@ -278,7 +313,7 @@ class GuideReports extends React.Component {
         var form = await db.collection("students").doc(sid).collection("comes").doc(this.state.date)
         var dataStudent = (await form.get()).data()
         if(dataStudent && dataStudent.form)
-            dataStudent = dataStudent.form
+            dataStudent = await dataStudent.form
         var approved = student.approv
         var feedback = student.feedback
         var guide = await db.collection("guides").doc(auth.currentUser.uid)
@@ -301,9 +336,13 @@ class GuideReports extends React.Component {
             } else {
                 console.log("in5")
                 if (!updateTeamDate.data()) {
-                    console.log("in6")
+                    console.log("in6",dataStudent)
+                    console.log(feedback)
                     feedbackToStudents[name] = feedback;
+                    console.log(dataStudent.topicMeeting)
                     postStudents[name] = dataStudent.topicMeeting;
+                    console.log(dataStudent)
+                    console.log(dataStudent.formStudents)
                     formStudents = dataStudent.formStudents;
                     updateTeamDateSet.set({
                         feedbackToStudents: feedbackToStudents,
@@ -330,6 +369,7 @@ class GuideReports extends React.Component {
                         console.log("in10")
                         formStudents = await updateTeamDate.data()['formStudents']
                         if (dataStudent.canUpdate) {
+                            console.log("in11")
                             formStudents['q1'][parseInt(dataStudent.feeedbackMeeting['q1'])]++;
                             formStudents['q2'][parseInt(dataStudent.feeedbackMeeting['q2'])]++;
                             formStudents['q3'][parseInt(dataStudent.feeedbackMeeting['q3'])]++;
@@ -364,7 +404,7 @@ class GuideReports extends React.Component {
 
         if(dataStudent && dataStudent.canUpdate)
         {
-            dataStudent.canUpdate = false
+            // dataStudent.canUpdate = false
             await form.set({
                 approved: approved,
                 form:dataStudent,

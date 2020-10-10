@@ -167,13 +167,11 @@ class SignUp extends React.Component {
                             </div>
                         </Grid>
                         <Grid item xs={12} hidden={options.length<=0}>
-                            {/*<Select placeholder="בחר קבוצה"  />*/}
-                            {/*<Select  placeholder={" בחר קבוצה " }options={options} onChange={(e)=>{*/}
-                            {/*    console.log(e.label,e.value);*/}
-                            {/*    this.setState({team:e.value,teamName:e.label})*/}
-                            {/*}} required/>*/}
-
-                            <Select options={options} />
+                            <Select placeholder="בחר קבוצה"  />
+                            <Select  placeholder={" בחר קבוצה " }options={options} onChange={(e)=>{
+                                console.log(e.label,e.value);
+                                this.setState({team:e.value,teamName:e.label})
+                            }} required/>
                         </Grid>
 
                         <Grid item xs={12}>

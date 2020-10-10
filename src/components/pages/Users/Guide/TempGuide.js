@@ -31,7 +31,7 @@ class TestGuide extends React.Component {
             }
         };
        
-        getPathData("Teams/FgMtMMfD72JGd2qYJ9VD/Dates/2020-10-10")
+        // getPathData("Teams/FgMtMMfD72JGd2qYJ9VD/Dates/2020-10-10")
     }
 
     async componentDidMount() {
