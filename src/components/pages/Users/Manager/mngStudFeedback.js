@@ -67,7 +67,9 @@ class FeedbackStudents extends Component {
 
                             <Grid item xs={2} hidden={!this.state.dateTo && !this.state.dateFrom}>
                                 <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
-                                <button id="viewReport" className="btn btn-info" onClick={()=>{ this.GetTeams()}}>מצא קבוצות<span
+                                <button id="viewReport" className="btn btn-info" onClick={()=>{
+                                    this.GetTeams()
+                                }}>מצא קבוצות<span
                                     className="fa fa-arrow-right"></span></button>
                             </Grid>
 
@@ -89,15 +91,17 @@ class FeedbackStudents extends Component {
 
                         </Grid>
                         </div>
-                    <Grid  item xs={12} hidden={!this.state.show}>
-                        {/*{*/}
-                        {/*    this.state.Forms.map((Form,index) => (*/}
-                        {/*        <Grid  item xs={12}  key={index}>*/}
-                        {/*            <hr/>*/}
-                        {/*            {this.feedbacks(Form)}*/}
-                        {/*        </Grid >*/}
-                        {/*    ))}*/}
+                    {this.state.forms?(
+                    <Grid  item xs={12} hidden={!this.state.show} >
+                        {
+                            this.state.forms.map((Form,index) => (
+                                <Grid  item xs={12}  key={index}>
+                                    <hr/>
+                                    {this.feedbacks(Form.data())}
+                                </Grid >
+                            ))}
                     </Grid >
+                    ):(<div></div>)}
                     <button id="go-back" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
                 </div>
             </div>
@@ -106,80 +110,147 @@ class FeedbackStudents extends Component {
 
     feedbacks(form)
 {
-    if(form)
-    return(
-    <div id="name-group" className="form-group" dir="rtl">
-        <div  className="report" id="report">
-            <div>
-                <h4> תאריך המפגש: 25-10-2020</h4>
-                <h4> נושא המפגש: טעם וריח</h4>
-            </div>
-            <table id="feedList" style={{style:{textAlign: 'center'}}}>
-                <tr>
-                    <th><h5> &nbsp; שאלות &nbsp;</h5></th>
-                    <th><h5> &nbsp; במידה מועטה מאוד &nbsp;</h5></th>
-                    <th><h5> &nbsp; במידה מועטה&nbsp; </h5></th>
-                    <th><h5> &nbsp; במידה בינונית&nbsp; </h5></th>
-                    <th><h5> &nbsp; במידה רבה&nbsp; </h5></th>
-                    <th><h5> &nbsp; במידה רבה מאוד &nbsp;</h5></th>
-                </tr>
-                <tr>
-                    <th><h5>באיזה מידה המפגש היום חידש לך/למדת דברים חדשים?</h5></th>
-                    <th><h5>5</h5></th>
-                    <th><h5>2</h5></th>
-                    <th><h5>0</h5></th>
-                    <th><h5>4</h5></th>
-                    <th><h5>4</h5></th>
-                </tr>
-                <tr>
-                    <th><h5>באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד?</h5></th>
-                    <th><h5>1</h5></th>
-                    <th><h5>2</h5></th>
-                    <th><h5>3</h5></th>
-                    <th><h5>4</h5></th>
-                    <th><h5>5</h5></th>
-                </tr>
-                <tr>
-                    <th><h5>באיזה מידה נושא המפגש היה רלוונטי עבורך?</h5></th>
-                    <th><h5>2</h5></th>
-                    <th><h5>5</h5></th>
-                    <th><h5>3</h5></th>
-                    <th><h5>4</h5></th>
-                    <th><h5>4</h5></th>
-                </tr>
-                <tr>
-                    <th><h5> באיזה מידה לקחת חלק פעיל במפגש היום?</h5></th>
-                    <th><h5>2</h5></th>
-                    <th><h5>5</h5></th>
-                    <th><h5>3</h5></th>
-                    <th><h5>4</h5></th>
-                    <th><h5>4</h5></th>
-                </tr>
-            </table>
+    if(form) {
+        console.log(form)
+        return (
+            <div id="name-group" className="form-group" dir="rtl">
+                <div className="report" id="report">
+                    <div>
+                        <h4> שם המדריך:{form.nameGuide} </h4>
+                        <h4> תאריך המפגש: 25-10-2020</h4>
+                        <h4> נושא המפגש: טעם וריח</h4>
+                    </div>
+                    <table id="feedList" style={{style: {textAlign: 'center'}}}>
+                        <tr>
+                            <th><h5> &nbsp; שאלות &nbsp;</h5></th>
+                            <th><h5> &nbsp; במידה מועטה מאוד &nbsp;</h5></th>
+                            <th><h5> &nbsp; במידה מועטה&nbsp; </h5></th>
+                            <th><h5> &nbsp; במידה בינונית&nbsp; </h5></th>
+                            <th><h5> &nbsp; במידה רבה&nbsp; </h5></th>
+                            <th><h5> &nbsp; במידה רבה מאוד &nbsp;</h5></th>
+                        </tr>
+                        <tr>
+                            <th><h5>באיזה מידה המפגש היום חידש לך/למדת דברים חדשים?</h5></th>
+                            <th><h5>{form.formStudents['q1'][0]}</h5></th>
+                            <th><h5>{form.formStudents['q1'][1]}</h5></th>
+                            <th><h5>{form.formStudents['q1'][2]}</h5></th>
+                            <th><h5>{form.formStudents['q1'][3]}</h5></th>
+                            <th><h5>{form.formStudents['q1'][4]}</h5></th>
 
-            <div>
-                <u><h3>סיכום חניכים:</h3></u>
-                <h5>היה לי כיף</h5>
-                <h5>נהנתי מאוד</h5>
-                <h5>היה משהו משהו</h5>
-                <h5>בדיקה כלשהי</h5>
-                <h5>מתנות תמיד זה נחמד</h5>
+                        </tr>
+                        <tr>
+                            <th><h5>באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד?</h5></th>
+                            <th><h5>{form.formStudents['q2'][0]}</h5></th>
+                            <th><h5>{form.formStudents['q2'][1]}</h5></th>
+                            <th><h5>{form.formStudents['q2'][2]}</h5></th>
+                            <th><h5>{form.formStudents['q2'][3]}</h5></th>
+                            <th><h5>{form.formStudents['q2'][4]}</h5></th>
+                        </tr>
+                        <tr>
+                            <th><h5>באיזה מידה נושא המפגש היה רלוונטי עבורך?</h5></th>
+                            <th><h5>{form.formStudents['q3'][0]}</h5></th>
+                            <th><h5>{form.formStudents['q3'][1]}</h5></th>
+                            <th><h5>{form.formStudents['q3'][2]}</h5></th>
+                            <th><h5>{form.formStudents['q3'][3]}</h5></th>
+                            <th><h5>{form.formStudents['q3'][4]}</h5></th>
+                        </tr>
+                        <tr>
+                            <th><h5> באיזה מידה לקחת חלק פעיל במפגש היום?</h5></th>
+                            <th><h5>{form.formStudents['q4'][0]}</h5></th>
+                            <th><h5>{form.formStudents['q4'][1]}</h5></th>
+                            <th><h5>{form.formStudents['q4'][2]}</h5></th>
+                            <th><h5>{form.formStudents['q4'][3]}</h5></th>
+                            <th><h5>{form.formStudents['q4'][4]}</h5></th>
+                        </tr>
+                    </table>
+
+                    <div>
+                        <u><h3>סיכום חניכים:</h3></u>
+                        <h5>היה לי כיף</h5>
+                        <h5>נהנתי מאוד</h5>
+                        <h5>היה משהו משהו</h5>
+                        <h5>בדיקה כלשהי</h5>
+                        <h5>מתנות תמיד זה נחמד</h5>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    )
+        )
+    }
     else
         return (<div></div>)
 }
 
+    parser(date)
+    {
+        var year=''
+        var month = ''
+        var day = ''
+        var j=0;
+        for(var i =0; i<date.length; i++)
+        {
+            if(j===0 && date[i]!=='-')
+            {
+                year+=date[i]
+            }
+            else if(j===1 && date[i]!=='-')
+            {
+                month+=date[i]
+            }
+            else if(j===2 && date[i]!=='-')
+            {
+                day+=date[i]
+            }
+            else
+                j++
 
+        }
+        year = parseInt(year)
+        month=parseInt(month)
+        day= parseInt(day)
+        return {year,month,day}
+    }
 async GetForms()
 {
-    var from= this.state.dateFrom
-    var to= this.state.dateTo
-    console.log(this.state.team)
-    var forms = await db.collection('Teams').doc(this.state.team.id).collection("Dates").where('date','>=',from).get()
-    console.log(forms)
+    if(this.state.forms)
+        return
+    var from = this.state.dateFrom;
+    var to = this.state.dateTo;
+    if(!from)
+      {
+          alert("שדה מתאריך - הוא שדה חובה")
+          return
+      }
+    if(!to)
+    {
+        alert("שדה עד תאריך - הוא שדה חובה")
+        return
+    }
+    var fromDate = this.parser(from)
+    console.log(fromDate["year"])
+    from = new Date()
+    from.setFullYear(fromDate["year"],fromDate["month"]-1,fromDate["day"]-1)
+    var toDate = this.parser(to)
+
+    to = new Date()
+    to.setFullYear(toDate["year"],toDate["month"]-1,toDate["day"]+1)
+    if(fromDate["year"]>toDate["year"]){
+        alert("התאריך מ גדול מהתאירך עד")
+        return
+    }
+    if(fromDate["year"]===toDate["year"] && fromDate["month"]>toDate["month"]){
+        alert("התאריך מ גדול מהתאירך עד")
+        return
+    }
+    if(fromDate["year"]===toDate["year"] && fromDate["month"]===toDate["month"] && fromDate["day"]>toDate["day"]){
+        alert("התאריך מ גדול מהתאירך עד")
+        return
+    }
+
+    var forms = await db.collection('Teams').doc(this.state.team.id).collection("Dates")
+        .where('date','>',from)
+        .where('date','<',to)
+        .get()
+    this.setState({forms:forms.docs})
 }
 }
 
