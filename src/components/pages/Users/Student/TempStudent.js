@@ -79,7 +79,7 @@ class TempStudent extends React.Component {
 
         return (
             <div id="instructor" className="sec-design" dir="rtl">
-                <h2> שלום {this.state.user.email} </h2>
+                <h2> שלום {this.state.user.displayName} </h2>
                 <form id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{NextPage(this.props,"Feedback",this.state.user)}}>מילוי משוב<span
                         className="fa fa-arrow-right"></span></button>

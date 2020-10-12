@@ -61,7 +61,8 @@ class TestGuide extends React.Component {
        render() {
         return (
             <div id="instructor" className="sec-design">
-                <h2>Hello Guide {this.state.user.email} </h2>
+                <h2>שלום {this.state.user.displayName} </h2>
+                {/*<h2>Hello Guide {this.state.user.email} </h2>*/}
                 <div id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{NextPage(this.props,"Reports",this.state.user)}}>אישור דו"ח נוכחות<span
                         className="fa fa-arrow-right"></span></button>

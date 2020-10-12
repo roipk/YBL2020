@@ -56,7 +56,7 @@ class TempManager extends React.Component {
 
         return (
             <div id="instructor" className="sec-design">
-                {/* <div> Hello Manager {this.state.user.email}</div> */}
+                 <div> שלום {this.state.user.displayName}</div>
                 <button id="report-button" className="btn btn-info"onClick={()=>{
                     this.ChangePage("UserApproval")
                     return
