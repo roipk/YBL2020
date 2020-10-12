@@ -130,6 +130,8 @@ export async function getStudentForms(uid) {
     return forms;
 }
 
+
+
 export async function getManager(uid) {
     var manager = await db.collection("managers").doc(uid);
     console.log(manager);
@@ -141,7 +143,12 @@ export async function getManagerData(uid) {
     console.log(managerData);
     return managerData;
 }
-
+export async function getTeamFeedbackByDate(teamPath,date) {
+    var team = await db.collection("Teams").doc(teamPath).collection("Dates").doc(date).get();
+    var teamFeedback=team.data()
+    await console.log(teamFeedback);
+    return teamFeedback;
+}
 //
 // class Firebase {
 //     constructor() {
