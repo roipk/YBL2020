@@ -528,6 +528,7 @@ class GuideReports extends React.Component {
                                     </div>)
                                 }
                             </Grid>
+
                             <Grid item xs={6} hidden={Student.feedback === Student.originFeedback && Student.originCheckBox === Student.approv}>
                                 <button onClick={async ()=>{
                                     var allStudent=[]

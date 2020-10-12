@@ -3,6 +3,7 @@ import {auth, db} from '../../../../firebase/firebase';
 import { Radio, RadioGroup} from "@material-ui/core";
 import './Guide.css'
 import {BackPage} from "../UserPage";
+import Grid from "@material-ui/core/Grid";
 
 
 class GuideFeedback extends React.Component {
@@ -298,23 +299,73 @@ class GuideFeedback extends React.Component {
                     </div>
                     <div id="name-group" >
                         <label id="Q3L" className="title-input"> מה היה בפעילות</label>
-                        <input type="text" name="q3" id="q3i" onChange={this.handleChange}  required/>
+                        <Grid item xs={12}>
+                            {
+                                <div>
+
+                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+
+
+                                </div>
+                            }
+                        </Grid>
+                        {/*<input type="text" name="q3" id="q3i" onChange={this.handleChange}  required/>*/}
                     </div>
                     <div id="name-group" >
                         <label id="Q4L" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
-                        <input type="text"  name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <Grid item xs={12}>
+                            {
+                                <div>
+
+                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+
+
+                                </div>
+                            }
+                        </Grid>
+                        {/*<input type="text"  name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <div id="name-group" >
                         <label id="Q5L" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
-                        <input type="text"  name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <Grid item xs={12}>
+                            {
+                                <div>
+
+                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+
+
+                                </div>
+                            }
+                        </Grid>
+                        {/*<input type="text"  name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <div id="name-group" >
                         <label id="Q6L" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
-                        <input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <Grid item xs={12}>
+                            {
+                                <div>
+
+                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+
+
+                                </div>
+                            }
+                        </Grid>
+                        {/*<input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <div id="name-group" >
                         <label id="Q7L" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
-                        <input type="text" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>
+                        <Grid item xs={12}>
+                            {
+                                <div>
+
+                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+
+
+                                </div>
+                            }
+                        </Grid>
+                        {/*<input type="text" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <br/>
                     <label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</h4></label>
@@ -354,7 +405,17 @@ class GuideFeedback extends React.Component {
                     <br/>
                     <div id="name-group" >
                         <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
-                        <input type="text" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>
+                        <Grid item xs={12}>
+                            {
+                                <div>
+
+                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+
+
+                                </div>
+                            }
+                        </Grid>
+                        {/*<input type="text" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
                     </div>
 
                 </div>

@@ -3,6 +3,7 @@ import  {auth,db} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 import {BackPage} from "../UserPage";
+import Grid from "@material-ui/core/Grid";
 
 
 class StudentFeedback extends React.Component {
@@ -221,7 +222,7 @@ class StudentFeedback extends React.Component {
         return ( <div>
 
             <div id="attendreport" className="sec-design">
-                <h2>שלום {this.state.user.email} </h2>
+                <h2>שלום {this.state.user.displayName} </h2>
 
                 <div id="name-group" className="form-group">
                     <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
@@ -338,6 +339,16 @@ class StudentFeedback extends React.Component {
                     <div id="name-group" className="form-group">
                         <label id="feedback" className="title-input" htmlFor="name"> מה את/ה לוקח/ת מהמפגש
                             היום</label>
+                        {/*<Grid item xs={12}>*/}
+                        {/*    {*/}
+                        {/*        <div>*/}
+
+                        {/*            <textarea  dir="rtl" cols="70"  rows="5" onChange={this.handleChange}  required/>*/}
+
+
+                        {/*        </div>*/}
+                        {/*    }*/}
+                        {/*</Grid>*/}
                         <input type="text" className="form-control" name="feedback" id="Q4" placeholder="התשובה שלך"
                                minLength="10" onChange={this.handleChange} required/>
                     </div>
