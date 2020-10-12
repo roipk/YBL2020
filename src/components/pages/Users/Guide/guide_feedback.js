@@ -171,7 +171,7 @@ class GuideFeedback extends React.Component {
                 form: form,
                 date:form.date
             }).then(async ()=>{
-                await this.addDateToTeam(guide,form.date);
+                await this.addDataToTeam(guide,form.date);
                 alert("הטופס נשלח בהצלחה ניתן לשנות פרטים עד לחתימת המנהל")
                 window.location.reload(true);
 
@@ -181,18 +181,20 @@ class GuideFeedback extends React.Component {
             alert(error.message)
         }
     }
-    async addDateToTeam(guide,date)
+    async addDataToTeam(guide,date)
     {
         var formGuide = (await guide.get()).ref
         try{
             var team = (await guide.get()).data();
             var teamCollection = await db.collection("Teams").doc(team.team.id)
             var newDate = teamCollection.collection("Dates").doc(date);
-            newDate.get().then(async function(doc){
+            var doc =  await newDate.get()
+            console.log(doc)
                 if(!doc.exists){
                     console.log("not exist")
                     newDate.set({
                         reportGuide: formGuide,
+                        topicMeeting:this.state.form.q1,
                         nameGuide: team.fname + " "+team.lname,
                         postStudents:{},
                         feedbackToStudents:{},
@@ -207,9 +209,9 @@ class GuideFeedback extends React.Component {
                 else {
                     newDate.update({
                         reportGuide: formGuide,
+                        topicMeeting:this.state.form.q1,
                     })
                 }
-            })
         }catch(error) {
             alert(error.message)
         }

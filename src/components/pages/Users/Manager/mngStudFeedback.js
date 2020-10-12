@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import  React, {Component, createElement} from "react";
 import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
 import {db} from "../../../../firebase/firebase";
+import $ from "jquery";
 
 
 
@@ -48,7 +49,7 @@ class FeedbackStudents extends Component {
                         <Grid container spacing={2}>
                             <Grid item xs={5}>
                                 <label id="insert-student" className="title-input" htmlFor="name">מתאריך </label>
-                                <input type="date" className="form-control" value={this.state.dateFrom} name="date"
+                                <input type="date" className="form-control"  name="date"
                                        onChange={(e)=>{
                                            this.setState({dateFrom:e.target.value})
                                            // this.GetTeams()
@@ -57,7 +58,7 @@ class FeedbackStudents extends Component {
                             </Grid>
                             <Grid item xs={5}>
                                 <label id="insert-student" className="title-input" htmlFor="name">עד תאריך </label>
-                                <input type="date" className="form-control" id="insert-date" value={this.state.dateTo} name="date"
+                                <input type="date" className="form-control" id="insert-date" name="date"
                                        onChange={(e)=>{
                                            this.setState({dateTo:e.target.value})
                                            // this.GetTeams()
@@ -99,7 +100,8 @@ class FeedbackStudents extends Component {
                                     <hr/>
                                     {this.feedbacks(Form.data())}
                                 </Grid >
-                            ))}
+                            ))
+                        }
                     </Grid >
                     ):(<div></div>)}
                     <button id="go-back" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
@@ -112,15 +114,17 @@ class FeedbackStudents extends Component {
 {
     if(form) {
         console.log(form)
+        console.log(form.postStudents)
         return (
             <div id="name-group" className="form-group" dir="rtl">
                 <div className="report" id="report">
                     <div>
                         <h4> שם המדריך:{form.nameGuide} </h4>
-                        <h4> תאריך המפגש: 25-10-2020</h4>
-                        <h4> נושא המפגש: טעם וריח</h4>
+                        <h4> תאריך המפגש: {form.date.Date}</h4>
+                        <h4> נושא המפגש: {form.topicMeeting}</h4>
                     </div>
                     <table id="feedList" style={{style: {textAlign: 'center'}}}>
+                        <tbody>
                         <tr>
                             <th><h5> &nbsp; שאלות &nbsp;</h5></th>
                             <th><h5> &nbsp; במידה מועטה מאוד &nbsp;</h5></th>
@@ -162,15 +166,17 @@ class FeedbackStudents extends Component {
                             <th><h5>{form.formStudents['q4'][3]}</h5></th>
                             <th><h5>{form.formStudents['q4'][4]}</h5></th>
                         </tr>
+                        </tbody>
                     </table>
 
-                    <div>
+                    <div id='posts'>
                         <u><h3>סיכום חניכים:</h3></u>
-                        <h5>היה לי כיף</h5>
-                        <h5>נהנתי מאוד</h5>
-                        <h5>היה משהו משהו</h5>
-                        <h5>בדיקה כלשהי</h5>
-                        <h5>מתנות תמיד זה נחמד</h5>
+                        {
+                            form.postStudents.map((post, i) =>
+                                <h5 key={i} >{post}</h5>
+                            )
+                        }
+
                     </div>
                 </div>
             </div>
@@ -211,7 +217,7 @@ class FeedbackStudents extends Component {
     }
 async GetForms()
 {
-    if(this.state.forms)
+    if(this.state.forms || this.state.show)
         return
     var from = this.state.dateFrom;
     var to = this.state.dateTo;

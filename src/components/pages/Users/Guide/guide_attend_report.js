@@ -5,6 +5,11 @@ import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
 
 
+
+
+
+var postStudents = [];
+
 class GuideReports extends React.Component {
     constructor(props) {
         super(props);
@@ -188,7 +193,7 @@ class GuideReports extends React.Component {
                         },
                         date:date,
                         nameGuide: team.fname + " "+team.lname,
-                        postStudents:{},
+                        postStudents:[],
                         feedbackToStudents:{},
 
                     })
@@ -321,13 +326,12 @@ class GuideReports extends React.Component {
         var updateTeamDate  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date).get();
         var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
-        console.log("in3")
+        console.log("in3");
+        var feedbackToStudents = {};
+        postStudents = [];
+        var formStudents = {};
         if(approved) {
-            var feedbackToStudents = {}
-            var postStudents = {}
-            var formStudents = {}
-
-            console.log("in4")
+            console.log("in4");
             if (dataStudent === undefined) {
                 feedbackToStudents[name] = feedback;
                 updateTeamDateSet.set({
@@ -340,7 +344,7 @@ class GuideReports extends React.Component {
                     console.log(feedback)
                     feedbackToStudents[name] = feedback;
                     console.log(dataStudent.topicMeeting)
-                    postStudents[name] = dataStudent.topicMeeting;
+                    postStudents.push(dataStudent.topicMeeting,);
                     console.log(dataStudent)
                     console.log(dataStudent.formStudents)
                     formStudents = dataStudent.formStudents;
@@ -355,8 +359,9 @@ class GuideReports extends React.Component {
                     if (updateTeamDate.data()["postStudents"]) {
                         console.log("in8")
                         postStudents = updateTeamDate.data()["postStudents"]
-                        if(dataStudent.topicMeeting)
-                            postStudents[name] = dataStudent.topicMeeting
+                        console.log(dataStudent)
+                        if(dataStudent.topicMeeting!==undefined && dataStudent.topicMeeting!=='')
+                            postStudents.push(dataStudent.topicMeeting,);
                     }
                     if (updateTeamDate.data()["feedbackToStudents"]) {
                         console.log("in9")

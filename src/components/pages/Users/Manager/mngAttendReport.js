@@ -62,15 +62,51 @@ class AttendReport extends Component {
             alert("נא למלא את כל השדות החובה")
             return
         }
-        var res= await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)["feedbackToStudents"]
-        console.log(res)
-        for (var name in res){
-            var lable=document.createElement("lable");
-            lable.innerHTML = name;
-            var br=document.createElement("br");
-            $('#studentList').append(lable);
-            $('#studentList').append(br);
-        }
+
+        var team = await db.collection("Teams").doc(this.state.teamPath.id).get();
+        console.log(team)
+        const collection = await db.collection('students').where("team","==",this.state.teamPath).get()
+        console.log(collection)
+        const Students = [];
+        const date = this.state.date
+        const collectionPromisesTeam = collection.docs.map( async function(doc) {
+            var ref =await db.collection("students").doc(doc.id).collection("comes").doc(date).get()
+            console.log(ref)
+            var user = await db.collection("students").doc(doc.id).get()
+            return [ref,user]
+
+        })
+        Promise.all(collectionPromisesTeam).then(res => {
+            console.log("end prommis");
+            res.forEach(doc=>{
+                var data = doc[1].data();
+                var ref = doc[0].data();
+                Students.push({data,ref})
+            })
+            let i;
+            console.log(Students)
+            this.setState({viewStudent: !this.state.viewStudent});
+            for (i=0;i<Students.length;i++)
+            {
+                try{
+                    if(Students[i].ref.approved===true){
+                        console.log(Students[i].ref)
+                        console.log(Students[i].data.fname+" "+Students[i].data.lname)
+                        var lable=document.createElement("lable");
+                        lable.innerHTML = Students[i].data.fname+" "+Students[i].data.lname;
+                        var br=document.createElement("br");
+                        $('#studentList').append(lable);
+                        $('#studentList').append(br);
+                    }
+                }catch{
+                    console.log("user doesnt have comes collection")
+                }
+
+
+            }
+        });
+        
+
     }
     async componentDidMount() {
         var nameTeams =  await db.collection("Teams").get();

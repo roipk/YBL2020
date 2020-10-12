@@ -68,6 +68,7 @@ function LoadPage() {
                     <Route exact path="/TempManager/Feedbacks/Student" component={FeedbackStudents} />
 
 
+
                     <Route exact path="/test_g_a_r" component={test_g_a_r} />
                     <Route exact path="/test_g_f" component={test_g_f} />
                     <Route exact path="/:404" component={notFound} />

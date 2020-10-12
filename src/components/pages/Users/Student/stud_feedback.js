@@ -249,13 +249,6 @@ class StudentFeedback extends React.Component {
                 {/*    </ul>*/}
 
                 {/*</div>*/}
-                <div id="topic" className="form-group">
-                    <label id="insert-topic" className="title-input" htmlFor="name"> באיזה נושא המפגש
-                        עסק</label>
-                    <input type="text" className="form-control" name="topicMeeting" id="subject"
-                           placeholder="Your Answer" minLength="5" required onChange={this.handleChange}/>
-
-                </div>
                 <div id="box" className="chekbox" >
                     <label id="checkbox" className="title-input" htmlFor="name">
                         באיזה מידה המפגש היום חידש לך / למדת דברים חדשים?
