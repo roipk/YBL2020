@@ -252,11 +252,14 @@ async GetForms()
         return
     }
 
+
+
     var forms = await db.collection('Teams').doc(this.state.team.id).collection("Dates")
         .where('date','>',from)
         .where('date','<',to)
         .get()
     this.setState({forms:forms.docs})
+    console.log(forms)
 }
 }
 

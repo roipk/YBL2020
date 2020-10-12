@@ -277,6 +277,7 @@ class GuideReports extends React.Component {
         return Students
     }
 
+
     parser(date)
     {
         var year=''
@@ -360,8 +361,9 @@ class GuideReports extends React.Component {
                         console.log("in8")
                         postStudents = updateTeamDate.data()["postStudents"]
                         console.log(dataStudent)
-                        if(dataStudent.topicMeeting!==undefined && dataStudent.topicMeeting!=='')
-                            postStudents.push(dataStudent.topicMeeting,);
+                        if (dataStudent.topicMeeting !== undefined && dataStudent.topicMeeting !== '') {
+                            postStudents.push(dataStudent.topicMeeting);
+                        }
                     }
                     if (updateTeamDate.data()["feedbackToStudents"]) {
                         console.log("in9")

@@ -44,6 +44,35 @@ class GuideFeedback extends React.Component {
 
     }
 
+    parser(date)
+    {
+        var year=''
+        var month = ''
+        var day = ''
+        var j=0;
+        for(var i =0; i<date.length; i++)
+        {
+            if(j===0 && date[i]!=='-')
+            {
+                year+=date[i]
+            }
+            else if(j===1 && date[i]!=='-')
+            {
+                month+=date[i]
+            }
+            else if(j===2 && date[i]!=='-')
+            {
+                day+=date[i]
+            }
+            else
+                j++
+
+        }
+        year = parseInt(year)
+        month=parseInt(month)
+        day= parseInt(day)
+        return {year,month,day}
+    }
 
 
     async handleChange(event)
@@ -52,7 +81,6 @@ class GuideFeedback extends React.Component {
         var name = event.target.name;
         var value = event.target.value;
         var e = event.target
-        // console.log(name, value)
         if(name === 'date' && event.target.value!=='' )
         {
             var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
@@ -190,14 +218,18 @@ class GuideFeedback extends React.Component {
             var teamCollection = await db.collection("Teams").doc(team.team.id)
             var newDate = teamCollection.collection("Dates").doc(date);
             var doc =  await newDate.get()
+            var {year,month,day} = this.parser(date)
+            var date = new Date()
+            date.setFullYear(year,month-1,day)
             console.log(doc)
                 if(!doc.exists){
                     console.log("not exist")
                     newDate.set({
+                        date:date,
                         reportGuide: formGuide,
                         topicMeeting:this.state.form.q1,
                         nameGuide: team.fname + " "+team.lname,
-                        postStudents:{},
+                        postStudents:[],
                         feedbackToStudents:{},
                         formStudents:{
                             q1:[0,0,0,0,0],
@@ -209,6 +241,7 @@ class GuideFeedback extends React.Component {
                 }
                 else {
                     newDate.update({
+                        date:date,
                         reportGuide: formGuide,
                         topicMeeting:this.state.form.q1,
                     })
