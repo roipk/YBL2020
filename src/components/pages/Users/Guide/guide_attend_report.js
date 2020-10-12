@@ -3,6 +3,7 @@ import firebase, {auth, db} from '../../../../firebase/firebase';
 import './Guide.css'
 import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 
@@ -18,7 +19,7 @@ class GuideReports extends React.Component {
             page:'menu',
             user: props.location,
             error:false,
-            loading: true,
+            loading: false,
             rule:"Manager",
             prevDate:'',
             viewStudent: false,
@@ -268,11 +269,13 @@ class GuideReports extends React.Component {
 
     async saveAllStudent(Students)
     {
-        alert("המערכת מתחילה בשמירה יש ללחוץ אישור להתחלה והמתנה להודעה נוספת")
+        // alert("המערכת מתחילה בשמירה יש ללחוץ אישור להתחלה והמתנה להודעה נוספת")
+        this.setState({loading:true})
         for(var i=0;i<Students.length;i++)
         {
            Students[i] = await this.saveStudentData(Students[i])
         }
+        this.setState({loading:false})
         alert("כל השינויים בוצעו בהצלחה")
         return Students
     }
@@ -440,6 +443,23 @@ class GuideReports extends React.Component {
 
     render() {
         return (
+            <div>
+                {!this.state.loading ? "" :
+                    <div id='fr'>
+                        טעון נתונים
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
+
+                            />
+                        </div>
+                    </div>
+                }
             <div id="guideAttendReport" className="sec-design">
                 <div id="name-group" className="form-group">
                     <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
@@ -484,7 +504,7 @@ class GuideReports extends React.Component {
 
                 }}>שמירת כל השינויים<span className="fa fa-arrow-right"></span></button>
                 <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>
-
+            </div>
             </div>
 
         )

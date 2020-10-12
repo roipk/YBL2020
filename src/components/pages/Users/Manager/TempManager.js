@@ -1,5 +1,6 @@
 import React from "react";
 import  {auth} from '../../../../firebase/firebase'
+import ClipLoader from "react-spinners/ClipLoader";
 
 class TempManager extends React.Component {
     constructor(props) {
@@ -87,6 +88,7 @@ class TempManager extends React.Component {
                 <button id="logout" className="btn btn-info" >התנתק</button>
                 <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
             </div>
+
         );
     }
 
