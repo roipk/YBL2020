@@ -234,8 +234,9 @@ class GuideFeedback extends React.Component {
                     })
                 }
                 else {
+                    console.log(formGuide)
                     newDate.update({
-                        date:date,
+                        date:fullDate,
                         reportGuide: formGuide,
                         topicMeeting:this.state.form.q1,
                     })
@@ -317,15 +318,15 @@ class GuideFeedback extends React.Component {
                     <label id="date"  className="title-input">הכנס את תאריך המפגש:</label>
                     <input type="date"  id="insert-date" name="date" onChange={this.handleChange} required/>
                     <div id="name-group">
-                        <label id="Q1L" className="title-input"> נושא הפעילות</label>
+                        <label id="Q1L" className="title-input"> נושא הפעילות:</label>
                         <input type="text"  name="q1" id="q1i" onChange={this.handleChange}  required/>
                     </div>
                     <div id="name-group">
-                        <label id="Q2L" className="title-input"> מספר הפעילות</label>
+                        <label id="Q2L" className="title-input"> מספר הפעילות:</label>
                         <input type="text" name="q2" id="q2i" onChange={this.handleChange}  required/>
                     </div>
                     <div id="name-group" >
-                        <label id="Q3L" className="title-input"> מה היה בפעילות</label>
+                        <label id="Q3L" className="title-input"> מה היה בפעילות?</label>
                         <Grid item xs={12}>
                             {
                                 <div>
@@ -337,7 +338,7 @@ class GuideFeedback extends React.Component {
                         {/*<input type="text" name="q3" id="q3i" onChange={this.handleChange}  required/>*/}
                     </div>
                     <div id="name-group" >
-                        <label id="Q4L" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
+                        <label id="Q4L" className="title-input">עם איזה תחושה יצאתי מהפעילות?</label>
                         <Grid item xs={12}>
                             {
                                 <div>
@@ -351,7 +352,7 @@ class GuideFeedback extends React.Component {
                         {/*<input type="text"  name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <div id="name-group" >
-                        <label id="Q5L" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
+                        <label id="Q5L" className="title-input">עם אילו הצלחות נפגשתי בפעילות?</label>
                         <Grid item xs={12}>
                             {
                                 <div>
@@ -365,7 +366,7 @@ class GuideFeedback extends React.Component {
                         {/*<input type="text"  name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <div id="name-group" >
-                        <label id="Q6L" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
+                        <label id="Q6L" className="title-input">עם אילו דילמות נפגשתי בפעילות?</label>
                         <Grid item xs={12}>
                             {
                                 <div>
@@ -379,7 +380,7 @@ class GuideFeedback extends React.Component {
                         {/*<input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <div id="name-group" >
-                        <label id="Q7L" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
+                        <label id="Q7L" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא:</label>
                         <Grid item xs={12}>
                             {
                                 <div>
