@@ -1,9 +1,10 @@
-import  React, {Component, createElement} from "react";
+import  React, {Component} from "react";
 import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
 import {db} from "../../../../firebase/firebase";
 import $ from "jquery";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 
@@ -13,36 +14,82 @@ let op = false
 
 class FeedbackStudents extends Component {
 
-    constructor() {
-        super();
-
-
+    constructor(props) {
+        super(props);
         this.state =
             {
                 isLoaded:false,
                 show:false,
+                spinner:false
             }
     }
 
 
 
     async  GetTeams() {
-        if (!op) {
-            op=true
+
+        var from = this.GetDates(this.state.dateFrom)
+        var to = this.GetDates(this.state.dateTo)
+
+        if(!this.state.dateFrom || !this.state.dateTo )
+        {
+            alert("נא למלא תאריך התחלה וסיום")
+            return
+        }
+
             var options=[]
+            this.setState({options:options,show:false})
             var nameTeams = await db.collection("Teams")
                 .orderBy('name','asc')
                 .get()
-            nameTeams.forEach(doc => {
-                options.push({value: doc.ref, label: doc.data().name})
-            })
-           this.setState({options:options})
 
-        }
+
+
+            console.log("in 1")
+            var Teamcollection = nameTeams.docs.map( async function(doc) {
+                console.log("in 2")
+                var dates = await db.collection("Teams").doc(doc.id).collection("Dates")
+                    .where('date','>=',from)
+                    .where('date','<=',to)
+                    .get()
+
+                if(!dates.empty)
+                    return [doc,dates]
+
+            })
+
+            Promise.all(Teamcollection).then(res => {
+                res.forEach(item=>{
+                    console.log("in 3")
+                    if(item)
+                        options.push({ value: item, label:  item[0].data().name})
+                })
+                this.setState({options:options})
+                console.log("in 4")
+
+            })
+
     }
 
     render() {
         return(
+            <div>
+                {!this.state.spinner ? "" :
+                    <div id='fr'>
+                        טעון נתונים
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
+
+                            />
+                        </div>
+                    </div>
+                }
             <div id="studentFeedback" className="feedback-design" dir='rtl'>
                 <div id="studentFeedback" className="form-design" name="student_form" method="POST">
                     <div id="name-group" className="form-group">
@@ -51,8 +98,7 @@ class FeedbackStudents extends Component {
                                 <label id="insert-student" className="title-input" htmlFor="name">מתאריך </label>
                                 <input type="date" className="form-control"  name="date"
                                        onChange={(e)=>{
-                                           this.setState({dateFrom:e.target.value})
-                                           // this.GetTeams()
+                                           this.setState({dateFrom:e.target.value,options:null,show:false,teamName:null})
                                        }}
                                        required/>
                             </Grid>
@@ -60,13 +106,13 @@ class FeedbackStudents extends Component {
                                 <label id="insert-student" className="title-input" htmlFor="name">עד תאריך </label>
                                 <input type="date" className="form-control" id="insert-date" name="date"
                                        onChange={(e)=>{
-                                           this.setState({dateTo:e.target.value})
-                                           // this.GetTeams()
+                                           this.setState({dateTo:e.target.value,options:null,show:false,teamName:null})
                                        }}
                                        required/>
                             </Grid>
 
-                            <Grid item xs={2} hidden={!this.state.dateTo && !this.state.dateFrom}>
+
+                            <Grid item xs={2} hidden={!this.state.dateTo || !this.state.dateFrom}>
                                 <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
                                 <button id="viewReport" className="btn btn-info" onClick={()=>{
                                     this.GetTeams()
@@ -75,17 +121,22 @@ class FeedbackStudents extends Component {
                             </Grid>
 
                             <Grid item xs={6} hidden={!this.state.options}>
-                                <Select  placeholder={" בחר קבוצה " }options={this.state.options} onChange={(e)=>{
+                                <Select id = 'select'  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
                                     console.log(e.label,e.value);
                                     this.setState({team:e.value,teamName:e.label})
                                 }} required/>
                             </Grid>
-                            <Grid item xs={3}>
+                            <Grid item xs={3} hidden={!this.state.options}>
+                                <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
+                                {
+                                    !this.state.teamName?"לא נבחרה קבוצה": this.state.teamName
+                                }
+
                             </Grid>
-                            <Grid item xs={3}  hidden={!this.state.options}>
+                            <Grid item xs={3}  hidden={!this.state.teamName}>
                                 <button id="viewReport" className="btn btn-info" onClick={()=>{
-                                    this.GetForms()
-                                    this.setState({show:!this.state.show})
+
+                                    this.setState({show:!this.state.show, forms:this.state.team[1].docs})
                                 }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
                                     className="fa fa-arrow-right"></span></button>
                             </Grid>
@@ -98,7 +149,7 @@ class FeedbackStudents extends Component {
                             this.state.forms.map((Form,index) => (
                                 <Grid  item xs={12}  key={index}>
                                     <hr/>
-                                    {this.feedbacks(Form.data())}
+                                    { this.feedbacks(Form.data())}
                                 </Grid >
                             ))
                         }
@@ -107,20 +158,25 @@ class FeedbackStudents extends Component {
                     <button id="go-back" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
                 </div>
             </div>
+            </div>
         )
     }
 
     feedbacks(form)
 {
-    if(form) {
-        console.log(form)
+    if(form && this.state.show) {
+       var date =form.date.toDate()
+        var day = date.getUTCDate()+1
+        var month = date.getMonth()+1
+        var year = date.getFullYear()
         console.log(form.postStudents)
         return (
             <div id="name-group" className="form-group" dir="rtl">
                 <div className="report" id="report">
                     <div>
                         <h4> שם המדריך:{form.nameGuide} </h4>
-                        <h4> תאריך המפגש: {form.date.Date}</h4>
+                        <h4> תאריך המפגש: {day+'/'+month+"/"+year}</h4>
+
                         <h4> נושא המפגש: {form.topicMeeting}</h4>
                     </div>
                     <table id="feedList" style={{style: {textAlign: 'center'}}}>
@@ -215,52 +271,37 @@ class FeedbackStudents extends Component {
         day= parseInt(day)
         return {year,month,day}
     }
-async GetForms()
+
+    GetDates(date)
 {
-    if(this.state.forms || this.state.show)
-        return
-    var from = this.state.dateFrom;
-    var to = this.state.dateTo;
-    if(!from)
-      {
-          alert("שדה מתאריך - הוא שדה חובה")
-          return
-      }
-    if(!to)
-    {
-        alert("שדה עד תאריך - הוא שדה חובה")
-        return
-    }
-    var fromDate = this.parser(from)
-    console.log(fromDate["year"])
-    from = new Date()
-    from.setFullYear(fromDate["year"],fromDate["month"]-1,fromDate["day"]-1)
-    var toDate = this.parser(to)
+    // if(this.state.forms || this.state.show)
+    //     return
 
-    to = new Date()
-    to.setFullYear(toDate["year"],toDate["month"]-1,toDate["day"]+1)
-    if(fromDate["year"]>toDate["year"]){
-        alert("התאריך מ גדול מהתאירך עד")
-        return
-    }
-    if(fromDate["year"]===toDate["year"] && fromDate["month"]>toDate["month"]){
-        alert("התאריך מ גדול מהתאירך עד")
-        return
-    }
-    if(fromDate["year"]===toDate["year"] && fromDate["month"]===toDate["month"] && fromDate["day"]>toDate["day"]){
-        alert("התאריך מ גדול מהתאירך עד")
-        return
-    }
+    date = this.parser(date)
+    var parsDate = new Date()
+    parsDate.setTime(0)
+    parsDate.setFullYear(date["year"],date["month"]-1,date["day"])
 
+    return parsDate;
 
+    // var toDate = this.parser(to)
+    // to = new Date()
+    // to.setFullYear(toDate["year"],toDate["month"]-1,toDate["day"]+1)
+    // if(fromDate["year"]>toDate["year"]){
+    //     alert("התאריך מ גדול מהתאירך עד")
+    //     return
+    // }
+    // if(fromDate["year"]===toDate["year"] && fromDate["month"]>toDate["month"]){
+    //     alert("התאריך מ גדול מהתאירך עד")
+    //     return
+    // }
+    // if(fromDate["year"]===toDate["year"] && fromDate["month"]===toDate["month"] && fromDate["day"]>toDate["day"]){
+    //     alert("התאריך מ גדול מהתאירך עד")
+    //     return
+    // }
 
-    var forms = await db.collection('Teams').doc(this.state.team.id).collection("Dates")
-        .where('date','>',from)
-        .where('date','<',to)
-        .get()
-    this.setState({forms:forms.docs})
-    console.log(forms)
 }
+
 }
 
 

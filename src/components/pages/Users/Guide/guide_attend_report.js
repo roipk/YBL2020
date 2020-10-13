@@ -19,7 +19,7 @@ class GuideReports extends React.Component {
             page:'menu',
             user: props.location,
             error:false,
-            loading: false,
+            spinner: false,
             rule:"Manager",
             prevDate:'',
             viewStudent: false,
@@ -164,8 +164,8 @@ class GuideReports extends React.Component {
 
 
     }
-    loadPage(event){
-        this.setState({loading:event})
+    loadSpinner(event){
+        this.setState({spinner:event})
     }
 
 
@@ -177,6 +177,7 @@ class GuideReports extends React.Component {
             var dateForm=this.state.date
             var {year,month,day} =this.parser(dateForm)
             var date = new Date()
+            date.setTime(0)
             date.setFullYear(year,month-1,day)
             var guide = await db.collection("guides").doc(path);
             var team = (await guide.get()).data();
@@ -271,11 +272,12 @@ class GuideReports extends React.Component {
     {
         // alert("המערכת מתחילה בשמירה יש ללחוץ אישור להתחלה והמתנה להודעה נוספת")
         this.setState({loading:true})
+        this.loadSpinner(true)
         for(var i=0;i<Students.length;i++)
         {
            Students[i] = await this.saveStudentData(Students[i])
         }
-        this.setState({loading:false})
+        this.loadSpinner(false)
         alert("כל השינויים בוצעו בהצלחה")
         return Students
     }
@@ -444,7 +446,7 @@ class GuideReports extends React.Component {
     render() {
         return (
             <div>
-                {!this.state.loading ? "" :
+                {!this.state.spinner ? "" :
                     <div id='fr'>
                         טעון נתונים
                         <div className="sweet-loading">

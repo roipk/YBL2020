@@ -220,7 +220,10 @@ class GuideFeedback extends React.Component {
             var doc =  await newDate.get()
             var {year,month,day} = this.parser(date)
             var date = new Date()
+            date.setTime(0)
             date.setFullYear(year,month-1,day)
+            // date.setUTCFullYear(year,month,day)
+            // date.setHours(0,0,0)
             console.log(doc)
                 if(!doc.exists){
                     console.log("not exist")
