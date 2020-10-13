@@ -2,7 +2,7 @@ import  React, {Component} from "react";
 import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
-import {db} from "../../../../firebase/firebase";
+import {db,getPathData} from "../../../../firebase/firebase";
 import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -156,12 +156,15 @@ class FeedbackGuides extends Component {
     }
 
 
-    feedbacks(form){
+    async feedbacks(form){
         if(form && this.state.show) {
         var date =form.date.toDate()
             var day = date.getUTCDate()+1
             var month = date.getMonth()+1
             var year = date.getFullYear()
+            console.log(form.reportGuide.path)
+            var reportGuide=(await form.reportGuide.get()).data()
+            console.log(reportGuide)
             console.log(form.postStudents)
             return (
                 <div id="name-group" className="form-group" dir="rtl">

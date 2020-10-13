@@ -12,11 +12,7 @@ class Profile extends React.Component {
         this.state = {
             fname:'',
             lname:'',
-            email:'',
             phone:'',
-            team:'',
-            teamName:'',
-            type:'',
         };
     }
 
@@ -48,23 +44,34 @@ class Profile extends React.Component {
     async getDate() {
         var user=(auth.currentUser).uid
         //check if student or guide
-        var student=await getStudentData("OHGcgl7SX3OJW569pCmh1ipONNa2")
-        this.state.fname=student.fname
-        this.state.lname=student.lname
-        this.state.email=student.email
-        this.state.phone=student.phone
-        this.state.team=student.team
-        this.state.teamName=student.teamName
-        this.state.type=student.type
+
+        var student=await getStudentData(user)
+        this.setState({
+            fname:student.fname,
+            lname:student.lname,
+            phone:student.phone,
+
+        })
+
         console.log(this.state)
     }
 
     async sendData(){
+        if(this.state.password && this.state.Vpassword && this.state.password === this.state.Vpassword)
+            auth.currentUser.updatePassword(this.state.password).then(()=>{
+                alert("הסיסמא שונה בהצלחה")
+            })
         console.log(this.state)
         var user=(auth.currentUser).uid
-        var student = getStudent("OHGcgl7SX3OJW569pCmh1ipONNa2")
+        var student = await getStudent(user)
         console.log(student)
-        student.set(this.state)
+        var updateStudent = {
+            fname:this.state.fname,
+            lname:this.state.lname,
+            phone:this.state.phone,
+        }
+
+        student.update(updateStudent)
     }
 
     render() {
@@ -126,18 +133,33 @@ class Profile extends React.Component {
                         <Grid item xs={12}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
-                                id="email"
-                                name="email"
-                                type="email"
+                                id="password"
+                                name="password"
+                                type="password"
                                 autoComplete="off"
-                                value={this.state.email}
-                                onChange={e => {
-                                    this.setState({email:e.target.value})
+                                onChange={(e) => {
+                                    this.setState({password:e.target.value})
                                 }}
                                 variant="standard"
                                 required
                                 fullWidth
-                                label="Email"
+                                label="סיסמא חדשה"
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                inputProps={{style: {textAlign: 'center'}}}
+                                id="password"
+                                name="password"
+                                type="password"
+                                autoComplete="off"
+                                onChange={(e) => {
+                                    this.setState({Vpassword:e.target.value})
+                                }}
+                                variant="standard"
+                                required
+                                fullWidth
+                                label="אימות סיסמא"
                             />
                         </Grid>
                     </Grid>
