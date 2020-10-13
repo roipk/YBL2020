@@ -21,15 +21,6 @@ class GuideFeedback extends React.Component {
             date:"",
             form : {
                 date:"",
-                q1:"",
-                q2:"",
-                q3:"",
-                q4:"",
-                q5:"",
-                q6:"",
-                q7:"",
-                q8:"",
-                q9:""
             }
         };
 
@@ -212,23 +203,23 @@ class GuideFeedback extends React.Component {
     }
     async addDataToTeam(guide,date)
     {
-        var formGuide = (await guide.get()).ref
+        var formGuide = (await guide.collection('comes').doc(date).get()).ref
         try{
             var team = (await guide.get()).data();
             var teamCollection = await db.collection("Teams").doc(team.team.id)
             var newDate = teamCollection.collection("Dates").doc(date);
             var doc =  await newDate.get()
             var {year,month,day} = this.parser(date)
-            var date = new Date()
-            date.setTime(0)
-            date.setFullYear(year,month-1,day)
+            var fullDate = new Date()
+            fullDate.setTime(0)
+            fullDate.setFullYear(year,month-1,day)
             // date.setUTCFullYear(year,month,day)
             // date.setHours(0,0,0)
             console.log(doc)
                 if(!doc.exists){
                     console.log("not exist")
                     newDate.set({
-                        date:date,
+                        date:fullDate,
                         reportGuide: formGuide,
                         topicMeeting:this.state.form.q1,
                         nameGuide: team.fname + " "+team.lname,
@@ -338,9 +329,7 @@ class GuideFeedback extends React.Component {
                         <Grid item xs={12}>
                             {
                                 <div>
-
-                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
-
+                                    <textarea  dir="rtl" cols="70" name="q3" id="q3i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
 
                                 </div>
                             }
@@ -353,7 +342,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q4" id="q4i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
 
 
                                 </div>
@@ -367,7 +356,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70"  name="q5" id="q5i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
 
 
                                 </div>
@@ -381,7 +370,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q6" id="q6i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
 
 
                                 </div>
@@ -395,7 +384,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q7" id="q7i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
 
 
                                 </div>
@@ -445,7 +434,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q9" id="q9i"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
 
 
                                 </div>

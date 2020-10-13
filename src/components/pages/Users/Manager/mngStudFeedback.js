@@ -2,7 +2,7 @@ import  React, {Component} from "react";
 import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
-import {db} from "../../../../firebase/firebase";
+import {db,getPathData} from "../../../../firebase/firebase";
 import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -20,7 +20,9 @@ class FeedbackStudents extends Component {
             {
                 isLoaded:false,
                 show:false,
-                spinner:false
+                spinner:false,
+                dateFrom:Date.now(),
+                dateTo:Date.now(),
             }
     }
 
@@ -96,7 +98,7 @@ class FeedbackStudents extends Component {
                         <Grid container spacing={2}>
                             <Grid item xs={5}>
                                 <label id="insert-student" className="title-input" htmlFor="name">מתאריך </label>
-                                <input type="date" className="form-control"  name="date"
+                                <input type="date"  className="form-control"  name="date"
                                        onChange={(e)=>{
                                            this.setState({dateFrom:e.target.value,options:null,show:false,teamName:null})
                                        }}
@@ -162,13 +164,15 @@ class FeedbackStudents extends Component {
         )
     }
 
-    feedbacks(form)
+   async feedbacks(form)
 {
     if(form && this.state.show) {
        var date =form.date.toDate()
         var day = date.getUTCDate()+1
         var month = date.getMonth()+1
         var year = date.getFullYear()
+        var guideReports = await form.reportGuide.get()
+        console.log(guideReports.data())
         console.log(form.postStudents)
         return (
             <div id="name-group" className="form-group" dir="rtl">
