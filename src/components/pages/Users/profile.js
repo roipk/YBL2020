@@ -43,7 +43,13 @@ class Profile extends React.Component {
         return (
             <div id="instructor" className="sec-design">
                 {/* <div> Hello Manager {this.state.user.email}</div> */}
-                <button id="report-button" className="btn btn-info" >עדכון פרטים<span
+                <button id="report-button" className="btn btn-info"  onClick={() => {
+                   auth.currentUser.updatePassword('1234').then(()=>{
+                       alert("הקוד שונה בהצלחה")
+                   })
+
+                }}
+                >עדכון פרטים<span
                     className="fa fa-arrow-right"></span></button>
                 <button onClick={() => {BackPage(this.props,this.state.user)}}>חזרה </button>
 
