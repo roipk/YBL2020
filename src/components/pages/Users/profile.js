@@ -1,5 +1,5 @@
 import React from "react";
-import  {db,auth, getStudentData,getStudent} from '../../../firebase/firebase'
+import  {db,auth, getStudentData,getStudent,getGuide,getManager} from '../../../firebase/firebase'
 import {BackPage} from "./UserPage";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -44,23 +44,49 @@ class Profile extends React.Component {
     async getDate() {
         var user=(auth.currentUser).uid
         //check if student or guide
+        var student = await getStudentData(user)
+        var guide = await getGuide(user)
+        var manager = await getManager(user)
+        if(student)
+            this.setState({
+                fname:student.fname,
+                lname:student.lname,
+                phone:student.phone,
 
-        var student=await getStudentData(user)
-        this.setState({
-            fname:student.fname,
-            lname:student.lname,
-            phone:student.phone,
+            })
+        else if(guide)
+            this.setState({
+                fname:guide.fname,
+                lname:guide.lname,
+                phone:guide.phone,
 
-        })
+            })
+        else if(manager)
+            this.setState({
+                fname:manager.fname,
+                lname:manager.lname,
+                phone:manager.phone,
 
+            })
         console.log(this.state)
     }
 
     async sendData(){
-        if(this.state.password && this.state.Vpassword && this.state.password === this.state.Vpassword)
-            auth.currentUser.updatePassword(this.state.password).then(()=>{
-                alert("הסיסמא שונה בהצלחה")
-            })
+        if(this.state.password && this.state.Vpassword){
+            if(this.state.password != this.state.Vpassword){
+                alert("הסיסמא ואימות הסיסמא לא תואמים")
+                return
+            }
+            else if((this.state.password).length <6){
+                alert("הסיסמא צריכה להיות יותר מ6 תווים")
+                return
+            }
+            auth.currentUser.updatePassword(this.state.password)
+        }
+        else if((!this.state.password && this.state.Vpassword)||(this.state.password && !this.state.Vpassword)){
+            alert("אנא מלא את כל הנתונים")
+            return
+        }
         console.log(this.state)
         var user=(auth.currentUser).uid
         var student = await getStudent(user)
@@ -71,10 +97,14 @@ class Profile extends React.Component {
             phone:this.state.phone,
         }
 
-        student.update(updateStudent)
+        student.update(updateStudent).then(()=>
+        {
+            alert("הפרטים שונו בהצלחה")
+        })
     }
 
     render() {
+        console.log("******")
         return (
             <div id="instructor" className="sec-design">
                 <Grid container spacing={2}>
@@ -90,7 +120,6 @@ class Profile extends React.Component {
                                     this.setState({lname:e.target.value})
                                 }}
                                 variant="standard"
-                                required
                                 fullWidth
                                 label="שם משפחה"
                             />
@@ -108,7 +137,6 @@ class Profile extends React.Component {
                                     this.setState({fname:e.target.value})
                                 }}
                                 variant="standard"
-                                required
                                 fullWidth
                                 label="שם פרטי"
                             />
@@ -125,7 +153,6 @@ class Profile extends React.Component {
                                     this.setState({phone:e.target.value})
                                 }}
                                 variant="standard"
-                                required
                                 fullWidth
                                 label="פלאפון"
                             />
@@ -141,7 +168,6 @@ class Profile extends React.Component {
                                     this.setState({password:e.target.value})
                                 }}
                                 variant="standard"
-                                required
                                 fullWidth
                                 label="סיסמא חדשה"
                             />
@@ -157,7 +183,6 @@ class Profile extends React.Component {
                                     this.setState({Vpassword:e.target.value})
                                 }}
                                 variant="standard"
-                                required
                                 fullWidth
                                 label="אימות סיסמא"
                             />

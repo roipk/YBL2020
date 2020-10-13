@@ -83,7 +83,7 @@ class TempStudent extends React.Component {
                 <form id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{NextPage(this.props,"Feedback",this.state.user)}}>מילוי משוב<span
                         className="fa fa-arrow-right"></span></button>
-                    <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Profile",this.state.user)}} >פרופיל<span
+                    <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Profile",this.state.user)}} >עדכון פרטים או סיסמא<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
                     <button id="report-button" className="btn btn-info" onClick={()=>{
