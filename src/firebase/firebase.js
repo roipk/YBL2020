@@ -108,6 +108,7 @@ export async function getStudent(uid) {
 }
 
 export async function getStudentData(uid) {
+    console.log(uid)
     var studentData = await (await db.collection("students").doc(uid).get()).data();
     console.log(studentData);
     return studentData;
@@ -146,7 +147,7 @@ export async function getManagerData(uid) {
 export async function getTeamFeedbackByDate(teamPath,date) {
     var team = await db.collection("Teams").doc(teamPath).collection("Dates").doc(date).get();
     var teamFeedback=team.data()
-    await console.log(teamFeedback);
+    console.log(teamFeedback);
     return teamFeedback;
 }
 //
