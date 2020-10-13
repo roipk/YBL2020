@@ -1,6 +1,7 @@
 import React from "react";
 import  {auth} from '../../../../firebase/firebase'
 import ClipLoader from "react-spinners/ClipLoader";
+import {NextPage} from "../UserPage";
 
 class TempManager extends React.Component {
     constructor(props) {
@@ -85,6 +86,8 @@ class TempManager extends React.Component {
                 }}>צפייה במשובי
                     מדריכים<span
                         className="fa fa-arrow-right"></span></button>
+                <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Profile",this.state.user)}} >עדכון פרטים או סיסמא<span
+                        className="fa fa-arrow-right"></span></button>               
                 <button id="logout" className="btn btn-info" >התנתק</button>
                 <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
             </div>

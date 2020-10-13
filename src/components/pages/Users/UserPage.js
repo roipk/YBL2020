@@ -28,6 +28,7 @@ export function NextPage(prop,path,data)
         pathname: `${prop.location.pathname}/${path}`,
         data: data,
     })
+    console.log(data)
 }
 
 
