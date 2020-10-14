@@ -5,9 +5,15 @@ import Select from "react-select";
 import {db,getPathData} from "../../../../firebase/firebase";
 import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
+import {Radio, RadioGroup} from "@material-ui/core";
 
 
-class FeedbackGuides extends Component {
+
+
+let op = false
+
+
+class FeedbackGuide extends Component {
 
     constructor(props) {
         super(props);
@@ -18,6 +24,9 @@ class FeedbackGuides extends Component {
                 spinner:false
             }
     }
+
+
+
     async  GetTeams() {
 
         var from = this.GetDates(this.state.dateFrom)
@@ -29,37 +38,44 @@ class FeedbackGuides extends Component {
             return
         }
 
-            var options=[]
-            this.setState({options:options,show:false})
-            var nameTeams = await db.collection("Teams")
-                .orderBy('name','asc')
+        var options=[]
+        this.setState({options:options,show:false})
+        var nameTeams = await db.collection("Teams")
+            .orderBy('name','asc')
+            .get()
+
+
+
+        console.log("in 1")
+        var Teamcollection = nameTeams.docs.map( async function(doc) {
+            console.log("in 2")
+            var dates = await db.collection("Teams").doc(doc.id).collection("Dates")
+                .where('date','>=',from)
+                .where('date','<=',to)
                 .get()
 
-
-
-            console.log("in 1")
-            var Teamcollection = nameTeams.docs.map( async function(doc) {
-                console.log("in 2")
-                var dates = await db.collection("Teams").doc(doc.id).collection("Dates")
-                    .where('date','>=',from)
-                    .where('date','<=',to)
-                    .get()
-
-                if(!dates.empty)
-                    return [doc,dates]
-
-            })
-
-            Promise.all(Teamcollection).then(res => {
-                res.forEach(item=>{
-                    console.log("in 3")
-                    if(item)
-                        options.push({ value: item, label:  item[0].data().name})
+            if(!dates.empty)
+            {
+                var forms=[]
+                dates.forEach(async function(doc){
+                    var FormsGuide= await getPathData(doc.data().reportGuide.path)
+                    forms.push(FormsGuide)
                 })
-                this.setState({options:options})
-                console.log("in 4")
+                return [doc,dates,forms]
+            }
 
+        })
+
+        Promise.all(Teamcollection).then(res => {
+            res.forEach(item=>{
+                console.log("in 3")
+                if(item)
+                    options.push({ value: item, label:  item[0].data().name})
             })
+            this.setState({options:options})
+            console.log("in 4")
+
+        })
 
     }
 
@@ -82,147 +98,146 @@ class FeedbackGuides extends Component {
                         </div>
                     </div>
                 }
-            <div id="studentFeedback" className="feedback-design" dir='rtl'>
-                <div id="studentFeedback" className="form-design" name="student_form" method="POST">
-                    <div id="name-group" className="form-group">
-                        <Grid container spacing={2}>
-                            <Grid item xs={5}>
-                                <label id="insert-student" className="title-input" htmlFor="name">מתאריך </label>
-                                <input type="date" className="form-control"  name="date"
-                                       onChange={(e)=>{
-                                           this.setState({dateFrom:e.target.value,options:null,show:false,teamName:null})
-                                       }}
-                                       required/>
-                            </Grid>
-                            <Grid item xs={5}>
-                                <label id="insert-student" className="title-input" htmlFor="name">עד תאריך </label>
-                                <input type="date" className="form-control" id="insert-date" name="date"
-                                       onChange={(e)=>{
-                                           this.setState({dateTo:e.target.value,options:null,show:false,teamName:null})
-                                       }}
-                                       required/>
-                            </Grid>
+                <div id="studentFeedback" className="feedback-design" dir='rtl'>
+                    <div id="studentFeedback" className="form-design" name="student_form" method="POST">
+                        <div id="name-group" className="form-group">
+                            <Grid container spacing={2}>
+                                <Grid item xs={5}>
+                                    <label id="insert-student" className="title-input" htmlFor="name">מתאריך </label>
+                                    <input type="date" className="form-control"  name="date"
+                                           onChange={(e)=>{
+                                               this.setState({dateFrom:e.target.value,options:null,show:false,teamName:null})
+                                           }}
+                                           required/>
+                                </Grid>
+                                <Grid item xs={5}>
+                                    <label id="insert-student" className="title-input" htmlFor="name">עד תאריך </label>
+                                    <input type="date" className="form-control" id="insert-date" name="date"
+                                           onChange={(e)=>{
+                                               this.setState({dateTo:e.target.value,options:null,show:false,teamName:null})
+                                           }}
+                                           required/>
+                                </Grid>
 
 
-                            <Grid item xs={2} hidden={!this.state.dateTo || !this.state.dateFrom}>
-                                <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
-                                <button id="viewReport" className="btn btn-info" onClick={()=>{
-                                    this.GetTeams()
-                                }}>מצא קבוצות<span
-                                    className="fa fa-arrow-right"></span></button>
-                            </Grid>
+                                <Grid item xs={2} hidden={!this.state.dateTo || !this.state.dateFrom}>
+                                    <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
+                                    <button id="viewReport" className="btn btn-info" onClick={()=>{
+                                        this.GetTeams()
+                                    }}>מצא קבוצות<span
+                                        className="fa fa-arrow-right"></span></button>
+                                </Grid>
 
-                            <Grid item xs={6} hidden={!this.state.options}>
-                                <Select id = 'select'  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
-                                    console.log(e.label,e.value);
-                                    this.setState({team:e.value,teamName:e.label})
-                                }} required/>
-                            </Grid>
-                            <Grid item xs={3} hidden={!this.state.options}>
-                                <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
-                                {
-                                    !this.state.teamName?"לא נבחרה קבוצה": this.state.teamName
-                                }
+                                <Grid item xs={6} hidden={!this.state.options}>
+                                    <Select id = 'select'  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
+                                        console.log(e.label,e.value);
+                                        this.setState({team:e.value,teamName:e.label})
+                                    }} required/>
+                                </Grid>
+                                <Grid item xs={3} hidden={!this.state.options}>
+                                    <label id="insert-student" className="title-input" htmlFor="name"> &nbsp;</label>
+                                    {
+                                        !this.state.teamName?"לא נבחרה קבוצה": this.state.teamName
+                                    }
+
+                                </Grid>
+                                <Grid item xs={3}  hidden={!this.state.teamName}>
+                                    <button id="viewReport" className="btn btn-info" onClick={()=>{
+
+                                        this.setState({show:!this.state.show, forms:this.state.team[1].docs, reportGuide:this.state.team[2]})
+                                    }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
+                                        className="fa fa-arrow-right"></span></button>
+                                </Grid>
 
                             </Grid>
-                            <Grid item xs={3}  hidden={!this.state.teamName}>
-                                <button id="viewReport" className="btn btn-info" onClick={()=>{
-
-                                    this.setState({show:!this.state.show, forms:this.state.team[1].docs})
-                                }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
-                                    className="fa fa-arrow-right"></span></button>
-                            </Grid>
-
-                        </Grid>
                         </div>
-                    {this.state.forms?(
-                    <Grid  item xs={12} hidden={!this.state.show} >
-                        {
-                            this.state.forms.map((Form,index) => (
-                                <Grid  item xs={12}  key={index}>
-                                    <hr/>
-                                    { this.feedbacks(Form.data())}
-                                </Grid >
-                            ))
-                        }
-                    </Grid >
-                    ):(<div></div>)}
-                    <button id="go-back" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
+                        {this.state.forms?(
+                            <Grid  item xs={12} hidden={!this.state.show} >
+                                {
+                                    this.state.forms.map((Form,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            { this.feedbacks(Form.data(),index)}
+                                        </Grid >
+                                    ))
+                                }
+                            </Grid >
+                        ):(<div></div>)}
+                        <button id="go-back" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
+                    </div>
                 </div>
             </div>
-            </div>
         )
-                    
     }
 
-
-    async feedbacks(form){
+    feedbacks(form,index)
+    {
         if(form && this.state.show) {
-        var date =form.date.toDate()
+            var reportGuide = this.state.reportGuide[index].form
+            var date =form.date.toDate()
             var day = date.getUTCDate()+1
             var month = date.getMonth()+1
             var year = date.getFullYear()
-            console.log(form.reportGuide.path)
-            var reportGuide=(await form.reportGuide.get()).data()
             console.log(reportGuide)
-            console.log(form.postStudents)
             return (
                 <div id="name-group" className="form-group" dir="rtl">
                     <div className="report" id="report">
                         <div>
+                            <div dir="rtl">
                             <h4> שם המדריך:{form.nameGuide} </h4>
                             <h4> תאריך המפגש: {day+'/'+month+"/"+year}</h4>
-
-                            <h4> נושא המפגש: {form.topicMeeting}</h4>
+                            <h4> נושא המפגש: {reportGuide.q1}</h4>
+                                <div id="name-group">
+                                    <h4>  <label id="Q2L" className="title-input"> מספר הפעילות:</label></h4>
+                                    {reportGuide.q2?(reportGuide.q2):('לא נכתבה תשובה לשאלה זו')}
+                                </div>
+                                <br/>
+                                <div id="name-group" >
+                                    <h4><label id="Q3L" className="title-input"> מה היה בפעילות?</label></h4>
+                                    {reportGuide.q3?(reportGuide.q3):('לא נכתבה תשובה לשאלה זו')}
+                                    {/*<input type="text" name="q3" id="q3i" onChange={this.handleChange}  required/>*/}
+                                </div>
+                                <br/>
+                                <div id="name-group" >
+                                    <h4> <label id="Q4L" className="title-input">עם איזה תחושה יצאתי מהפעילות?</label></h4>
+                                    {reportGuide.q4?(reportGuide.q4):('לא נכתבה תשובה לשאלה זו')}
+                                    {/*<input type="text"  name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                                </div>
+                                <br/>
+                                <div id="name-group" >
+                                    <h4> <label id="Q5L" className="title-input">עם אילו הצלחות נפגשתי בפעילות?</label></h4>
+                                    {reportGuide.q5?(reportGuide.q5):('לא נכתבה תשובה לשאלה זו')}
+                                    {/*<input type="text"  name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                                </div>
+                                <br/>
+                                <div id="name-group" >
+                                    <h4> <label id="Q6L" className="title-input">עם אילו דילמות נפגשתי בפעילות?</label></h4>
+                                    {reportGuide.q6?(reportGuide.q6):('לא נכתבה תשובה לשאלה זו')}
+                                    {/*<input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                                </div>
+                                <br/>
+                                <div id="name-group" >
+                                    <h4> <label id="Q7L" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא:</label></h4>
+                                    {reportGuide.q7?(reportGuide.q7):('לא נכתבה תשובה לשאלה זו')}
+                                    {/*<input type="text" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                                </div>
+                                <br/>
+                                <h4><label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות?</h4></label></h4>
+                                {(reportGuide.q8 === 0)?('במידה מועטה מאוד'):
+                                    (reportGuide.q8 === 1)?('במידה מועטה'):
+                                        (reportGuide.q8 === 2)?('במידה בינונית'):
+                                            (reportGuide.q8 === 3)?('במידה רבה'):
+                                                (reportGuide.q8 === 4)?('במידה רבה מאוד'):('לא נכתבה תשובה לשאלה זו')
+                                    }
+                                <br/>
+                                <div id="name-group" >
+                                    <h4> <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה:</label></h4>
+                                    {reportGuide.q9?(reportGuide.q9):('לא נכתבה תשובה לשאלה זו')}
+                                    {/*<input type="text" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                                </div>
                         </div>
-                        <table id="feedList" style={{style: {textAlign: 'center'}}}>
-                            <tbody>
-                            <tr>
-                                <th><h5> &nbsp; שאלות &nbsp;</h5></th>
-                                <th><h5> &nbsp; במידה מועטה מאוד &nbsp;</h5></th>
-                                <th><h5> &nbsp; במידה מועטה&nbsp; </h5></th>
-                                <th><h5> &nbsp; במידה בינונית&nbsp; </h5></th>
-                                <th><h5> &nbsp; במידה רבה&nbsp; </h5></th>
-                                <th><h5> &nbsp; במידה רבה מאוד &nbsp;</h5></th>
-                            </tr>
-                            <tr>
-                                <th><h5>באיזה מידה המפגש היום חידש לך/למדת דברים חדשים?</h5></th>
-                                <th><h5>{form.formStudents['q1'][0]}</h5></th>
-                                <th><h5>{form.formStudents['q1'][1]}</h5></th>
-                                <th><h5>{form.formStudents['q1'][2]}</h5></th>
-                                <th><h5>{form.formStudents['q1'][3]}</h5></th>
-                                <th><h5>{form.formStudents['q1'][4]}</h5></th>
-
-                            </tr>
-                            <tr>
-                                <th><h5>באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד?</h5></th>
-                                <th><h5>{form.formStudents['q2'][0]}</h5></th>
-                                <th><h5>{form.formStudents['q2'][1]}</h5></th>
-                                <th><h5>{form.formStudents['q2'][2]}</h5></th>
-                                <th><h5>{form.formStudents['q2'][3]}</h5></th>
-                                <th><h5>{form.formStudents['q2'][4]}</h5></th>
-                            </tr>
-                            <tr>
-                                <th><h5>באיזה מידה נושא המפגש היה רלוונטי עבורך?</h5></th>
-                                <th><h5>{form.formStudents['q3'][0]}</h5></th>
-                                <th><h5>{form.formStudents['q3'][1]}</h5></th>
-                                <th><h5>{form.formStudents['q3'][2]}</h5></th>
-                                <th><h5>{form.formStudents['q3'][3]}</h5></th>
-                                <th><h5>{form.formStudents['q3'][4]}</h5></th>
-                            </tr>
-                            <tr>
-                                <th><h5> באיזה מידה לקחת חלק פעיל במפגש היום?</h5></th>
-                                <th><h5>{form.formStudents['q4'][0]}</h5></th>
-                                <th><h5>{form.formStudents['q4'][1]}</h5></th>
-                                <th><h5>{form.formStudents['q4'][2]}</h5></th>
-                                <th><h5>{form.formStudents['q4'][3]}</h5></th>
-                                <th><h5>{form.formStudents['q4'][4]}</h5></th>
-                            </tr>
-                            </tbody>
-                        </table>
-
                         <div id='posts'>
-                            <u><h3>סיכום חניכים:</h3></u>
+                            <u><h3>נכתב על כל חניך:</h3></u>
                             {
                                 form.postStudents.map((post, i) =>
                                     <h5 key={i} >{post}</h5>
@@ -232,13 +247,15 @@ class FeedbackGuides extends Component {
                         </div>
                     </div>
                 </div>
+                </div>
             )
         }
         else
             return (<div></div>)
     }
 
-    parser(date){
+    parser(date)
+    {
         var year=''
         var month = ''
         var day = ''
@@ -267,15 +284,38 @@ class FeedbackGuides extends Component {
         return {year,month,day}
     }
 
-    GetDates(date){
+    GetDates(date)
+    {
+        // if(this.state.forms || this.state.show)
+        //     return
+
         date = this.parser(date)
         var parsDate = new Date()
         parsDate.setTime(0)
         parsDate.setFullYear(date["year"],date["month"]-1,date["day"])
+
         return parsDate;
+
+        // var toDate = this.parser(to)
+        // to = new Date()
+        // to.setFullYear(toDate["year"],toDate["month"]-1,toDate["day"]+1)
+        // if(fromDate["year"]>toDate["year"]){
+        //     alert("התאריך מ גדול מהתאירך עד")
+        //     return
+        // }
+        // if(fromDate["year"]===toDate["year"] && fromDate["month"]>toDate["month"]){
+        //     alert("התאריך מ גדול מהתאירך עד")
+        //     return
+        // }
+        // if(fromDate["year"]===toDate["year"] && fromDate["month"]===toDate["month"] && fromDate["day"]>toDate["day"]){
+        //     alert("התאריך מ גדול מהתאירך עד")
+        //     return
+        // }
+
     }
 
 }
 
 
-export default FeedbackGuides;
+
+export default FeedbackGuide;
