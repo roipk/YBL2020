@@ -2,7 +2,7 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import {Button} from "@material-ui/core";
-
+import {Link} from "react-router-dom";
 import '../Users/UserPage.css'
 import {auth} from "../../../firebase/firebase";
 
@@ -20,7 +20,7 @@ class resetPassword extends React.Component {
     }
 
 
-    async sendEmail(){
+    sendEmail(){
         var emailAddress = this.state.email;
         console.log(emailAddress)
         auth.sendPasswordResetEmail(emailAddress).then(function() {
@@ -62,10 +62,23 @@ class resetPassword extends React.Component {
                                     type="submit"
                                     fullWidth
                                     variant="contained"
-                                    id="HomeBtn"
+                                    id="submit"
                                     onClick={()=>{this.sendEmail()}}
                                     >
                                    שלח
+                                </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div>
+                                <Button
+                                    type="submit"
+                                    fullWidth
+                                    variant="contained"
+                                    id="HomeBtn"
+                                    component={Link}
+                                    to="/">
+                                    חזרה לעמוד הראשי
                                 </Button>
                             </div>
                         </Grid>
