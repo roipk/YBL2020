@@ -33,7 +33,10 @@ class UpdatesFirebase extends Component {
         else
             this.setState({newTeamName:value})
     }
+    async deleteTeam(){
 
+
+    }
 
     render() {
         return(
@@ -61,7 +64,6 @@ class UpdatesFirebase extends Component {
                             console.log(e.label,e.value);
                             this.setState({teamPath:e.value,teamName:e.label})
                         }} required/>
-
                     </Grid>
                     <Grid item xs={4} hidden={!this.state.replaceTeamName} >
                         <button onClick={async ()=>{
@@ -80,6 +82,37 @@ class UpdatesFirebase extends Component {
                                 console.log("שם זהה לא ניתן לשנות")
                             }
                         }}>אישור החלפה</button>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <button onClick={()=>{
+                            this.setState({delete:true})
+                            this.deleteTeam()
+                        }}>מחק קבוצה </button>
+                    </Grid>
+                    <Grid item xs={8} hidden={!this.state.delete}>
+                        <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
+                            console.log(e.label,e.value);
+                            this.setState({teamPath:(e.value).path,teamName:e.label})
+                        }} required/>
+                    </Grid>
+                    <Grid item xs={4} hidden={!this.state.delete} >
+                        <button onClick={async ()=>{
+                            console.log(this.state.teamPath)
+                            if(this.state.teamPath) {
+                                await this.setState({delete: false})
+                                db.doc(this.state.teamPath).delete().then(function() {
+                                    console.log("הקבוצה נמחקה בהצלחה!");
+                                }).catch(function(error) {
+                                    console.error("Error removing document: ", error);
+                                });
+                                window.location.reload(true);
+
+                            }
+                            else
+                            {
+                                console.log("בחר קבוצה")
+                            }
+                        }}>מחק</button>
                     </Grid>
                     <Grid item xs={12}>
                         <div className="text-below-image">
