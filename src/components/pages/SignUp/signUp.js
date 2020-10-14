@@ -4,7 +4,7 @@ import TextField from "@material-ui/core/TextField";
 import Select from "react-select";
 import {Button} from "@material-ui/core";
 import {Link} from "react-router-dom";
-import {db, RegisterUser} from "../../../firebase/firebase";
+import {db, RegisterUser,CreateNewUser} from "../../../firebase/firebase";
 import '../Users/UserPage.css'
 
 
@@ -52,8 +52,10 @@ class SignUp extends React.Component {
                 alert("נא למלא את כל השדות החובה")
                 return
             }
-            await this.setState({approve:true})
-            await RegisterUser(this.state.email,this.state)
+            await this.setState({approve:false})
+            var newUser = await CreateNewUser(this.state.email,this.state.phone)
+            this.setState({uid:newUser.user.uid})
+            await RegisterUser(newUser.user,this.state)
             // await DeleteUser(email)
             alert("ההרשמה בוצעה בהצלחה נא להמתין לאישור מנהל")
             this.props.history.push({
@@ -167,8 +169,7 @@ class SignUp extends React.Component {
                             </div>
                         </Grid>
                         <Grid item xs={12} hidden={options.length<=0}>
-                            <Select placeholder="בחר קבוצה"  />
-                            <Select  placeholder={" בחר קבוצה " }options={options} onChange={(e)=>{
+                            <Select  placeholder={" בחר קבוצה " }options={options} onChange={e=>{
                                 console.log(e.label,e.value);
                                 this.setState({team:e.value,teamName:e.label})
                             }} required/>

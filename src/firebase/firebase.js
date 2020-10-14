@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firebase-firestore'
+// import * as admin from 'firebase-admin';
 
 const firebaseConfig = {
     apiKey: "AIzaSyD91v4LsW6wytMO6tJoUE7xyVz6BLTm5jk",
@@ -14,39 +15,75 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
+// var serviceAccount = require("./adminYbl");
+//
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: "https://ybl-project-b5e04.firebaseio.com"
+// });
 export const auth = firebase.auth();
 export const db = firebase.firestore();
-
+// export  const admin = admin.auth();
 export default firebase;
+//
+// console.log(admin);
+//
+//
+// admin.auth().createUser({
+//     email: 'user@example.com',
+//     emailVerified: false,
+//     phoneNumber: '+11234567890',
+//     password: 'secretPassword',
+//     displayName: 'John Doe',
+//     photoURL: 'http://www.example.com/12345678/photo.png',
+//     disabled: false
+// })
+//     .then(function(userRecord) {
+//         // See the UserRecord reference doc for the contents of userRecord.
+//         console.log('Successfully created new user:', userRecord.uid);
+//     })
+//     .catch(function(error) {
+//         console.log('Error creating new user:', error);
+//     });
 
 
-export async function RegisterUser(email,user) {
-    await db.collection("waitforapproval").doc(email).set(user);
+export async function CreateNewUser(email,phone) {
+    var res = await auth.createUserWithEmailAndPassword(email,phone)
+    return res;
+}
+
+export async function RegisterUser(uid,user) {
+    uid.updateProfile({displayName:user.fname+" "+ user.lname})
+    await db.collection("waitforapproval").doc(uid.uid).set(user);
     return;
 }
-export async function DeleteUser(email,) {
-    await db.collection("waitforapproval").doc(email).delete();
+export async function DeleteUser(uid) {
+    await db.collection("waitforapproval").doc(uid).delete();
     return;
 }
 
 export async function CreateUser(user) {
+
+
     console.log(user)
-    var res = await auth.createUserWithEmailAndPassword(user.email,user.phone)
-    auth.currentUser.updateProfile({displayName:user.fname+" "+ user.lname})
+    // var res = await auth.createUserWithEmailAndPassword(user.email,user.phone)
+    // res.user.updateProfile({displayName:user.fname+" "+ user.lname})
+
     if(user.type==="testers") {
-        await db.collection("students").doc(res.user.uid).set(user)
-        await db.collection("guides").doc(res.user.uid).set(user)
-        await db.collection("managers").doc(res.user.uid).set(user)
+        await db.collection("students").doc(user.uid).set(user)
+        await db.collection("guides").doc(user.uid).set(user)
+        await db.collection("managers").doc(user.uid).set(user)
     }
-    await  db.collection(user.type).doc(res.user.uid).set(user)
+    await  db.collection(user.type).doc(user.uid).set(user)
     var team=await db.collection('Teams').doc(user.team.id);
     team.set({
         name: user.teamName,
-        guide: db.doc('guides/'+res.user.uid)
+        guide: db.doc('guides/'+user.uid)
     })
 
-    // await db.collection("waitforapproval").doc(user.email).delete();
-    await DeleteUser(user.email)
+    await db.collection("waitforapproval").doc(user.email).delete();
+    await DeleteUser(user.uid)
     console.log("done the user is ready")
     return true;
 }
@@ -131,6 +168,27 @@ export async function getStudentForms(uid) {
     return forms;
 }
 
+
+export async function getUser(user)
+{
+    var testers = await db.collection('testers').doc(user.uid).get()
+    var guides = await db.collection('guides').doc(user.uid).get()
+    var students = await db.collection('students').doc(user.uid).get()
+    var managers = await db.collection('managers').doc(user.uid).get()
+
+    console.log(user)
+    console.log(testers.data())
+    if(testers.exists)
+        return 'Tester'
+    else if(managers.exists)
+        return 'Manager'
+    else if(guides.exists)
+        return 'Guide'
+    else if(students.exists)
+        return 'Student'
+    else
+        return null
+}
 
 
 export async function getManager(uid) {

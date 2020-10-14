@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import  { db,CreateUser, DeleteUser} from '../../../../firebase/firebase'
+import  { db,admin,CreateUser, DeleteUser} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TempManager from "./TempManager";
@@ -288,7 +288,7 @@ render() {
                             <button
                                 style={{backgroundColor: "rgb(248,6,6)"}}
                                 onClick={()=>{
-                                DeleteUser(user.email).then(()=>{
+                                DeleteUser(user.uid).then(()=>{
                                     var newUsers = []
                                     this.state.users.forEach((user,i)=>{
                                         if(index!==i)
