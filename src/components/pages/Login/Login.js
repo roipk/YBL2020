@@ -132,6 +132,21 @@ class Login extends React.Component {
                         </Grid>
                         <Grid item xs={12}>
                             <div>
+
+                                <Button
+                                    type="submit"
+                                    style={{style: {margin: '10px'}}}
+                                    fullWidth
+                                    variant="contained"
+                                    id="registerBtn"
+                                    component={Link}
+                                    to="/resetPassword">
+                                    שכחתי סיסמא
+                                </Button>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <div>
                                 <Button
                                     type="submit"
                                     fullWidth

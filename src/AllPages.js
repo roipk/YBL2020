@@ -3,6 +3,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import HomePage from './components/pages/HomePage/HomePage';
 import SignUp from './components/pages/SignUp/signUp';
 import Login from './components/pages/Login/Login';
+import resetPassword from './components/pages/Login/resetPassword';
 
 import UserPage from "./components/pages/Users/UserPage";
 import Students from './components/pages/Users/Student/Students';
@@ -40,8 +41,10 @@ function LoadPage() {
                     <Route exact path="/" component={HomePage} />
 
                     <Route exact path="/Login" component={Login} />
+                    <Route exact path="/resetPassword" component={resetPassword} />
                     <Route exact path="/SignUp" component={SignUp} />
                     <Route exact path="/User" component={UserPage} />
+
 
                     <Route exact path="/Student/:id" component={Students} />
                     <Route exact path="/Guide/:id" component={Guides} />
@@ -57,6 +60,7 @@ function LoadPage() {
                     <Route exact path="/TempGuide" component={TempGuide} />
                     <Route exact path="/TempGuide/Reports" component={GuideReports} />
                     <Route exact path="/TempGuide/Feedback" component={GuideFeedback} />
+                    <Route exact path="/TempGuide/profile" component={Profile} />
 
 
                     {/*managers pages*/}
@@ -66,7 +70,7 @@ function LoadPage() {
                     <Route exact path="/TempManager/Reports" component={AttendReport} />
                     <Route exact path="/TempManager/Feedbacks/Guide" component={FeedbackGuides} />
                     <Route exact path="/TempManager/Feedbacks/Student" component={FeedbackStudents} />
-
+                    <Route exact path="/TempManager/profile" component={Profile} />
 
 
                     <Route exact path="/test_g_a_r" component={test_g_a_r} />
