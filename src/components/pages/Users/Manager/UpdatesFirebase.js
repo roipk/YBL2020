@@ -4,6 +4,8 @@ import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
 import Select from "react-select";
 var options = []
+var guidesOptions = []
+var studentsOptions = []
 class UpdatesFirebase extends Component {
 
     constructor(props) {
@@ -124,7 +126,12 @@ class UpdatesFirebase extends Component {
                                 this.setState({showGuides:!this.state.showGuides})
                             }} >{this.state.showGuides?'הסתר רשימת מדריכים':'הצג רשימת מדריכים'}</button>
                             {
-                                (this.state.showGuides && this.state.Guides )?(<div> נמצאו: {this.state.Guides.length} מדריכים </div>):(<div></div>)
+                                (this.state.showGuides && this.state.Guides )?(<div> נמצאו: {this.state.Guides.length} מדריכים
+                                    <Select  placeholder={" מצא מדריך "} options={guidesOptions} onChange={(e)=>{
+                                        console.log(e.label,e.value);
+                                        this.setState({Guides:[e.value]})
+                                    }} />
+                                </div>):(<div></div>)
                             }
                             {
                                 (!this.state.Guides || !this.state.showGuides)?<div></div>:
@@ -151,6 +158,14 @@ class UpdatesFirebase extends Component {
                                 (this.state.showStudents && this.state.Students )?<div> נמצאו: {this.state.Students.length} חניכים </div>:<div></div>
                             }
                             {
+                                (this.state.showStudents && this.state.Students )?(
+                                    <Select  placeholder={" מצא חניך "} options={options} onChange={(e)=>{
+                                        console.log(e.label,e.value);
+                                        this.setState({Students:e.value})
+                                    }} />
+                                ):(<div></div>)
+                            }
+                            {
                                 (!this.state.Students || !this.state.showStudents)?<div></div>:
                                     this.state.Students.map((Student,index) => (
                                         <Grid  item xs={12}  key={index}>
@@ -162,6 +177,16 @@ class UpdatesFirebase extends Component {
 
                             }
                         </div>
+                        <Grid item xs={12}>
+                            <button id="feedback-button" className="btn btn-info" onClick={()=>{
+
+                            }}>הצג קבוצות ללא מדריך</button>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <button id="feedback-button" className="btn btn-info" onClick={()=>{
+
+                            }}>הצג מדריכים ללא קבוצה</button>
+                        </Grid>
                     <Grid item xs={12}>
                         <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                     </Grid>
@@ -180,13 +205,23 @@ class UpdatesFirebase extends Component {
 
     async getAllUsers(user)
     {
-        if((user === 'guides' && this.state.Guides)||(user === 'students' && this.state.Students))
+        if((user === 'guides' && this.state.Guides && this.state.Guides > 1 )||(user === 'students' && this.state.Students && this.state.Students > 1))
             return
+
+        if(user === 'guides')
+            guidesOptions=[]
+        else if(user === 'students')
+            studentsOptions=[]
         var allUsers = []
         await db.collection(user).get().then(res=>{
             res.forEach(res=>{
-                if(res.data().uid)
+                if(res.data().uid) {
                     allUsers.push(res)
+                    if(user === 'guides')
+                        guidesOptions.push({ value: res, label: res.data().fname+''+res.data().lname })
+                    else if(user === 'students')
+                        studentsOptions.push({ value: res, label: res.data().fname+''+res.data().lname })
+                }
             })
         })
         if(user === 'guides')
@@ -194,6 +229,7 @@ class UpdatesFirebase extends Component {
         else if(user === 'students')
             this.setState({Students:allUsers})
 
+        console.log(guidesOptions)
     }
 
 
@@ -228,24 +264,58 @@ class UpdatesFirebase extends Component {
     card(user)
     {
         console.log(user)
-        // {
-        //     approve: false
-        //     email: "r@gmail.com"
-        //     fname: "r"
-        //     lname: "r"
-        //     phone: "123123"
-        //     team: nv {d_: ji, w_: $r, m_: null, firestore: ov, ff: Vd}
-        //     teamName: "קבוצה 1"
-        //     type: "guides"
-        // }
         return(
             <div id="name-group" className="form-group" dir="rtl">
                 <div className="report" id="report">
                     <div>
+
                         <h4> שם: {user.fname+' '+ user.lname} </h4>
                         <h4> טלפון: {user.phone}</h4>
                         <h4> אימייל: {user.email}</h4>
                         <h4> קבוצה: {user.teamName}</h4>
+                        <Grid container spacing={2}>
+                            <Grid item xs={8}>
+                        <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
+                            console.log(e.label,e.value);
+                            this.setState({guideTeamPath:e.value,guideTeamName:e.label})
+                        }} />
+                        </Grid>
+                        <Grid item xs={4} hidden={!this.state.guideTeamName}>
+                        <button onClick={async ()=>{
+
+
+                            if(user.type==='guides') {
+                                var updateTeam = await db.collection('guides').doc(user.uid)
+                                updateTeam.update({
+                                    teamName:this.state.guideTeamName,
+                                    team:this.state.guideTeamPath
+                                })
+
+                                await db.collection('Teams').doc(this.state.guideTeamPath.id).update({
+                                    teamName:null,
+                                    team:null
+                                })
+                                await db.collection('Teams').doc(user.team.id).update({
+                                    guide: null
+                                })
+                                await db.collection('Teams').doc(this.state.guideTeamPath.id).update({
+                                    guide: updateTeam
+                                })
+                                this.getAllUsers('guides')
+                            }
+                            else
+                            {
+                                var updateTeam = await db.collection('students').doc(user.uid)
+                                updateTeam.update({
+                                    teamName:this.state.guideTeamName,
+                                    team:this.state.guideTeamPath
+                                })
+                                this.getAllUsers('students')
+                            }
+                            alert('הוחלפה קבוצה')
+                        }}>החלף</button>
+                        </Grid>
+                        </Grid>
                     </div>
                 </div>
             </div>
