@@ -504,21 +504,31 @@ class UpdatesFirebase extends Component {
                         <button onClick={async ()=>{
 
 
-                            if(user.type==='guides') {
+                            if(user.type==='guides' || user.type==='testers') {
                                 var updateTeam = await db.collection('guides').doc(user.uid)
-                                updateTeam.update({
+                                await updateTeam.update({
                                     teamName:this.state.guideTeamName,
                                     team:this.state.guideTeamPath
                                 })
-
                                 var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath.id).get()
-                                await db.doc(oldGuide.data().guide).update({
-                                    teamName:null,
-                                    team:null
-                                })
-                                await db.collection('Teams').doc(user.team.id).update({
-                                    guide: null
-                                })
+                                try{
+                                    await db.doc((oldGuide.data().guide).path).update({
+                                        teamName:null,
+                                        team:null
+                                    })
+
+                                }
+                                catch(e){
+                                    console.log(e)
+                                }
+                                try{
+                                    await db.collection('Teams').doc(user.team.id).update({
+                                        guide: null
+                                    })
+                                }
+                                catch{
+                                    console.log("למדריך לא הייתה קבוצה לפני")
+                                }
                                 await db.collection('Teams').doc(this.state.guideTeamPath.id).update({
                                     guide: updateTeam
                                 })
