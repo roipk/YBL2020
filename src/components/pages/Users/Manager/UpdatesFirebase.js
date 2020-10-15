@@ -5,9 +5,11 @@ import {BackPage} from "../UserPage";
 import Select from "react-select";
 var options = []
 var guidesOptions = []
-var emptyGuidesOptions = []
-var emptyTeamOptions = []
 var studentsOptions = []
+var emptyGuidesOptions = []
+var emptyStudentsOptions = []
+var emptyTeamOptions = []
+var TeamOptions = []
 class UpdatesFirebase extends Component {
 
     constructor(props) {
@@ -26,6 +28,7 @@ class UpdatesFirebase extends Component {
                 showStudents:false,
                 showTeamWithoutGuide:false,
                 showGuideWithoutTeam:false,
+                showStudentWithoutTeam:false,
             }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
@@ -108,7 +111,23 @@ class UpdatesFirebase extends Component {
                             console.log(this.state.teamPath)
                             if(this.state.teamPath) {
                                 await this.setState({delete: false})
-                                db.doc(this.state.teamPath).delete().then(function() {
+                               var d = await db.doc(this.state.teamPath).get()
+                                if(d.data().guide) {
+                                    console.log("team on guide remove")
+                                    await d.data().guide.update({
+                                        team: null,
+                                        teamName: null
+                                    })
+                                }
+                               var studs = await  db.collection("students").where('teamName','==',this.state.teamName).get()
+                                    studs.docs.forEach(async student=>{
+                                        student.ref.update({
+                                            teamName: null,
+                                            team:null
+                                        })
+                                    })
+
+                               await db.doc(this.state.teamPath).delete().then(function() {
                                     console.log("הקבוצה נמחקה בהצלחה!");
                                 }).catch(function(error) {
                                     console.error("Error removing document: ", error);
@@ -122,6 +141,7 @@ class UpdatesFirebase extends Component {
                             }
                         }}>מחק</button>
                     </Grid>
+
                     <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={()=>{
@@ -179,6 +199,35 @@ class UpdatesFirebase extends Component {
 
                             }
                         </div>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <div className="text-below-image">
+                            <button onClick={async ()=>{
+                                await this.getAllUsers('studentEmpty')
+                                await this.getAllUsers('Teams')
+                                this.setState({showStudentWithoutTeam:!this.state.showStudentWithoutTeam})
+                            }} >{this.state.showStudentWithoutTeam?'הסתר רשימת חניכים ללא קבוצה':'הצג רשימת חניכים ללא קבוצה'}</button>
+                            {
+                                (this.state.showStudentWithoutTeam && this.state.StudentEmpty )?(<div> נמצאו: {this.state.StudentEmpty.length} חניכים
+                                    <Select  placeholder={" מצא חניך "} options={emptyStudentsOptions} onChange={(e)=>{
+                                        console.log(e.label,e.value);
+                                        this.setState({StudentEmpty:[e.value]})
+                                    }} />
+                                </div>):('')
+                            }
+                            {
+                                (!this.state.StudentEmpty || !this.state.showStudentWithoutTeam)?'':
+                                    this.state.StudentEmpty.map((user,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            {this.card(user.data())}
+                                        </Grid >
+                                    ))
+
+
+                            }
+                        </div>
+
                     </Grid>
                     <Grid item xs={12}>
                         <div className="text-below-image">
@@ -260,62 +309,74 @@ class UpdatesFirebase extends Component {
 
 
 
-    async getAllUsers(user)
-    {
+    async getAllUsers(user) {
 
-       if((user === 'guides' && this.state.Guides && this.state.Guides > 1 ) ||
-           (user === 'students' && this.state.Students && this.state.Students > 1)||
-           (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1)||
-           (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1))
+        if ((user === 'guides' && this.state.Guides && this.state.Guides > 1) ||
+            (user === 'students' && this.state.Students && this.state.Students > 1) ||
+            (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1) ||
+            (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
+            (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
+            (user === 'Teams' && this.state.Teams && this.state.Teams > 1))
             return
         console.log(user)
         var temp = user
-        if(user === 'guides')
-            guidesOptions=[]
-        else if(user === 'guidesEmpty') {
+        if (user === 'guides')
+            guidesOptions = []
+        else if (user === 'guidesEmpty') {
             emptyGuidesOptions = []
-            temp ='guides'
-        }
-        else if(user === 'teamEmpty') {
+            temp = 'guides'
+        } else if (user === 'studentEmpty') {
+            emptyStudentsOptions = []
+            temp = 'students'
+        } else if (user === 'teamEmpty') {
             emptyTeamOptions = []
-            temp ='Teams'
-        }
-        else if(user === 'students')
-            studentsOptions=[]
+            temp = 'Teams'
+        } else if (user === 'Teams') {
+            TeamOptions = []
+            temp = 'Teams'
+        } else if (user === 'students')
+            studentsOptions = []
         var allUsers = []
-        await db.collection(temp).get().then(res=>{
-            res.forEach(res=>{
-                if(res.data().uid) {
+        await db.collection(temp).get().then(res => {
+            res.forEach(res => {
+                if (res.data().uid) {
                     if (user === 'students') {
                         allUsers.push(res)
                         studentsOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
 
-                    }
-                    else if (user === 'guides') {
+                    } else if (user === 'guides') {
                         allUsers.push(res)
                         guidesOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
 
-                    }
-                    else if (user === 'guidesEmpty' && !res.data().team) {
+                    } else if (user === 'guidesEmpty' && !res.data().team) {
                         allUsers.push(res)
                         emptyGuidesOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+                    } else if (user === 'studentEmpty' && !res.data().teamName) {
+                        allUsers.push(res)
+                        emptyStudentsOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
                     }
-                }
-                else if(user === 'teamEmpty' && !res.data().guide)
-                {
+                } else if (user === 'teamEmpty' && !res.data().guide) {
                     allUsers.push(res)
-                    emptyTeamOptions.push({ value: res, label: res.name })
+                    emptyTeamOptions.push({value: res, label: res.name})
+
+                } else if (user === 'Teams' && res.data().guide) {
+                    allUsers.push(res)
+                    TeamOptions.push({value: res, label: res.name})
                 }
             })
         })
-        if(user === 'guides')
-            this.setState({Guides:allUsers})
-        else if(user === 'students')
-            this.setState({Students:allUsers})
-        else if(user === 'guidesEmpty')
-            this.setState({GuidesEmpty:allUsers})
-        else if(user === 'teamEmpty') {
-            this.setState({TeamEmpty:allUsers})
+        if (user === 'guides')
+            this.setState({Guides: allUsers})
+        else if (user === 'students')
+            this.setState({Students: allUsers})
+        else if (user === 'guidesEmpty')
+            this.setState({GuidesEmpty: allUsers})
+        else if (user === 'studentEmpty')
+            this.setState({StudentEmpty: allUsers})
+        else if (user === 'teamEmpty')
+            this.setState({TeamEmpty: allUsers})
+        else if (user === 'Teams') {
+            this.setState({Teams: allUsers})
         }
 
         console.log(allUsers)
