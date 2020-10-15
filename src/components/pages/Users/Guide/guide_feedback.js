@@ -318,15 +318,15 @@ class GuideFeedback extends React.Component {
                     <label id="date"  className="title-input">הכנס את תאריך המפגש:</label>
                     <input type="date"  id="insert-date" name="date" onChange={this.handleChange} required/>
                     <div id="name-group">
-                        <label id="Q1L" className="title-input"> נושא הפעילות:</label>
+                        <label id="Q1L" className="title-input">נושא הפעילות:</label>
                         <input type="text"  name="q1" id="q1i" onChange={this.handleChange}  required/>
                     </div>
                     <div id="name-group">
-                        <label id="Q2L" className="title-input"> מספר הפעילות:</label>
+                        <label id="Q2L" className="title-input">מספר הפעילות:</label>
                         <input type="text" name="q2" id="q2i" onChange={this.handleChange}  required/>
                     </div>
                     <div id="name-group" >
-                        <label id="Q3L" className="title-input"> מה היה בפעילות?</label>
+                        <label id="Q3L" className="title-input">מה היה בפעילות?</label>
                         <Grid item xs={12}>
                             {
                                 <div>
@@ -380,7 +380,7 @@ class GuideFeedback extends React.Component {
                         {/*<input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <div id="name-group" >
-                        <label id="Q7L" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא:</label>
+                        <label id="Q7L" className="title-input" htmlFor="name">נקודות חשובות למפגש הבא:</label>
                         <Grid item xs={12}>
                             {
                                 <div>
@@ -394,7 +394,7 @@ class GuideFeedback extends React.Component {
                         {/*<input type="text" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
                     </div>
                     <br/>
-                    <label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</h4></label>
+                    <label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות?</h4></label>
                     <div>
                         <RadioGroup
                             aria-label="new"
@@ -430,7 +430,7 @@ class GuideFeedback extends React.Component {
                     </div>
                     <br/>
                     <div id="name-group" >
-                        <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
+                        <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה:</label>
                         <Grid item xs={12}>
                             {
                                 <div>
