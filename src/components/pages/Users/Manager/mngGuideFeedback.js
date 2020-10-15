@@ -2,7 +2,7 @@ import  React, {Component} from "react";
 import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
-import {db,getPathData} from "../../../../firebase/firebase";
+import {auth, db, getPathData, getUser} from "../../../../firebase/firebase";
 import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
 import {Radio, RadioGroup} from "@material-ui/core";
@@ -77,6 +77,44 @@ class FeedbackGuide extends Component {
 
         })
 
+    }
+
+    async componentDidMount() {
+        auth.onAuthStateChanged(async user => {
+            if (user) {
+                var type = await getUser(user)
+                console.log(type)
+                if (type) {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    // if (type !== 'Tester')
+                    //     this.loadUser(type)
+                } else {
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
+
+            } else {
+                this.setState({
+                    isLoad: true,
+                })
+                window.location.href = '/Login';
+                return;
+
+            }
+            this.render()
+        })
     }
 
     render() {
@@ -314,6 +352,14 @@ class FeedbackGuide extends Component {
 
     }
 
+    loadUser(page)
+    {
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 }
 
 

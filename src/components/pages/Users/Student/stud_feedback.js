@@ -1,5 +1,5 @@
 import React from "react";
-import  {auth,db} from '../../../../firebase/firebase'
+import {auth, db, getUser} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 import {BackPage} from "../UserPage";
@@ -144,13 +144,33 @@ class StudentFeedback extends React.Component {
     }
 
     async componentDidMount() {
-        auth.onAuthStateChanged(user=>{
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+                var type = await getUser(user)
+                console.log(type)
+                if(type)
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    // if(type!=='Tester')
+                    //     this.loadUser(type)
+                }
+                else{
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
 
             }
             else {
@@ -221,7 +241,7 @@ class StudentFeedback extends React.Component {
     StudentAttendReport(){
         return ( <div>
 
-            <div id="attendreport" className="sec-design">
+            <div id="attendreport" className="sec-design" dir='rtl'>
                 <h2>שלום {this.state.user.displayName} </h2>
 
                 <div id="name-group" className="form-group">
@@ -264,11 +284,11 @@ class StudentFeedback extends React.Component {
                             onChange={this.hendleRadioButton}
                             row={true}
                         >
-                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
                         </RadioGroup>
                     </div>
                     <br/>
@@ -284,11 +304,11 @@ class StudentFeedback extends React.Component {
                             onChange={this.hendleRadioButton}
                             row={true}
                         >
-                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
                         </RadioGroup>
                     </div>
                     <br/>
@@ -305,11 +325,11 @@ class StudentFeedback extends React.Component {
                             row={true}
 
                         >
-                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
                         </RadioGroup>
                     </div>
                     <br/>
@@ -326,11 +346,11 @@ class StudentFeedback extends React.Component {
                             row={true}
 
                         >
-                            <FormControlLabel value="0" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
 
                         </RadioGroup>
                     </div>
@@ -386,7 +406,14 @@ class StudentFeedback extends React.Component {
         )
     }
 
-
+    loadUser(page)
+    {
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 }
 
 

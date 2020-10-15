@@ -1,5 +1,5 @@
 import React from "react";
-import firebase, {auth, db} from '../../../../firebase/firebase';
+import firebase, {auth, db, getUser} from '../../../../firebase/firebase';
 import './Guide.css'
 import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
@@ -210,13 +210,33 @@ class GuideReports extends React.Component {
 
     }
     async componentDidMount() {
-        auth.onAuthStateChanged(user=>{
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+                var type = await getUser(user)
+                console.log(type)
+                if(type)
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    // if(type!=='Tester')
+                        // this.loadUser(type)
+                }
+                else{
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
 
             }
             else {
@@ -316,7 +336,7 @@ class GuideReports extends React.Component {
     {
         console.log("in1")
         if(student.feedback === student.originFeedback && student.originCheckBox === student.approv) {
-            return
+            return student
         }
         await this.addDataToTeam()
         console.log("in2")
@@ -416,7 +436,7 @@ class GuideReports extends React.Component {
 
         if(dataStudent && dataStudent.canUpdate)
         {
-            // dataStudent.canUpdate = false
+            dataStudent.canUpdate = false
             await form.set({
                 approved: approved,
                 form:dataStudent,
@@ -583,6 +603,16 @@ class GuideReports extends React.Component {
         }
     }
 
+
+    loadUser(page)
+    {
+
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 }
 
 

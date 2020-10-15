@@ -121,7 +121,6 @@ class UserPage extends React.Component {
                         </Button>
 
 
-
                         <button onClick={() => this.loadUser("Student")}>Enter Student</button>
                         <button onClick={() => this.loadUser("Guide")}>Enter Guide</button>
                         <button onClick={() => this.loadUser("Manager")}>Enter Manager</button>
@@ -174,7 +173,7 @@ class UserPage extends React.Component {
             return (<h1>{error}</h1>)
 
         return(
-            <div>
+            <div dir='rtl' >
                שלום {user.displayName}
             {/*    <span>*/}
             {/*    {isLoaded ? <Users user={user} isLoaded={isLoaded}/> : <div/>}*/}

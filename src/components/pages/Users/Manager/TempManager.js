@@ -1,5 +1,5 @@
 import React from "react";
-import  {auth} from '../../../../firebase/firebase'
+import {auth, getUser, signOut} from '../../../../firebase/firebase'
 import ClipLoader from "react-spinners/ClipLoader";
 import {NextPage} from "../UserPage";
 
@@ -22,13 +22,33 @@ class TempManager extends React.Component {
     }
 
     async componentDidMount() {
-        auth.onAuthStateChanged(user=>{
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+                var type = await getUser(user)
+                console.log(type)
+                if(type)
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    if(type!=='Tester')
+                        this.loadUser(type)
+                }
+                else{
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
 
             }
             else {
@@ -57,7 +77,7 @@ class TempManager extends React.Component {
     render() {
 
         return (
-            <div id="instructor" className="sec-design">
+            <div id="instructor" className="sec-design" dir='rtl'>
                  <div> שלום {this.state.user.displayName}</div>
                 <button id="report-button" className="btn btn-info"onClick={()=>{
                     this.ChangePage("UserApproval")
@@ -87,8 +107,8 @@ class TempManager extends React.Component {
                     מדריכים<span
                         className="fa fa-arrow-right"></span></button>
                 <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Profile",this.state.user)}} >עדכון פרטים או סיסמא<span
-                        className="fa fa-arrow-right"></span></button>               
-                <button id="logout" className="btn btn-info" >התנתק</button>
+                        className="fa fa-arrow-right"></span></button>
+                <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
                 <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
             </div>
 
@@ -111,8 +131,15 @@ class TempManager extends React.Component {
         })
 
     }
-    
 
+    loadUser(page)
+    {
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 }
 
 

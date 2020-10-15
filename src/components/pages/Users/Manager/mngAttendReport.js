@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {getTeamFeedbackByDate,db} from "../../../../firebase/firebase";
+import {getTeamFeedbackByDate, db, auth, getUser} from "../../../../firebase/firebase";
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import $ from 'jquery'
@@ -73,6 +73,45 @@ class AttendReport extends Component {
         }
     }
     async componentDidMount() {
+        auth.onAuthStateChanged(async user=>{
+            if(user)
+            {
+                var type = await getUser(user)
+                console.log(type)
+                if(type)
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    // if(type!=='Tester')
+                    //     this.loadUser(type)
+                }
+                else{
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
+
+            }
+            else {
+                this.setState({
+                    isLoad: true,
+                })
+                window.location.href = '/Login';
+                return;
+
+            }
+            this.render()
+        })
         var nameTeams =  await db.collection("Teams").get();
         nameTeams.forEach(doc=>{
             options.push({ value: doc.ref, label: doc.data().name })
@@ -89,7 +128,14 @@ class AttendReport extends Component {
         }
     }
 
-    
+    loadUser(page)
+    {
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 }
 
 

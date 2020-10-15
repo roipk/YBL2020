@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import  { db,admin,CreateUser, DeleteUser} from '../../../../firebase/firebase'
+import {db, admin, CreateUser, DeleteUser, auth, getUser} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TempManager from "./TempManager";
@@ -47,7 +47,45 @@ class UserApproval extends React.Component {
 
 
     async componentDidMount() {
+        auth.onAuthStateChanged(async user=>{
+            if(user)
+            {
+                var type = await getUser(user)
+                console.log(type)
+                if(type)
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    // if(type!=='Tester')
+                    //     this.loadUser(type)
+                }
+                else{
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
 
+            }
+            else {
+                this.setState({
+                    isLoad: true,
+                })
+                window.location.href = '/Login';
+                return;
+
+            }
+            this.render()
+        })
         const collection = await db.collection('waitforapproval').get()
         const usersList = [];
         collection.forEach(doc => {
@@ -95,8 +133,8 @@ class UserApproval extends React.Component {
     }
     else if(e.target === manager) {
         student.checked=false;
-        guide.checked=true;
-        manager.checked=false;
+        guide.checked=false;
+        manager.checked=true;
         tester.checked=false;
 
     }
@@ -153,11 +191,11 @@ render() {
 
 
                                 </Grid>
-                                <Grid item xs={12}>
-                                    <div className="text-below-image">
-                                        <button>אישור בקשות מסומנות</button>
-                                    </div>
-                                </Grid>
+                                {/*<Grid item xs={12}>*/}
+                                {/*    <div className="text-below-image">*/}
+                                {/*        <button>אישור בקשות מסומנות</button>*/}
+                                {/*    </div>*/}
+                                {/*</Grid>*/}
                                 <Grid item xs={12}>
                                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
                                 </Grid>
@@ -263,7 +301,7 @@ render() {
                         </Grid>
                         <Grid item xs={12}>
                             <div className="text-below-image">
-                                <label className="container">אישור בקשה<input type='checkbox' checked={user.approve} onChange={e=>{
+                                <label className="container">אישור בקשה<input type='checkbox'  onChange={e=>{
                                     user.approve = e.target.checked
                                 } }/></label>
                             </div>
@@ -305,6 +343,15 @@ render() {
 
                 </div>
             );
+    }
+
+    loadUser(page)
+    {
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
     }
 
 }

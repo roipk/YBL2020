@@ -1,5 +1,5 @@
 import React from "react";
-import  {auth, signOut} from '../../../../firebase/firebase'
+import {auth, getUser, signOut} from '../../../../firebase/firebase'
 import {NextPage} from "../UserPage";
 
 
@@ -18,13 +18,33 @@ class TempStudent extends React.Component {
 
 
     async componentDidMount() {
-         auth.onAuthStateChanged(user=>{
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+                var type = await getUser(user)
+                console.log(type)
+                if(type)
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    if(type!=='Tester')
+                        this.loadUser(type)
+                }
+                else{
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
 
             }
             else {
@@ -97,7 +117,14 @@ class TempStudent extends React.Component {
         )
     }
 
-
+    loadUser(page)
+    {
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 }
 
 

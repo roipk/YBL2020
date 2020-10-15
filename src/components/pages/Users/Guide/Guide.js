@@ -165,7 +165,7 @@ class Guide extends React.Component {
 
     menu() {
         return (
-            <div id="instructor" className="sec-design">
+            <div id="instructor" className="sec-design" dir='rtl'>
                 <h2>שלום מדריך {this.state.user.name} </h2>
                 <div id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>אישור דו"ח נוכחות<span

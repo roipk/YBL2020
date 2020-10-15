@@ -1,5 +1,5 @@
 import React from "react";
-import  {auth, getPathData, signOut} from '../../../../firebase/firebase';
+import {auth, getPathData, getUser, signOut} from '../../../../firebase/firebase';
 import './Guide.css'
 import {NextPage} from "../UserPage";
 
@@ -35,13 +35,33 @@ class TestGuide extends React.Component {
     }
 
     async componentDidMount() {
-        auth.onAuthStateChanged(user=>{
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+                var type = await getUser(user)
+                console.log(type)
+                if(type)
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    if(type!=='Tester')
+                        this.loadUser(type)
+                }
+                else{
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+                // console.log(tester.exists)
+                // console.log(user)
+                console.log("change user")
+                // this.setState({
+                //     isLoad:true,
+                //     user:user,
+                // })
 
             }
             else {
@@ -60,7 +80,7 @@ class TestGuide extends React.Component {
 
        render() {
         return (
-            <div id="instructor" className="sec-design">
+            <div id="instructor" className="sec-design" dir='rtl'>
                 <h2>שלום {this.state.user.displayName} </h2>
                 {/*<h2>Hello Guide {this.state.user.email} </h2>*/}
                 <div id="instructor_menu" className="form-design" name="student_form" method="POST">
@@ -80,6 +100,15 @@ class TestGuide extends React.Component {
                 </div>
             </div>
         )
+    }
+
+    loadUser(page)
+    {
+        this.props.history.push({
+            // pathname: `/${page}/${this.state.user.id}`,
+            pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
     }
 
 }
