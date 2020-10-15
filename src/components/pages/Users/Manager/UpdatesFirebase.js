@@ -5,6 +5,8 @@ import {BackPage} from "../UserPage";
 import Select from "react-select";
 var options = []
 var guidesOptions = []
+var emptyGuidesOptions = []
+var emptyTeamOptions = []
 var studentsOptions = []
 class UpdatesFirebase extends Component {
 
@@ -21,8 +23,9 @@ class UpdatesFirebase extends Component {
                 replaceTeamName:false,
                 delete:false,
                 showGuides:false,
-                showStudents:false
-
+                showStudents:false,
+                showTeamWithoutGuide:false,
+                showGuideWithoutTeam:false,
             }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
@@ -131,10 +134,10 @@ class UpdatesFirebase extends Component {
                                         console.log(e.label,e.value);
                                         this.setState({Guides:[e.value]})
                                     }} />
-                                </div>):(<div></div>)
+                                </div>):('')
                             }
                             {
-                                (!this.state.Guides || !this.state.showGuides)?<div></div>:
+                                (!this.state.Guides || !this.state.showGuides)?'':
                                     this.state.Guides.map((Guide,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
@@ -147,7 +150,6 @@ class UpdatesFirebase extends Component {
                         </div>
 
                     </Grid>
-
                     <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={()=>{
@@ -155,18 +157,18 @@ class UpdatesFirebase extends Component {
                                 this.setState({showStudents:!this.state.showStudents})
                             }} >{this.state.showStudents?'הסתר רשימת חניכים':'הצג רשימת חניכים'}</button>
                             {
-                                (this.state.showStudents && this.state.Students )?<div> נמצאו: {this.state.Students.length} חניכים </div>:<div></div>
+                                (this.state.showStudents && this.state.Students )?<div> נמצאו: {this.state.Students.length} חניכים </div>:''
                             }
                             {
                                 (this.state.showStudents && this.state.Students )?(
-                                    <Select  placeholder={" מצא חניך "} options={options} onChange={(e)=>{
+                                    <Select  placeholder={" מצא חניך "} options={studentsOptions} onChange={(e)=>{
                                         console.log(e.label,e.value);
                                         this.setState({Students:e.value})
                                     }} />
-                                ):(<div></div>)
+                                ):('')
                             }
                             {
-                                (!this.state.Students || !this.state.showStudents)?<div></div>:
+                                (!this.state.Students || !this.state.showStudents)?'':
                                     this.state.Students.map((Student,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
@@ -177,19 +179,72 @@ class UpdatesFirebase extends Component {
 
                             }
                         </div>
-                        <Grid item xs={12}>
-                            <button id="feedback-button" className="btn btn-info" onClick={()=>{
+                    </Grid>
+                    <Grid item xs={12}>
+                        <div className="text-below-image">
+                            <button onClick={async ()=>{
+                                await this.getAllUsers('guidesEmpty')
+                                await this.getAllUsers('teamEmpty')
+                                this.setState({showGuideWithoutTeam:!this.state.showGuideWithoutTeam})
+                            }} >{this.state.showGuideWithoutTeam?'הסתר רשימת מדריכים ללא קבוצה':'הצג רשימת מדריכים ללא קבוצה'}</button>
+                            {
+                                (this.state.showGuideWithoutTeam && this.state.GuidesEmpty )?(<div> נמצאו: {this.state.GuidesEmpty.length} מדריכים
+                                    <Select  placeholder={" מצא מדריך "} options={emptyGuidesOptions} onChange={(e)=>{
+                                        console.log(e.label,e.value);
+                                        this.setState({GuidesEmpty:[e.value]})
+                                    }} />
+                                </div>):('')
+                            }
+                            {
+                                (!this.state.GuidesEmpty || !this.state.showGuideWithoutTeam)?'':
+                                    this.state.GuidesEmpty.map((Guide,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            {this.card(Guide.data())}
+                                        </Grid >
+                                    ))
 
-                            }}>הצג קבוצות ללא מדריך</button>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <button id="feedback-button" className="btn btn-info" onClick={()=>{
 
-                            }}>הצג מדריכים ללא קבוצה</button>
-                        </Grid>
+                            }
+                        </div>
+
+                    </Grid>
+                    <Grid item xs={12}>
+                        <div className="text-below-image">
+                            <button onClick={async ()=>{
+                                await this.getAllUsers('guidesEmpty')
+                                await this.getAllUsers('teamEmpty')
+                                this.setState({showTeamWithoutGuide:!this.state.showTeamWithoutGuide})
+                            }} >{this.state.showTeamWithoutGuide?'הסתר רשימת קבוצות ללא מדריך':'הצג רשימת קבוצות ללא מדריך'}</button>
+                            {
+                                (this.state.showTeamWithoutGuide && this.state.TeamEmpty )?(<div> נמצאו: {this.state.TeamEmpty.length} קבוצות
+                                    <Select  placeholder={" מצא קבוצה "} options={emptyTeamOptions} onChange={(e)=>{
+                                        console.log(e.label,e.value);
+                                        this.setState({TeamEmpty:[e.value]})
+                                    }} />
+                                </div>):('')
+                            }
+                            {
+                                (!this.state.TeamEmpty || !this.state.showTeamWithoutGuide)?'':
+                                    this.state.TeamEmpty.map((Team,index) => (
+                                        <Grid  item xs={12}  key={index}>
+                                            <hr/>
+                                            {this.teamCard(Team.data())}
+                                        </Grid >
+                                    ))
+
+
+                            }
+                        </div>
+
+                    </Grid>
+
+
+
+
+
                     <Grid item xs={12}>
                         <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
-                    </Grid>
                     </Grid>
 
 
@@ -203,24 +258,53 @@ class UpdatesFirebase extends Component {
     }
 
 
+
+
     async getAllUsers(user)
     {
-        if((user === 'guides' && this.state.Guides && this.state.Guides > 1 )||(user === 'students' && this.state.Students && this.state.Students > 1))
-            return
 
+       if((user === 'guides' && this.state.Guides && this.state.Guides > 1 ) ||
+           (user === 'students' && this.state.Students && this.state.Students > 1)||
+           (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1)||
+           (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1))
+            return
+        console.log(user)
+        var temp = user
         if(user === 'guides')
             guidesOptions=[]
+        else if(user === 'guidesEmpty') {
+            emptyGuidesOptions = []
+            temp ='guides'
+        }
+        else if(user === 'teamEmpty') {
+            emptyTeamOptions = []
+            temp ='Teams'
+        }
         else if(user === 'students')
             studentsOptions=[]
         var allUsers = []
-        await db.collection(user).get().then(res=>{
+        await db.collection(temp).get().then(res=>{
             res.forEach(res=>{
                 if(res.data().uid) {
+                    if (user === 'students') {
+                        allUsers.push(res)
+                        studentsOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+
+                    }
+                    else if (user === 'guides') {
+                        allUsers.push(res)
+                        guidesOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+
+                    }
+                    else if (user === 'guidesEmpty' && !res.data().team) {
+                        allUsers.push(res)
+                        emptyGuidesOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+                    }
+                }
+                else if(user === 'teamEmpty' && !res.data().guide)
+                {
                     allUsers.push(res)
-                    if(user === 'guides')
-                        guidesOptions.push({ value: res, label: res.data().fname+''+res.data().lname })
-                    else if(user === 'students')
-                        studentsOptions.push({ value: res, label: res.data().fname+''+res.data().lname })
+                    emptyTeamOptions.push({ value: res, label: res.name })
                 }
             })
         })
@@ -228,8 +312,13 @@ class UpdatesFirebase extends Component {
             this.setState({Guides:allUsers})
         else if(user === 'students')
             this.setState({Students:allUsers})
+        else if(user === 'guidesEmpty')
+            this.setState({GuidesEmpty:allUsers})
+        else if(user === 'teamEmpty') {
+            this.setState({TeamEmpty:allUsers})
+        }
 
-        console.log(guidesOptions)
+        console.log(allUsers)
     }
 
 
@@ -260,10 +349,33 @@ class UpdatesFirebase extends Component {
         }
     }
 
+    teamCard(team)
+    {
+        return(
+            <div id="name-group" className="form-group" dir="rtl">
+                <div className="report" id="report">
+                    <div>
+                        <h4> שם קבוצה: {team.name} </h4>
+                        <Grid container spacing={2}>
+                            <Grid item xs={8}>
+                                <Select  placeholder={" שיבוץ מדריך "} options={emptyGuidesOptions} onChange={(e)=>{
+                                    console.log(e.label,e.value);
+                                    this.setState({emtpyGuideTeamPath:e.value,emtpyguideTeamName:e.label})
+                                }} />
+                            </Grid>
+                            <Grid item xs={4} hidden={!this.state.emtpyGuideTeamPath}>
+
+
+                            </Grid>
+                        </Grid>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     card(user)
     {
-        console.log(user)
         return(
             <div id="name-group" className="form-group" dir="rtl">
                 <div className="report" id="report">
@@ -291,7 +403,8 @@ class UpdatesFirebase extends Component {
                                     team:this.state.guideTeamPath
                                 })
 
-                                await db.collection('Teams').doc(this.state.guideTeamPath.id).update({
+                                var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath.id).get()
+                                await db.doc(oldGuide.data().guide).update({
                                     teamName:null,
                                     team:null
                                 })
