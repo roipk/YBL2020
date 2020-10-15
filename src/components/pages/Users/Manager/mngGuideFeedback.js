@@ -58,8 +58,11 @@ class FeedbackGuide extends Component {
             {
                 var forms=[]
                 dates.forEach(async function(doc){
-                    var FormsGuide= await getPathData(doc.data().reportGuide.path)
-                    forms.push(FormsGuide)
+                    if(doc.data().reportGuide)
+                    {
+                        var FormsGuide = await getPathData(doc.data().reportGuide.path)
+                        forms.push(FormsGuide)
+                    }
                 })
                 return [doc,dates,forms]
             }
@@ -211,6 +214,7 @@ class FeedbackGuide extends Component {
     feedbacks(form,index)
     {
         if(form && this.state.show) {
+            console.log(this.state.reportGuide)
             var reportGuide = this.state.reportGuide[index].form
             var date =form.date.toDate()
             var day = date.getUTCDate()+1

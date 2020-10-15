@@ -127,6 +127,14 @@ class UpdatesFirebase extends Component {
                                         })
                                     })
 
+                                var guide = await  db.collection("guides").where('teamName','==',this.state.teamName).get()
+                                guide.docs.forEach(async student=>{
+                                    guide.ref.update({
+                                        teamName: null,
+                                        team:null
+                                    })
+                                })
+
                                await db.doc(this.state.teamPath).delete().then(function() {
                                     console.log("הקבוצה נמחקה בהצלחה!");
                                 }).catch(function(error) {
