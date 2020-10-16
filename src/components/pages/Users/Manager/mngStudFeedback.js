@@ -201,8 +201,9 @@ class FeedbackStudents extends Component {
     feedbacks(form)
     {
         if(form && this.state.show) {
-            var date =form.date.toDate()
-            var day = date.getUTCDate()+1
+            var date = form.date.toDate()
+            var day = date.getDate()
+            console.log(day)
             var month = date.getMonth()+1
             var year = date.getFullYear()
             console.log(form.postStudents)

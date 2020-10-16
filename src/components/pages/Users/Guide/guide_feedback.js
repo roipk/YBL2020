@@ -88,9 +88,7 @@ class GuideFeedback extends React.Component {
             }
             else
             {
-                form = this.state.form
-                form[name] = value;
-                this.setState({form:form})
+                this.setState({form:test.data().form})
             }
         }
         else
@@ -316,21 +314,21 @@ class GuideFeedback extends React.Component {
             <div id="guideFeeadback" className="sec-design" >
                 <div dir="rtl">
                     <label id="date"  className="title-input">הכנס את תאריך המפגש:</label>
-                    <input type="date"  id="insert-date" name="date" onChange={this.handleChange} required/>
+                    <input type="date"  id="insert-date" name="date" onChange={(e)=>this.handleChange(e)} required/>
                     <div id="name-group">
                         <label id="Q1L" className="title-input">נושא הפעילות:</label>
-                        <input type="text"  name="q1" id="q1i" onChange={this.handleChange}  required/>
+                        <input type="text"  name="q1" id="q1i" placeholder={'התשובה שלך'} value={this.state.form.q1?(this.state.form.q1):('')} onChange={(e)=>{this.handleChange(e)}}  required/>
                     </div>
                     <div id="name-group">
                         <label id="Q2L" className="title-input">מספר הפעילות:</label>
-                        <input type="text" name="q2" id="q2i" onChange={this.handleChange}  required/>
+                        <input type="text" name="q2" id="q2i" placeholder={'התשובה שלך'} value={this.state.form.q2?(this.state.form.q2):('') } onChange={(e)=>this.handleChange(e)}  required/>
                     </div>
                     <div id="name-group" >
                         <label id="Q3L" className="title-input">מה היה בפעילות?</label>
                         <Grid item xs={12}>
                             {
                                 <div>
-                                    <textarea  dir="rtl" cols="70" name="q3" id="q3i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q3" id="q3i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q3?(this.state.form.q3):('') } onChange={(e)=>this.handleChange(e)}  required/>
 
                                 </div>
                             }
@@ -343,7 +341,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70" name="q4" id="q4i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q4" id="q4i" rows="5"placeholder={'התשובה שלך'} value={this.state.form.q4?(this.state.form.q4):('') } onChange={(e)=>this.handleChange(e)}  required/>
 
 
                                 </div>
@@ -357,7 +355,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70"  name="q5" id="q5i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70"  name="q5" id="q5i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q5?(this.state.form.q5):('') }  onChange={(e)=>this.handleChange(e)}  required/>
 
 
                                 </div>
@@ -371,7 +369,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70" name="q6" id="q6i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q6" id="q6i" rows="5" placeholder="Your Answer"placeholder={'התשובה שלך'} value={this.state.form.q6?(this.state.form.q6):('') } onChange={(e)=>this.handleChange(e)}  required/>
 
 
                                 </div>
@@ -385,7 +383,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70" name="q7" id="q7i" rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q7" id="q7i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q7?(this.state.form.q7):('') } onChange={(e)=>this.handleChange(e)}  required/>
 
 
                                 </div>
@@ -401,7 +399,7 @@ class GuideFeedback extends React.Component {
                             name="q8"
                             id ='q8i'
                             // value={location}
-                            onChange={this.handleChange}
+                            onChange={(e)=>this.handleChange(e)}
                             row={true}
                         >
                             <label id="insert-name" className="title-input" htmlFor="name">
@@ -435,7 +433,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70" name="q9" id="q9i"  rows="5" placeholder="Your Answer" onChange={this.handleChange}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q9" id="q9i"  rows="5"placeholder={'התשובה שלך'} value={this.state.form.q9?(this.state.form.q9):('') } onChange={(e)=>this.handleChange(e)}  required/>
 
 
                                 </div>
