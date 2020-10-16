@@ -154,7 +154,8 @@ class UpdatesFirebase extends Component {
                         <div className="text-below-image">
                             <button onClick={()=>{
                                 this.getAllUsers('guides')
-                                this.setState({showGuides:!this.state.showGuides})
+                                    this.setState({showGuides:!this.state.showGuides,guideTeamName:null,guideName:null})
+
                             }} >{this.state.showGuides?'הסתר רשימת מדריכים':'הצג רשימת מדריכים'}</button>
                             {
                                 (this.state.showGuides && this.state.Guides )?(<div> נמצאו: {this.state.Guides.length} מדריכים
@@ -169,7 +170,7 @@ class UpdatesFirebase extends Component {
                                     this.state.Guides.map((Guide,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            {this.card(Guide.data())}
+                                            {this.card(Guide.data(),index)}
                                         </Grid >
                                     ))
 
@@ -200,7 +201,7 @@ class UpdatesFirebase extends Component {
                                     this.state.Students.map((Student,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            {this.card(Student.data())}
+                                            {this.card(Student.data(),index)}
                                         </Grid >
                                     ))
 
@@ -228,7 +229,7 @@ class UpdatesFirebase extends Component {
                                     this.state.StudentEmpty.map((user,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            {this.card(user.data())}
+                                            {this.card(user.data(),index)}
                                         </Grid >
                                     ))
 
@@ -257,7 +258,7 @@ class UpdatesFirebase extends Component {
                                     this.state.GuidesEmpty.map((Guide,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            {this.card(Guide.data())}
+                                            {this.card(Guide.data(),index)}
                                         </Grid >
                                     ))
 
@@ -350,18 +351,18 @@ class UpdatesFirebase extends Component {
                 if (res.data().uid) {
                     if (user === 'students') {
                         allUsers.push(res)
-                        studentsOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+                        studentsOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
 
                     } else if (user === 'guides') {
                         allUsers.push(res)
-                        guidesOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+                        guidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
 
                     } else if (user === 'guidesEmpty' && !res.data().team) {
                         allUsers.push(res)
-                        emptyGuidesOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+                        emptyGuidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
                     } else if (user === 'studentEmpty' && !res.data().teamName) {
                         allUsers.push(res)
-                        emptyStudentsOptions.push({value: res, label: res.data().fname + '' + res.data().lname})
+                        emptyStudentsOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
                     }
                 } else if (user === 'teamEmpty' && !res.data().guide) {
                     allUsers.push(res)
@@ -482,7 +483,7 @@ class UpdatesFirebase extends Component {
         )
     }
 
-    card(user)
+    card(user,index)
     {
         return(
             <div id="name-group" className="form-group" dir="rtl">
@@ -497,18 +498,37 @@ class UpdatesFirebase extends Component {
                             <Grid item xs={8}>
                         <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
                             console.log(e.label,e.value);
-                            this.setState({guideTeamPath:e.value,guideTeamName:e.label})
+                            user.options = e.label
+                            var teamPath = this.state.guideTeamPath
+                            var teamName = this.state.guideTeamName
+                            if(teamPath && teamName) {
+                                if (index < teamPath.length) {
+                                    teamPath[index] = e.value
+                                    teamName[index] = e.label
+                                }
+                                else
+                                {
+                                    teamPath.push(e.value)
+                                    teamName.push(e.label)
+                                }
+                            }
+                            else
+                            {
+                                teamPath = [e.value]
+                                teamName = [e.label]
+
+                            }
+                            this.setState({guideTeamPath:teamPath,guideTeamName:teamName})
                         }} />
                         </Grid>
-                        <Grid item xs={4} hidden={!this.state.guideTeamName}>
+                        <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
                         <button onClick={async ()=>{
-
 
                             if(user.type==='guides' || user.type==='testers') {
                                 var updateTeam = await db.collection('guides').doc(user.uid)
                                 await updateTeam.update({
-                                    teamName:this.state.guideTeamName,
-                                    team:this.state.guideTeamPath
+                                    teamName:this.state.guideTeamName[index],
+                                    team:this.state.guideTeamPath[index]
                                 })
                                 var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath.id).get()
                                 try{
@@ -538,8 +558,8 @@ class UpdatesFirebase extends Component {
                             {
                                 var updateTeam = await db.collection('students').doc(user.uid)
                                 updateTeam.update({
-                                    teamName:this.state.guideTeamName,
-                                    team:this.state.guideTeamPath
+                                    teamName:this.state.guideTeamName[index],
+                                    team:this.state.guideTeamPath[index]
                                 })
                                 this.getAllUsers('students')
                             }
