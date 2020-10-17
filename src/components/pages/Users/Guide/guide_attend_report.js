@@ -34,7 +34,7 @@ class GuideReports extends React.Component {
                 q6:"",
                 q7:"",
                 q8:"",
-                q9:""
+                q9:"",
             }
         };
 
@@ -143,6 +143,7 @@ class GuideReports extends React.Component {
                     if(doc[0].data().form)
                         canUpdate = doc[0].data().form.canUpdate
                     feedback = doc[0].data().feedbackGuide;
+
                     originFeedback = feedback;
 
                 }
@@ -170,11 +171,14 @@ class GuideReports extends React.Component {
                 }
 
             }
+
             this.loadSpinner(false)
         });
 
 
     }
+
+
     loadSpinner(event){
         this.setState({spinner:event})
     }
@@ -183,7 +187,6 @@ class GuideReports extends React.Component {
 
     async addDataToTeam()
     {
-        this.loadSpinner(true)
 
         var path = auth.currentUser.uid
         try{
@@ -209,19 +212,16 @@ class GuideReports extends React.Component {
                         date:date,
                         nameGuide: team.fname + " "+team.lname,
                         postStudents:[],
-                        feedbackToStudents:{},
+                        feedbackToStudents:[],
 
                     })
 
                 }
-                this.loadSpinner(false)
             })
+
         }catch(error) {
             this.loadSpinner(false)
         }
-
-
-
     }
     async componentDidMount() {
         auth.onAuthStateChanged(async user=>{
@@ -302,6 +302,7 @@ class GuideReports extends React.Component {
         {
             if(Students[i] === student)
             {
+
                 Students[i].feedback = event.target.value
                 this.setState({Students: Students})
                 return
@@ -360,6 +361,7 @@ class GuideReports extends React.Component {
         if(student.feedback === student.originFeedback && student.originCheckBox === student.approv && !student.canUpdate) {
             return student
         }
+
         await this.addDataToTeam()
         console.log("in2")
         var sid = student.ref
@@ -376,13 +378,13 @@ class GuideReports extends React.Component {
         var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
         console.log("in3");
-        var feedbackToStudents = {};
+        var feedbackToStudents = [];
         postStudents = [];
         var formStudents = {};
         if(approved) {
             console.log("in4");
             if (dataStudent === undefined) {
-                feedbackToStudents[name] = feedback;
+                feedbackToStudents.push(name+": "+feedback);
                 updateTeamDateSet.set({
                     feedbackToStudents: feedbackToStudents,
                 }, { merge: true });
@@ -391,7 +393,7 @@ class GuideReports extends React.Component {
                 if (!updateTeamDate.data()) {
                     console.log("in6",dataStudent)
                     console.log(feedback)
-                    feedbackToStudents[name] = feedback;
+                    feedbackToStudents.push(name+": "+feedback);
                     console.log(dataStudent.topicMeeting)
                     postStudents.push(dataStudent.topicMeeting,);
                     console.log(dataStudent)
@@ -416,8 +418,25 @@ class GuideReports extends React.Component {
                     if (updateTeamDate.data()["feedbackToStudents"]) {
                         console.log("in9")
                         feedbackToStudents = updateTeamDate.data()["feedbackToStudents"]
-                        feedbackToStudents[name] = feedback
+                        var enter = false
+                        await feedbackToStudents.map((oldfeedback, i) => {
+                            var newName = oldfeedback.substr(0, name.length)
+                            if (newName === name) {
+                                console.log('enter')
+                                feedbackToStudents[i] = name + ": " + feedback
+                                enter = true
+                            }
+                        })
+                        if (!enter) {
+                            console.log(name)
+                            feedbackToStudents.push(name + ": " + feedback)
+                        }
+                    console.log(feedbackToStudents)
 
+                    }
+                    else
+                    {
+                        feedbackToStudents.push(name + ": " + feedback)
                     }
                     if (updateTeamDate.data()["formStudents"]) {
                         // console.log("formStudents")

@@ -225,6 +225,7 @@ class FeedbackGuide extends Component {
             return
         }
         if(form && this.state.show) {
+            console.log(form)
             var reportGuide = this.state.reportGuide[index].form
             var date =form.date.toDate()
             var day = date.getDate()
@@ -236,7 +237,7 @@ class FeedbackGuide extends Component {
                     <div className="report" id="report">
                         <div>
                             <div dir="rtl">
-                            <h4> שם המדריך:{form.nameGuide} </h4>
+                            <h4> שם המדריך:{form.nameGuidbe} </h4>
                             <h4> תאריך המפגש: {day+'/'+month+"/"+year}</h4>
                             <h4> נושא המפגש: {reportGuide.q1}</h4>
                                 <div id="name-group">
@@ -291,8 +292,8 @@ class FeedbackGuide extends Component {
                         <div id='posts'>
                             <u><h3>נכתב על כל חניך:</h3></u>
                             {
-                                form.postStudents.map((post, i) =>
-                                    <h5 key={i} >{post}</h5>
+                                form.feedbackToStudents.map((feedback,i) =>
+                                    <h5 key={i} >{feedback}</h5>
                                 )
                             }
 
