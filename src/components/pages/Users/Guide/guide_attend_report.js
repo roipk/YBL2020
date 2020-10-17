@@ -11,6 +11,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 var postStudents = [];
 
+
 class GuideReports extends React.Component {
     constructor(props) {
         super(props);
@@ -380,12 +381,15 @@ class GuideReports extends React.Component {
         console.log("in3");
         var feedbackToStudents = [];
         postStudents = [];
+        var studentsComes=[]
         var formStudents = {};
         if(approved) {
             console.log("in4");
             if (dataStudent === undefined) {
                 feedbackToStudents.push(name+": "+feedback);
+                studentsComes.push(name)
                 updateTeamDateSet.set({
+                    studentsComes:studentsComes,
                     feedbackToStudents: feedbackToStudents,
                 }, { merge: true });
             } else {
@@ -394,6 +398,7 @@ class GuideReports extends React.Component {
                     console.log("in6",dataStudent)
                     console.log(feedback)
                     feedbackToStudents.push(name+": "+feedback);
+                    studentsComes.push(name)
                     console.log(dataStudent.topicMeeting)
                     postStudents.push(dataStudent.topicMeeting,);
                     console.log(dataStudent)
@@ -401,6 +406,7 @@ class GuideReports extends React.Component {
                     formStudents = dataStudent.formStudents;
                     updateTeamDateSet.set({
                         feedbackToStudents: feedbackToStudents,
+                        studentsComes:studentsComes,
                         // guideName: team.fname+' '+team.lname,
                         postStudents: postStudents,
                         formStudents: formStudents
@@ -414,6 +420,27 @@ class GuideReports extends React.Component {
                         if (dataStudent.topicMeeting !== undefined && dataStudent.topicMeeting !== '') {
                             postStudents.push(dataStudent.topicMeeting);
                         }
+                    }
+                    if (updateTeamDate.data()["studentsComes"]) {
+                        console.log("in9")
+                        studentsComes = updateTeamDate.data()["studentsComes"]
+                        var enter = false
+                        await studentsComes.map((oldCome, i) => {
+                            var newName = oldCome.substr(0, name.length)
+                            if (newName === name) {
+                                console.log('enter')
+                                studentsComes[i] = name
+                                enter = true
+                            }
+                        })
+                        if (!enter) {
+                            studentsComes.push(name)
+
+                        }
+                    }
+                    else
+                    {
+                        studentsComes.push(name)
                     }
                     if (updateTeamDate.data()["feedbackToStudents"]) {
                         console.log("in9")
@@ -430,6 +457,7 @@ class GuideReports extends React.Component {
                         if (!enter) {
                             console.log(name)
                             feedbackToStudents.push(name + ": " + feedback)
+
                         }
                     console.log(feedbackToStudents)
 
@@ -444,6 +472,7 @@ class GuideReports extends React.Component {
                         formStudents = await updateTeamDate.data()['formStudents']
                         if (dataStudent.canUpdate) {
                             console.log("in11")
+                            postStudents.push(dataStudent.feedback)
                             formStudents['q1'][parseInt(dataStudent.feeedbackMeeting['q1'])]++;
                             formStudents['q2'][parseInt(dataStudent.feeedbackMeeting['q2'])]++;
                             formStudents['q3'][parseInt(dataStudent.feeedbackMeeting['q3'])]++;
@@ -456,6 +485,7 @@ class GuideReports extends React.Component {
                         // guideName: team.fname + ' ' + team.lname,
                         postStudents: postStudents,
                         feedbackToStudents: feedbackToStudents,
+                        studentsComes:studentsComes,
                         formStudents: formStudents
                     })
 
@@ -467,6 +497,7 @@ class GuideReports extends React.Component {
             console.log("in11")
             feedback=""
             feedbackToStudents={}
+            studentsComes=[]
             feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
             console.log('not approved')
             updateTeamDateSet.set({

@@ -19,6 +19,7 @@ class AttendReport extends Component {
                 date:"",
                 teamPath:"",
                 spinner: true,
+                report:false
             }
             this.handleSubmit = this.handleSubmit.bind(this)
             this.handleChangeDate = this.handleChangeDate.bind(this)
@@ -62,9 +63,15 @@ class AttendReport extends Component {
                         <Grid item xs={12}>
                             <div className="text-below-image">
 
-                                <button onClick={this.handleSubmit} >הצג דוח נוכחות</button>
-                                <div id="studentList"></div>
+                                <button onClick={(e)=>{
+                                    this.handleSubmit(e)
+                                    this.setState({report:!this.state.report})
+                                }} >{this.state.report?"הסתר דוח נוכחות":"הצג דוח נוכחות"}</button>
+
                             </div>
+                        </Grid>
+                        <Grid item xs={12}  hidden={!this.state.report}>
+                            <div id="studentList" ></div>
                         </Grid>
                         <Grid item xs={12}>
                                 <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
@@ -82,15 +89,22 @@ class AttendReport extends Component {
             alert("נא למלא את כל השדות החובה")
             return
         }
-        var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).feedbackToStudents
-        
-        for (var name in res){
+        var res= (await getTeamFeedbackByDate(this.state.teamPath.id,this.state.date)).studentsComes
+
+        res.forEach(name=>{
             var lable=document.createElement("lable");
             lable.innerHTML = name;
             var br=document.createElement("br");
             $('#studentList').append(lable);
             $('#studentList').append(br);
-        }
+        })
+        // for (var name in res){
+        //     var lable=document.createElement("lable");
+        //     lable.innerHTML = name;
+        //     var br=document.createElement("br");
+        //     $('#studentList').append(lable);
+        //     $('#studentList').append(br);
+        // }
     }
     async componentDidMount() {
         auth.onAuthStateChanged(async user=>{

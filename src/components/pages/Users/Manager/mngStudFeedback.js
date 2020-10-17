@@ -108,7 +108,9 @@ class FeedbackStudents extends Component {
         })
 
     }
-
+    loadSpinner(event){
+        this.setState({spinner:event})
+    }
     render() {
         return(
             <div>

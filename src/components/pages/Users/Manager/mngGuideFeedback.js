@@ -205,7 +205,7 @@ class FeedbackGuide extends Component {
                                     this.state.forms.map((Form,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            { this.feedbacks(Form.data(),index)}
+                                            {this.feedbacks(Form.data(),index)}
                                         </Grid >
                                     ))
                                 }
@@ -220,10 +220,16 @@ class FeedbackGuide extends Component {
 
     feedbacks(form,index)
     {
+        console.log(form)
         if(index>=this.state.reportGuide.length)
         {
+            console.log(this.state.show)
+            console.log(index)
+            console.log(this.state.reportGuide)
+
             return
         }
+        console.log(this.state.show)
         if(form && this.state.show) {
             console.log(form)
             var reportGuide = this.state.reportGuide[index].form
