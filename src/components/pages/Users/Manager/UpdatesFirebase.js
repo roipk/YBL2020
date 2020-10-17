@@ -556,25 +556,32 @@ class UpdatesFirebase extends Component {
                         </Grid>
                         <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
                         <button onClick={async ()=>{
-
+                            this.loadSpinner(true)
+                            console.log('in1')
                             if(user.type==='guides' || user.type==='testers') {
-                                var updateTeam = await db.collection('guides').doc(user.uid)
-                                await updateTeam.update({
-                                    teamName:this.state.guideTeamName[index],
-                                    team:this.state.guideTeamPath[index]
-                                })
-                                var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath.id).get()
+                                console.log('in2')
+                                console.log(user.uid)
+
+
                                 try{
+                                var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
+                                console.log('in5')
+                                console.log(oldGuide.data())
+
                                     await db.doc((oldGuide.data().guide).path).update({
                                         teamName:null,
                                         team:null
                                     })
+                                    console.log('in6')
 
                                 }
                                 catch(e){
+                                    console.log('in7')
+                                    console.log('לקבוצה לא היה מדריך לפני')
                                     console.log(e)
                                 }
                                 try{
+                                    console.log(user.team.id)
                                     await db.collection('Teams').doc(user.team.id).update({
                                         guide: null
                                     })
@@ -582,20 +589,32 @@ class UpdatesFirebase extends Component {
                                 catch{
                                     console.log("למדריך לא הייתה קבוצה לפני")
                                 }
-                                await db.collection('Teams').doc(this.state.guideTeamPath.id).update({
-                                    guide: updateTeam
+                                var updateTeam = await db.collection('guides').doc(user.uid)
+                                console.log('in3')
+                                await updateTeam.update({
+                                    teamName:this.state.guideTeamName[index],
+                                    team:this.state.guideTeamPath[index]
+                                })
+
+                                console.log(this.state.guideTeamPath)
+                                await db.collection('Teams').doc(this.state.guideTeamPath[index].id).update({
+                                        guide: updateTeam
                                 })
                                 this.getAllUsers('guides')
                             }
                             else
                             {
+                                console.log('in8')
+                                console.log(user.uid)
                                 var updateTeam = await db.collection('students').doc(user.uid)
                                 updateTeam.update({
                                     teamName:this.state.guideTeamName[index],
                                     team:this.state.guideTeamPath[index]
                                 })
+                                console.log('in9')
                                 this.getAllUsers('students')
                             }
+                            this.loadSpinner(false)
                             alert('הוחלפה קבוצה')
                         }}>החלף</button>
                         </Grid>

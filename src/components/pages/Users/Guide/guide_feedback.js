@@ -29,7 +29,7 @@ class GuideFeedback extends React.Component {
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChange = this.handleChange.bind(this)
-        this.handleChangeDate = this.handleChangeDate.bind(this)
+        // this.handleChangeDate = this.handleChangeDate.bind(this)
         this.approvStudent = this.approvStudent.bind(this)
 
         this.feedbackGuide = this.feedbackGuide.bind(this)
@@ -81,10 +81,10 @@ class GuideFeedback extends React.Component {
         var e = event.target
         if(name === 'date' && event.target.value!=='' )
         {
-            var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
-            if(test.data() && test.data().locked) {
-                alert("המשוב לתאריך הנוכחי נחתם נא לבחור תאריך אחר")
 
+            var formGuide = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
+            if(formGuide.data() && formGuide.data().locked) {
+                alert("המשוב לתאריך הנוכחי נחתם נא לבחור תאריך אחר")
                 document.getElementById(e.id).value=''
                 form = this.state.form;
                 console.log(name);
@@ -93,9 +93,17 @@ class GuideFeedback extends React.Component {
                 this.setState({form:form})
 
             }
+            else if(formGuide.data())
+            {
+                this.setState({form:formGuide.data().form})
+
+            }
             else
             {
-                this.setState({form:test.data().form})
+
+                form ={}
+                form[name] = value;
+                this.setState({form:form})
             }
         }
         else
@@ -111,20 +119,20 @@ class GuideFeedback extends React.Component {
     }
 
 
-
-    async handleChangeDate(event)
-    {
-        var name = event.target.name;
-        var value = event.target.value;
-        if(name === 'date')
-        {
-            this.setState({date:value,viewStudent:false});
-            this.state.date=value
-        }
-
-
-        this.state.Students=null
-    }
+    //
+    // async handleChangeDate(event)
+    // {
+    //     var name = event.target.name;
+    //     var value = event.target.value;
+    //     if(name === 'date')
+    //     {
+    //         this.setState({date:value,viewStudent:false});
+    //         this.state.date=value
+    //     }
+    //
+    //
+    //     this.state.Students=null
+    // }
 
 
 
@@ -197,6 +205,7 @@ class GuideFeedback extends React.Component {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
+            console.log(form)
             var newDate = await guide.collection("comes").doc(form.date);
             newDate.set({
                 form: form,
@@ -262,7 +271,7 @@ class GuideFeedback extends React.Component {
 
     }
     async componentDidMount() {
-        auth.onAuthStateChanged(user=>{
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
                 this.setState({
@@ -279,6 +288,13 @@ class GuideFeedback extends React.Component {
                 return;
 
             }
+            var teamName = await db.collection("guides").doc(auth.currentUser.uid).get()
+                if(!teamName.data().teamName)
+                {
+                    alert("אינך משוייכ/ת לקבוצה יש לפנות למנהל")
+                    this.loadSpinner(false)
+                    BackPage(this.props,this.state.user)
+                }
             this.loadSpinner(false)
             this.render()
         })

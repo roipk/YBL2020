@@ -261,6 +261,13 @@ class GuideReports extends React.Component {
                 return;
 
             }
+            var teamName = await db.collection("guides").doc(auth.currentUser.uid).get()
+            if(!teamName.data().teamName)
+            {
+                alert("אינך משוייכ/ת לקבוצה יש לפנות למנהל")
+                this.loadSpinner(false)
+                BackPage(this.props,this.state.user)
+            }
             this.loadSpinner(false)
             this.render()
         })
