@@ -4,6 +4,7 @@ import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 class StudentFeedback extends React.Component {
@@ -12,6 +13,7 @@ class StudentFeedback extends React.Component {
         super(props);
         this.state = {
             isLoad:false,
+            spinner: true,
             user: props.location,
             error:false,
             loading: true,
@@ -54,6 +56,7 @@ class StudentFeedback extends React.Component {
 
     async sendDataToFirebase(form)
     {
+        this.loadSpinner(true)
         var path = auth.currentUser.uid
         try{
             await db.collection("students").doc(path).collection("comes").doc(this.state.date).set({
@@ -67,10 +70,11 @@ class StudentFeedback extends React.Component {
 
         }catch(error) {
             alert(error.message)
+            this.loadSpinner(false)
         }
 
 
-
+        this.loadSpinner(false)
     }
 
     getItem(item)
@@ -181,12 +185,15 @@ class StudentFeedback extends React.Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
 
     }
 
-
+    loadSpinner(event){
+        this.setState({spinner:event})
+    }
     async  logout() {
         //מסך טעינה
         await auth.signOut();
@@ -241,6 +248,23 @@ class StudentFeedback extends React.Component {
     StudentAttendReport(){
         return ( <div>
 
+            {!this.state.spinner ? "" :
+                <div id='fr'>
+                    אנא המתן/י הפעולה מתבצעת
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
+
+                        />
+                    </div>
+                </div>
+            }
+
             <div id="attendreport" className="sec-design" dir='rtl'>
                 <h2>שלום {this.state.user.displayName} </h2>
 
@@ -250,26 +274,6 @@ class StudentFeedback extends React.Component {
                            required/>
                 </div>
 
-                {/*<div id="name-group" className="form-group">*/}
-                {/*    <input*/}
-                {/*        type="text"*/}
-                {/*        placeholder="בחר מדריך"*/}
-                {/*        name = "guide"*/}
-                {/*        value={this.state.searchTerm}*/}
-                {/*        onChange={(e)=>{*/}
-                {/*            this.hendleSerch(e);*/}
-                {/*            this.handleChange(e);*/}
-                {/*        }}*/}
-
-
-                {/*    />*/}
-                {/*    <ul>*/}
-                {/*        {this.state.searchResults.map(item => (*/}
-                {/*            <ul key={item} onClick={()=>{this.getItem({item})}}>{item}</ul>*/}
-                {/*        ))}*/}
-                {/*    </ul>*/}
-
-                {/*</div>*/}
                 <div id="box" className="chekbox" >
                     <label id="checkbox" className="title-input" htmlFor="name">
                         ?באיזה מידה המפגש היום חידש לך / למדת דברים חדשים

@@ -4,12 +4,13 @@ import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import $ from 'jquery'
 import {BackPage} from "../UserPage";
+import ClipLoader from "react-spinners/ClipLoader";
 
 var options = []
 class AttendReport extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
 
         this.state =
@@ -17,17 +18,36 @@ class AttendReport extends Component {
                 isLoaded:false,
                 date:"",
                 teamPath:"",
+                spinner: true,
             }
             this.handleSubmit = this.handleSubmit.bind(this)
             this.handleChangeDate = this.handleChangeDate.bind(this)
     }
 
-
+    loadSpinner(event){
+        this.setState({spinner:event})
+    }
 
     render() {
 
         return(
             <div id="instactorReport" className="sec-design">
+                {!this.state.spinner ? "" :
+                    <div id='fr'>
+                        אנא המתן/י הפעולה מתבצעת
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
+
+                            />
+                        </div>
+                    </div>
+                }
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <Grid item xs={12}>
@@ -110,12 +130,15 @@ class AttendReport extends Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
+        this.loadSpinner(true)
         var nameTeams =  await db.collection("Teams").get();
         nameTeams.forEach(doc=>{
             options.push({ value: doc.ref, label: doc.data().name })
         })
+        this.loadSpinner(false)
     }
     async handleChangeDate(event)
     {

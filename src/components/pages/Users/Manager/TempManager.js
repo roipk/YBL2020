@@ -1,6 +1,5 @@
 import React from "react";
 import {auth, getUser, signOut} from '../../../../firebase/firebase'
-import ClipLoader from "react-spinners/ClipLoader";
 import {NextPage} from "../UserPage";
 
 class TempManager extends React.Component {

@@ -1,6 +1,7 @@
 import React from "react";
 import {auth, getUser, signOut} from '../../../../firebase/firebase'
 import {NextPage} from "../UserPage";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 class TempStudent extends React.Component {
@@ -9,11 +10,14 @@ class TempStudent extends React.Component {
 
         this.state = {
             user: props.location,
+            spinner: true,
         };
     }
 
 
-
+    loadSpinner(event){
+        this.setState({spinner:event})
+    }
 
 
 
@@ -55,6 +59,8 @@ class TempStudent extends React.Component {
                 return;
 
             }
+
+            this.loadSpinner(false)
             this.render()
         })
 
@@ -99,6 +105,23 @@ class TempStudent extends React.Component {
 
         return (
             <div id="instructor" className="sec-design" dir="rtl">
+
+                {!this.state.spinner ? "" :
+                    <div id='fr'>
+                        אנא המתן/י הפעולה מתבצעת
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
+
+                            />
+                        </div>
+                    </div>
+                }
                 <h2> שלום {this.state.user.displayName} </h2>
                 <form id="instructor_menu" className="form-design" name="student_form" method="POST">
                     <button id="feedback-button" className="btn btn-info"  onClick={()=>{NextPage(this.props,"Feedback",this.state.user)}}>מילוי משוב<span

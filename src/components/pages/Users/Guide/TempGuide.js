@@ -2,13 +2,14 @@ import React from "react";
 import {auth, getPathData, getUser, signOut} from '../../../../firebase/firebase';
 import './Guide.css'
 import {NextPage} from "../UserPage";
-
+import ClipLoader from "react-spinners/ClipLoader";
 
 class TestGuide extends React.Component {
     constructor(props) {
         super(props);
         
         this.state = {
+            spinner: true,
             page:'menu',
             user: props.location,
             error:false,
@@ -34,6 +35,10 @@ class TestGuide extends React.Component {
         // getPathData("Teams/FgMtMMfD72JGd2qYJ9VD/Dates/2020-10-10")
     }
 
+
+    loadSpinner(event){
+        this.setState({spinner:event})
+    }
     async componentDidMount() {
         auth.onAuthStateChanged(async user=>{
             if(user)
@@ -72,6 +77,7 @@ class TestGuide extends React.Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
 
@@ -81,6 +87,22 @@ class TestGuide extends React.Component {
        render() {
         return (
             <div id="instructor" className="sec-design" dir='rtl'>
+                {!this.state.spinner ? "" :
+                    <div id='fr'>
+                        אנא המתן/י הפעולה מתבצעת
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
+
+                            />
+                        </div>
+                    </div>
+                }
                 <h2>שלום {this.state.user.displayName} </h2>
                 {/*<h2>Hello Guide {this.state.user.email} </h2>*/}
                 <div id="instructor_menu" className="form-design" name="student_form" method="POST">

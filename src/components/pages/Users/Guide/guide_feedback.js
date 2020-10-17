@@ -4,6 +4,7 @@ import { Radio, RadioGroup} from "@material-ui/core";
 import './Guide.css'
 import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 class GuideFeedback extends React.Component {
@@ -13,6 +14,7 @@ class GuideFeedback extends React.Component {
         this.state = {
             page:'menu',
             user: props.location,
+            spinner: true,
             error:false,
             loading: true,
             rule:"Manager",
@@ -65,9 +67,14 @@ class GuideFeedback extends React.Component {
         return {year,month,day}
     }
 
+    loadSpinner(event){
+        this.setState({spinner:event})
+    }
 
     async handleChange(event)
     {
+        this.loadSpinner(true)
+
         var form=''
         var name = event.target.name;
         var value = event.target.value;
@@ -97,6 +104,7 @@ class GuideFeedback extends React.Component {
             form[name] = value;
             this.setState({form:form})
         }
+        this.loadSpinner(false)
 
 
 
@@ -129,6 +137,7 @@ class GuideFeedback extends React.Component {
             this.setState({viewStudent: !this.state.viewStudent});
             return ;
         }
+        this.loadSpinner(true)
         this.setState({prevDate:this.state.date});
         console.log("in");
         var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().Team;
@@ -163,15 +172,18 @@ class GuideFeedback extends React.Component {
                 if(!this.state.Students)
                 {
                     this.setState({Students: Students});
+                    this.loadSpinner(false)
                     return
                 }
                 else if(Students[i].approv!==this.state.Students[i].approv)
                 {
                     this.setState({Students: Students});
+                    this.loadSpinner(false)
                     return
                 }
 
             }
+            this.loadSpinner(false)
         });
 
 
@@ -181,6 +193,7 @@ class GuideFeedback extends React.Component {
     }
 
     async sendfeedback(form){
+        this.loadSpinner(true)
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
@@ -191,12 +204,14 @@ class GuideFeedback extends React.Component {
             }).then(async ()=>{
                 await this.addDataToTeam(guide,form.date);
                 alert("הטופס נשלח בהצלחה ניתן לשנות פרטים עד לחתימת המנהל")
+                this.loadSpinner(false)
                 window.location.reload(true);
 
             })
 
         }catch(error) {
             alert(error.message)
+            this.loadSpinner(false)
         }
     }
     async addDataToTeam(guide,date)
@@ -264,6 +279,7 @@ class GuideFeedback extends React.Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
 
@@ -312,6 +328,22 @@ class GuideFeedback extends React.Component {
         return(
 
             <div id="guideFeeadback" className="sec-design" >
+                {!this.state.spinner ? "" :
+                    <div id='fr'>
+                        אנא המתן/י הפעולה מתבצעת
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
+
+                            />
+                        </div>
+                    </div>
+                }
                 <div dir="rtl">
                     <label id="date"  className="title-input">הכנס את תאריך המפגש:</label>
                     <input type="date"  id="insert-date" name="date" onChange={(e)=>this.handleChange(e)} required/>

@@ -19,7 +19,7 @@ class GuideReports extends React.Component {
             page:'menu',
             user: props.location,
             error:false,
-            spinner: false,
+            spinner: true,
             rule:"Manager",
             prevDate:'',
             viewStudent: false,
@@ -52,6 +52,8 @@ class GuideReports extends React.Component {
 
     async handleChange(event)
     {
+        this.loadSpinner(true)
+
         var form=''
         var name = event.target.name;
         var value = event.target.value;
@@ -66,7 +68,6 @@ class GuideReports extends React.Component {
 
                 form[name] = '';
                 this.setState({form:form})
-
             }
             else
             {
@@ -82,7 +83,7 @@ class GuideReports extends React.Component {
             this.setState({form:form})
         }
 
-
+        this.loadSpinner(false)
 
     }
 
@@ -105,11 +106,14 @@ class GuideReports extends React.Component {
 
     async handleSubmit(event)
     {
+        this.loadSpinner(true)
         if(!this.state.date) {
+            this.loadSpinner(false)
             return;
         }
         if(this.state.date === this.state.prevDate) {
             this.setState({viewStudent: !this.state.viewStudent});
+            this.loadSpinner(false)
             return ;
         }
         this.setState({prevDate:this.state.date});
@@ -129,11 +133,15 @@ class GuideReports extends React.Component {
         Promise.all(collectionPromisesTeam).then(res => {
             console.log("end prommis");
             res.forEach(doc=>{
+                var canUpdate = false
                 var approv = false;
                 var feedback = ''
                 var originFeedback = ''
                 if(doc[0].exists) {
                     approv = doc[0].data().approved;
+                    console.log(doc[0].data())
+                    if(doc[0].data().form)
+                        canUpdate = doc[0].data().form.canUpdate
                     feedback = doc[0].data().feedbackGuide;
                     originFeedback = feedback;
 
@@ -141,7 +149,7 @@ class GuideReports extends React.Component {
                 var originCheckBox = approv
                 var data = doc[1].data();
                 var ref = doc[1].id;
-                Students.push({data,approv,ref,feedback,originFeedback,originCheckBox})
+                Students.push({data,approv,ref,feedback,originFeedback,originCheckBox,canUpdate})
             })
             let i;
             console.log(Students.length)
@@ -151,15 +159,18 @@ class GuideReports extends React.Component {
                 if(!this.state.Students)
                 {
                     this.setState({Students: Students});
+                    this.loadSpinner(false)
                     return
                 }
                 else if(Students[i].approv!==this.state.Students[i].approv)
                 {
                     this.setState({Students: Students});
+                    this.loadSpinner(false)
                     return
                 }
 
             }
+            this.loadSpinner(false)
         });
 
 
@@ -172,6 +183,8 @@ class GuideReports extends React.Component {
 
     async addDataToTeam()
     {
+        this.loadSpinner(true)
+
         var path = auth.currentUser.uid
         try{
             var dateForm=this.state.date
@@ -201,9 +214,10 @@ class GuideReports extends React.Component {
                     })
 
                 }
+                this.loadSpinner(false)
             })
         }catch(error) {
-
+            this.loadSpinner(false)
         }
 
 
@@ -247,6 +261,7 @@ class GuideReports extends React.Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
 
@@ -290,15 +305,15 @@ class GuideReports extends React.Component {
 
     async saveAllStudent(Students)
     {
+        this.loadSpinner(true )
         // alert("המערכת מתחילה בשמירה יש ללחוץ אישור להתחלה והמתנה להודעה נוספת")
         this.setState({loading:true})
-        this.loadSpinner(true)
         for(var i=0;i<Students.length;i++)
         {
            Students[i] = await this.saveStudentData(Students[i])
         }
-        this.loadSpinner(false)
         alert("כל השינויים בוצעו בהצלחה")
+        this.loadSpinner(false)
         return Students
     }
 
@@ -335,7 +350,7 @@ class GuideReports extends React.Component {
     async saveStudentData(student)
     {
         console.log("in1")
-        if(student.feedback === student.originFeedback && student.originCheckBox === student.approv) {
+        if(student.feedback === student.originFeedback && student.originCheckBox === student.approv && !student.canUpdate) {
             return student
         }
         await this.addDataToTeam()
@@ -343,8 +358,9 @@ class GuideReports extends React.Component {
         var sid = student.ref
         var form = await db.collection("students").doc(sid).collection("comes").doc(this.state.date)
         var dataStudent = (await form.get()).data()
-        if(dataStudent && dataStudent.form)
+        if(dataStudent && dataStudent.form) {
             dataStudent = await dataStudent.form
+        }
         var approved = student.approv
         var feedback = student.feedback
         var guide = await db.collection("guides").doc(auth.currentUser.uid)
@@ -453,6 +469,7 @@ class GuideReports extends React.Component {
         }
         student.originFeedback = student.feedback
         student.originCheckBox = student.approv
+        student.canUpdate = false
         console.log("done")
         return  student
     }
@@ -468,7 +485,7 @@ class GuideReports extends React.Component {
             <div>
                 {!this.state.spinner ? "" :
                     <div id='fr'>
-                        טעון נתונים
+                        אנא המתן/י הפעולה מתבצעת
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",
@@ -573,7 +590,7 @@ class GuideReports extends React.Component {
                                 }
                             </Grid>
 
-                            <Grid item xs={6} hidden={Student.feedback === Student.originFeedback && Student.originCheckBox === Student.approv}>
+                            <Grid item xs={6} hidden={Student.feedback === Student.originFeedback && Student.originCheckBox === Student.approv && !Student.canUpdate}>
                                 <button onClick={async ()=>{
                                     var allStudent=[]
                                     allStudent.push(Student)

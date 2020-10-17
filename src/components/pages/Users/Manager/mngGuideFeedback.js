@@ -21,14 +21,14 @@ class FeedbackGuide extends Component {
             {
                 isLoaded:false,
                 show:false,
-                spinner:false
+                spinner:true
             }
     }
 
 
 
     async  GetTeams() {
-
+        this.loadSpinner(true)
         var from = this.GetDates(this.state.dateFrom)
         var to = this.GetDates(this.state.dateTo)
 
@@ -36,6 +36,7 @@ class FeedbackGuide extends Component {
         {
             alert("נא למלא תאריך התחלה וסיום")
             return
+            this.loadSpinner(false)
         }
 
         var options=[]
@@ -77,7 +78,7 @@ class FeedbackGuide extends Component {
             })
             this.setState({options:options})
             console.log("in 4")
-
+            this.loadSpinner(false)
         })
 
     }
@@ -116,6 +117,7 @@ class FeedbackGuide extends Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
     }
@@ -125,7 +127,7 @@ class FeedbackGuide extends Component {
             <div>
                 {!this.state.spinner ? "" :
                     <div id='fr'>
-                        טעון נתונים
+                        אנא המתן/י הפעולה מתבצעת
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",

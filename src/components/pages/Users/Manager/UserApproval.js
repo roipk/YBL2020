@@ -5,6 +5,7 @@ import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TempManager from "./TempManager";
 import {BackPage} from "../UserPage";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 const options = [
@@ -15,35 +16,38 @@ class UserApproval extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            spinner: true,
 
         };
 
     }
 
-
-
-
-    async componentDidUpdate(prevProps, prevState, snapshot) {
-        const collection = await db.collection('paintings').get()
-        const usersList = [];
-        collection.forEach(doc => {
-            const data = doc.data();
-            if (data)
-                usersList.push(data)
-        });
-        let i;
-        console.log(this.state.users)
-        for (i=0;i<usersList.length;i++)
-        {
-            if(usersList[i].email!==this.state.users[i].email)
-            {
-                this.setState({users: usersList});
-                return
-            }
-        }
-
-
+    loadSpinner(event){
+        this.setState({spinner:event})
     }
+
+
+    // async componentDidUpdate(prevProps, prevState, snapshot) {
+    //     const collection = await db.collection('paintings').get()
+    //     const usersList = [];
+    //     collection.forEach(doc => {
+    //         const data = doc.data();
+    //         if (data)
+    //             usersList.push(data)
+    //     });
+    //     let i;
+    //     console.log(this.state.users)
+    //     for (i=0;i<usersList.length;i++)
+    //     {
+    //         if(usersList[i].email!==this.state.users[i].email)
+    //         {
+    //             this.setState({users: usersList});
+    //             return
+    //         }
+    //     }
+    //
+    //
+    // }
 
 
     async componentDidMount() {
@@ -84,8 +88,10 @@ class UserApproval extends React.Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
+        this.loadSpinner(true)
         const collection = await db.collection('waitforapproval').get()
         const usersList = [];
         collection.forEach(doc => {
@@ -95,11 +101,12 @@ class UserApproval extends React.Component {
         });
         this.setState({users: usersList});
 
-
         var nameTeams =  await db.collection("Teams").get();
             nameTeams.forEach(doc=>{
                 options.push({ value: doc.ref, label: doc.data().name })
             })
+
+        this.loadSpinner(false)
 
     }
 
@@ -149,15 +156,48 @@ render() {
         
     if(this.state.page ==='menu')
         return(
+            <div>
+                {!this.state.spinner ? "" :
+                <div id='fr'>
+                    אנא המתן/י הפעולה מתבצעת
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
+
+                        />
+                    </div>
+                </div>
+            }
             <TempManager>
 
             </TempManager>
+            </div>
         )
         if(this.state.users) {
             if(this.state.users.length === 0)
             {
                 return (
                     <div id="guideAttendReport" className="sec-design" dir="rtl">
+                        {!this.state.spinner ? "" :
+                            <div id='fr'>
+                                אנא המתן/י הפעולה מתבצעת
+                                <div className="sweet-loading">
+                                    <ClipLoader style={{
+                                        backgroundColor: "rgba(255,255,255,0.85)",
+                                        borderRadius: "25px"
+                                    }}
+                                        //   css={override}
+                                                size={120}
+                                                color={"#123abc"}
+                                    />
+                                </div>
+                            </div>
+                        }
                         <div id="name-group" className="form-group">
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
@@ -173,6 +213,21 @@ render() {
             }
             return (
                 <div id="guideAttendReport" className="sec-design" dir="rtl">
+                    {!this.state.spinner ? "" :
+                        <div id='fr'>
+                            אנא המתן/י הפעולה מתבצעת
+                            <div className="sweet-loading">
+                                <ClipLoader style={{
+                                    backgroundColor: "rgba(255,255,255,0.85)",
+                                    borderRadius: "25px"
+                                }}
+                                    //   css={override}
+                                            size={120}
+                                            color={"#123abc"}
+                                />
+                            </div>
+                        </div>
+                    }
                     <div id="name-group" className="form-group">
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -214,6 +269,21 @@ render() {
         {
            return (
                <div id="guideAttendReport" className="sec-design" dir="rtl">
+                   {!this.state.spinner ? "" :
+                       <div id='fr'>
+                           אנא המתן/י הפעולה מתבצעת
+                           <div className="sweet-loading">
+                               <ClipLoader style={{
+                                   backgroundColor: "rgba(255,255,255,0.85)",
+                                   borderRadius: "25px"
+                               }}
+                                   //   css={override}
+                                           size={120}
+                                           color={"#123abc"}
+                               />
+                           </div>
+                       </div>
+                   }
                    <div id="name-group" className="form-group">
                        <Grid container spacing={2}>
                            <Grid item xs={12}>
@@ -231,7 +301,6 @@ render() {
 
     Card(user,index) {
             return (
-
                 <div className="Card"  dir="rtl">
                     <Grid container spacing={1}>
                         <Grid item xs={12}>

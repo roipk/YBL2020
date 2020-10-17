@@ -3,6 +3,9 @@ import {db, CreateNewTeam, auth, getUser} from "../../../../firebase/firebase";
 import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
 import Select from "react-select";
+import ClipLoader from "react-spinners/ClipLoader";
+
+
 var options = []
 var guidesOptions = []
 var studentsOptions = []
@@ -17,6 +20,7 @@ class UpdatesFirebase extends Component {
 
         this.state =
             {
+                spinner: true,
                 isLoaded:false,
                 date:"",
                 newTeamName:'',
@@ -33,6 +37,10 @@ class UpdatesFirebase extends Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleChangeDate = this.handleChangeDate.bind(this)
         this.handleChange = this.handleChange.bind(this)
+    }
+
+    loadSpinner(event){
+        this.setState({spinner:event})
     }
 
     async handleChange(event)
@@ -52,6 +60,22 @@ class UpdatesFirebase extends Component {
     render() {
         return(
             <div id="instactorReport" className="sec-design" dir='rtl'>
+                {!this.state.spinner ? "" :
+                    <div id='fr'>
+                        אנא המתן/י הפעולה מתבצעת
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
+
+                            />
+                        </div>
+                    </div>
+                }
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <input type="text" name="team" placeholder="שם קבוצה חדשה" onChange={this.handleChange}/>
@@ -319,14 +343,17 @@ class UpdatesFirebase extends Component {
 
 
     async getAllUsers(user) {
+        this.loadSpinner(true)
 
         if ((user === 'guides' && this.state.Guides && this.state.Guides > 1) ||
             (user === 'students' && this.state.Students && this.state.Students > 1) ||
             (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1) ||
             (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
             (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
-            (user === 'Teams' && this.state.Teams && this.state.Teams > 1))
+            (user === 'Teams' && this.state.Teams && this.state.Teams > 1)) {
+            this.loadSpinner(false)
             return
+        }
         console.log(user)
         var temp = user
         if (user === 'guides')
@@ -388,12 +415,14 @@ class UpdatesFirebase extends Component {
             this.setState({Teams: allUsers})
         }
 
+        this.loadSpinner(false)
         console.log(allUsers)
     }
 
 
     async handleSubmit(event)
     {
+        this.loadSpinner(true)
         console.log(this.state.teamPath)
         if(!this.state.date) {
             return;
@@ -401,6 +430,7 @@ class UpdatesFirebase extends Component {
         console.log("in");
         var team = await db.collection("Teams").doc(this.state.teamPath).get();
         console.log(team)
+        this.loadSpinner(false)
     }
     async componentDidMount() {
         auth.onAuthStateChanged(async user=>{
@@ -440,12 +470,15 @@ class UpdatesFirebase extends Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
+        this.loadSpinner(true)
         var nameTeams =  await db.collection("Teams").get();
         nameTeams.forEach(doc=>{
             options.push({ value: doc.ref, label: doc.data().name })
         })
+        this.loadSpinner(false)
     }
     async handleChangeDate(event)
     {

@@ -20,7 +20,7 @@ class FeedbackStudents extends Component {
             {
                 isLoaded:false,
                 show:false,
-                spinner:false
+                spinner:true
             }
     }
 
@@ -58,18 +58,20 @@ class FeedbackStudents extends Component {
                 return;
 
             }
+            this.loadSpinner(false)
             this.render()
         })
     }
 
     async  GetTeams() {
-
+        this.loadSpinner(true)
         var from = this.GetDates(this.state.dateFrom)
         var to = this.GetDates(this.state.dateTo)
 
         if(!this.state.dateFrom || !this.state.dateTo )
         {
             alert("נא למלא תאריך התחלה וסיום")
+            this.loadSpinner(false)
             return
         }
 
@@ -102,7 +104,7 @@ class FeedbackStudents extends Component {
             })
             this.setState({options:options})
             console.log("in 4")
-
+            this.loadSpinner(false)
         })
 
     }
@@ -112,7 +114,7 @@ class FeedbackStudents extends Component {
             <div>
                 {!this.state.spinner ? "" :
                     <div id='fr'>
-                        טעון נתונים
+                        אנא המתן/י הפעולה מתבצעת
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",
