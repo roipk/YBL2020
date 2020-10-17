@@ -122,6 +122,11 @@ class FeedbackGuide extends Component {
         })
     }
 
+
+    loadSpinner(event){
+        this.setState({spinner:event})
+    }
+
     render() {
         return(
             <div>
@@ -215,11 +220,14 @@ class FeedbackGuide extends Component {
 
     feedbacks(form,index)
     {
+        if(index>=this.state.reportGuide.length)
+        {
+            return
+        }
         if(form && this.state.show) {
-            console.log(this.state.reportGuide)
             var reportGuide = this.state.reportGuide[index].form
             var date =form.date.toDate()
-            var day = date.getUTCDate()+1
+            var day = date.getDate()
             var month = date.getMonth()+1
             var year = date.getFullYear()
             console.log(reportGuide)
