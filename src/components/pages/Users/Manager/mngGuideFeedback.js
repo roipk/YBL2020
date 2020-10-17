@@ -6,11 +6,29 @@ import {auth, db, getPathData, getUser} from "../../../../firebase/firebase";
 import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
 import {Radio, RadioGroup} from "@material-ui/core";
+import { CSVLink, CSVDownload } from "react-csv";
 
 
 
 
 let op = false
+
+const csvData = [
+    [
+        "שם קבוצה",
+        "שם המדריך",
+        "תאריך המפגש",
+        "נושא המפגש",
+        "מספר הפעילות",
+        "מה היה בפעילות",
+        "עם איזה תחושה יצאתי מהפעילות",
+        "עם אילו הצלחות נפגשתי בפעילות",
+        "עם אילו דילמות נפגשתי בפעילות",
+        "נקודות חשובות למפגש הבא",
+        "באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות",
+        "שאלות ומחשבות לשיחת הדרכה הבאה",
+    ],
+];
 
 
 class FeedbackGuide extends Component {
@@ -27,6 +45,12 @@ class FeedbackGuide extends Component {
 
 
 
+    exportCsv()
+    {
+        var Row = []
+        var a=[['id','name','email']]
+
+    }
     async  GetTeams() {
         this.loadSpinner(true)
         var from = this.GetDates(this.state.dateFrom)
@@ -79,6 +103,30 @@ class FeedbackGuide extends Component {
             this.setState({options:options})
             console.log("in 4")
             this.loadSpinner(false)
+        })
+
+    }
+
+
+    createCsvFile(forms,reportGuide)
+    {
+        reportGuide.map(report=>{
+            console.log(reportGuide)
+            csvData.push([
+                report.form.team,
+                report.form.name,
+                report.form.date,
+                report.form.q1,
+                report.form.q2,
+                report.form.q3,
+                report.form.q4,
+                report.form.q5,
+                report.form.q6,
+                report.form.q7,
+                report.form.q8,
+                report.form.q9,
+
+            ],)
         })
 
     }
@@ -149,6 +197,7 @@ class FeedbackGuide extends Component {
                 <div id="studentFeedback" className="feedback-design" dir='rtl'>
                     <div id="studentFeedback" className="form-design" name="student_form" method="POST">
                         <div id="name-group" className="form-group">
+
                             <Grid container spacing={2}>
                                 <Grid item xs={5}>
                                     <label id="insert-student" className="title-input" htmlFor="name">מתאריך </label>
@@ -191,8 +240,8 @@ class FeedbackGuide extends Component {
                                 </Grid>
                                 <Grid item xs={3}  hidden={!this.state.teamName}>
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
-
                                         this.setState({show:!this.state.show, forms:this.state.team[1].docs, reportGuide:this.state.team[2]})
+                                        this.createCsvFile(this.state.team[1].docs, this.state.team[2])
                                     }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
                                         className="fa fa-arrow-right"></span></button>
                                 </Grid>
@@ -201,6 +250,25 @@ class FeedbackGuide extends Component {
                         </div>
                         {this.state.forms?(
                             <Grid  item xs={12} hidden={!this.state.show} >
+
+                                    <CSVLink
+                                        data={csvData}
+                                        filename={this.state.dateFrom+"-"+this.state.dateTo+".csv"}
+                                        className="btn btn-primary"
+                                        target="_blank"
+                                    >
+                                <button>
+                                    הורדת כל דוחות הקבוצה בתאריכים הנבחרים
+                                </button>
+                                    </CSVLink>
+                                {/*<CSVLink*/}
+                                {/*    data={csvData}*/}
+                                {/*    filename={this.state.dateFrom+"-"+this.state.dateTo+".csv"}*/}
+                                {/*    className="btn btn-primary"*/}
+                                {/*    target="_blank"*/}
+                                {/*>*/}
+                                {/*   הורדת הדוחות*/}
+                                {/*</CSVLink>*/}
                                 {
                                     this.state.forms.map((Form,index) => (
                                         <Grid  item xs={12}  key={index}>
@@ -220,13 +288,10 @@ class FeedbackGuide extends Component {
 
     feedbacks(form,index)
     {
+        console.log(csvData)
         console.log(form)
         if(index>=this.state.reportGuide.length)
         {
-            console.log(this.state.show)
-            console.log(index)
-            console.log(this.state.reportGuide)
-
             return
         }
         console.log(this.state.show)
@@ -243,7 +308,7 @@ class FeedbackGuide extends Component {
                     <div className="report" id="report">
                         <div>
                             <div dir="rtl">
-                            <h4> שם המדריך:{form.nameGuidbe} </h4>
+                            <h4> שם המדריך:{form.nameGuide} </h4>
                             <h4> תאריך המפגש: {day+'/'+month+"/"+year}</h4>
                             <h4> נושא המפגש: {reportGuide.q1}</h4>
                                 <div id="name-group">
@@ -282,11 +347,11 @@ class FeedbackGuide extends Component {
                                 </div>
                                 <br/>
                                 <h4><label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות?</h4></label></h4>
-                                {(reportGuide.q8 === 0)?('במידה מועטה מאוד'):
-                                    (reportGuide.q8 === 1)?('במידה מועטה'):
-                                        (reportGuide.q8 === 2)?('במידה בינונית'):
-                                            (reportGuide.q8 === 3)?('במידה רבה'):
-                                                (reportGuide.q8 === 4)?('במידה רבה מאוד'):('לא נכתבה תשובה לשאלה זו')
+                                {(reportGuide.q8 === "0")?('במידה מועטה מאוד'):
+                                    (reportGuide.q8 === "1")?('במידה מועטה'):
+                                        (reportGuide.q8 === "2")?('במידה בינונית'):
+                                            (reportGuide.q8 === "3")?('במידה רבה'):
+                                                (reportGuide.q8 === "4")?('במידה רבה מאוד'):('לא נכתבה תשובה לשאלה זו')
                                     }
                                 <br/>
                                 <div id="name-group" >
@@ -295,9 +360,10 @@ class FeedbackGuide extends Component {
                                     {/*<input type="text" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
                                 </div>
                         </div>
-                        <div id='posts'>
+                        <div id='posts' hidden={form.feedbackToStudents.length === 0}>
                             <u><h3>נכתב על כל חניך:</h3></u>
                             {
+                                form.feedbackToStudents.length > 0 &&
                                 form.feedbackToStudents.map((feedback,i) =>
                                     <h5 key={i} >{feedback}</h5>
                                 )

@@ -23,6 +23,8 @@ class GuideFeedback extends React.Component {
             date:"",
             form : {
                 date:"",
+                team:"",
+                name:"",
             }
         };
 
@@ -83,6 +85,7 @@ class GuideFeedback extends React.Component {
         {
 
             var formGuide = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
+
             if(formGuide.data() && formGuide.data().locked) {
                 alert("המשוב לתאריך הנוכחי נחתם נא לבחור תאריך אחר")
                 document.getElementById(e.id).value=''
@@ -100,9 +103,11 @@ class GuideFeedback extends React.Component {
             }
             else
             {
-
+                var guideData= await db.collection("guides").doc(auth.currentUser.uid).get()
                 form ={}
                 form[name] = value;
+                form['name']=guideData.data().fname+' '+guideData.data().lname;
+                form['team']=guideData.data().teamName
                 this.setState({form:form})
             }
         }
