@@ -18,24 +18,27 @@ class AttendReport extends Component {
                 isLoaded:false,
                 date:"",
                 teamPath:"",
-                spinner: true,
+                spinner: [true,'נא להמתין הדף נטען'],
                 report:false
             }
             this.handleSubmit = this.handleSubmit.bind(this)
             this.handleChangeDate = this.handleChangeDate.bind(this)
     }
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
     render() {
 
         return(
             <div id="instactorReport" className="sec-design">
-                {!this.state.spinner ? "" :
+                {!this.state.spinner[0] ? "" :
                     <div id='fr'>
-                        אנא המתן/י הפעולה מתבצעת
+                       {this.state.spinner[1]}
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",
@@ -144,15 +147,15 @@ class AttendReport extends Component {
                 return;
 
             }
-            this.loadSpinner(false)
+            this.loadSpinner(false,'')
             this.render()
         })
-        this.loadSpinner(true)
+        this.loadSpinner(true,"מיבא נתוני משתמש")
         var nameTeams =  await db.collection("Teams").get();
         nameTeams.forEach(doc=>{
             options.push({ value: doc.ref, label: doc.data().name })
         })
-        this.loadSpinner(false)
+        this.loadSpinner(false,"")
     }
     async handleChangeDate(event)
     {

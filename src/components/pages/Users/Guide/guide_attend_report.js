@@ -20,7 +20,7 @@ class GuideReports extends React.Component {
             page:'menu',
             user: props.location,
             error:false,
-            spinner: true,
+            spinner: [true,'נא להמתין הדף נטען'],
             rule:"Manager",
             prevDate:'',
             viewStudent: false,
@@ -53,14 +53,14 @@ class GuideReports extends React.Component {
 
     async handleChange(event)
     {
-        this.loadSpinner(true)
-
         var form=''
+
         var name = event.target.name;
         var value = event.target.value;
         console.log(name, value)
         if(name === 'date' && event.target.value!=='' )
         {
+            this.loadSpinner(true,"מיבא נתוני קבוצה")
             var test = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
             if(test.exists) {
                 alert("מילאת משוב לתאריך הנוכחי נא לבחור תאריך אחר")
@@ -84,7 +84,7 @@ class GuideReports extends React.Component {
             this.setState({form:form})
         }
 
-        this.loadSpinner(false)
+        this.loadSpinner(false,"")
 
     }
 
@@ -107,14 +107,14 @@ class GuideReports extends React.Component {
 
     async handleSubmit(event)
     {
-        this.loadSpinner(true)
+        this.loadSpinner(true,"שומר נתונים")
         if(!this.state.date) {
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
             return;
         }
         if(this.state.date === this.state.prevDate) {
             this.setState({viewStudent: !this.state.viewStudent});
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
             return ;
         }
         this.setState({prevDate:this.state.date});
@@ -161,27 +161,30 @@ class GuideReports extends React.Component {
                 if(!this.state.Students)
                 {
                     this.setState({Students: Students});
-                    this.loadSpinner(false)
+                    this.loadSpinner(false,"")
                     return
                 }
                 else if(Students[i].approv!==this.state.Students[i].approv)
                 {
                     this.setState({Students: Students});
-                    this.loadSpinner(false)
+                    this.loadSpinner(false,"")
                     return
                 }
 
             }
 
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
         });
 
 
     }
 
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage=""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
 
@@ -314,7 +317,7 @@ class GuideReports extends React.Component {
 
     async saveAllStudent(Students)
     {
-        this.loadSpinner(true )
+        this.loadSpinner(true ,"מעדכן נתוני סטודנט")
         // alert("המערכת מתחילה בשמירה יש ללחוץ אישור להתחלה והמתנה להודעה נוספת")
         this.setState({loading:true})
         for(var i=0;i<Students.length;i++)
@@ -540,9 +543,9 @@ class GuideReports extends React.Component {
     render() {
         return (
             <div>
-                {!this.state.spinner ? "" :
+                {!this.state.spinner[0] ? "" :
                     <div id='fr'>
-                        אנא המתן/י הפעולה מתבצעת
+                        {this.state.spinner[1]}
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",

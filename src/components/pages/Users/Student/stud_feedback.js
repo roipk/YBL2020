@@ -13,7 +13,7 @@ class StudentFeedback extends React.Component {
         super(props);
         this.state = {
             isLoad:false,
-            spinner: true,
+            spinner: [true,'נא להמתין הדף נטען'],
             user: props.location,
             error:false,
             loading: true,
@@ -56,7 +56,7 @@ class StudentFeedback extends React.Component {
 
     async sendDataToFirebase(form)
     {
-        this.loadSpinner(true)
+        this.loadSpinner(true,"שולח נתוני משוב")
         var path = auth.currentUser.uid
         try{
             await db.collection("students").doc(path).collection("comes").doc(this.state.date).set({
@@ -198,8 +198,11 @@ class StudentFeedback extends React.Component {
 
     }
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
     async  logout() {
         //מסך טעינה
@@ -255,9 +258,10 @@ class StudentFeedback extends React.Component {
     StudentAttendReport(){
         return ( <div>
 
-            {!this.state.spinner ? "" :
+
+            {!this.state.spinner[0] ? "" :
                 <div id='fr'>
-                    אנא המתן/י הפעולה מתבצעת
+                    {this.state.spinner[1]}
                     <div className="sweet-loading">
                         <ClipLoader style={{
                             backgroundColor: "rgba(255,255,255,0.85)",

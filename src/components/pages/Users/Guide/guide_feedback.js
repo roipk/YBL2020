@@ -14,7 +14,7 @@ class GuideFeedback extends React.Component {
         this.state = {
             page:'menu',
             user: props.location,
-            spinner: true,
+            spinner: [true,'נא להמתין הדף נטען'],
             error:false,
             loading: true,
             rule:"Manager",
@@ -69,20 +69,23 @@ class GuideFeedback extends React.Component {
         return {year,month,day}
     }
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
     async handleChange(event)
     {
-        this.loadSpinner(true)
-
         var form=''
+
         var name = event.target.name;
         var value = event.target.value;
         var e = event.target
         if(name === 'date' && event.target.value!=='' )
         {
+            this.loadSpinner(true,"טוען נתוני מדריך")
 
             var formGuide = await db.collection("guides").doc(auth.currentUser.uid).collection("comes").doc(event.target.value).get()
 
@@ -150,7 +153,7 @@ class GuideFeedback extends React.Component {
             this.setState({viewStudent: !this.state.viewStudent});
             return ;
         }
-        this.loadSpinner(true)
+        this.loadSpinner(true,"מעדכן נתונים חדשים")
         this.setState({prevDate:this.state.date});
         console.log("in");
         var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().Team;
@@ -206,7 +209,7 @@ class GuideFeedback extends React.Component {
     }
 
     async sendfeedback(form){
-        this.loadSpinner(true)
+        this.loadSpinner(true,"שליחת המשוב")
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
@@ -349,9 +352,10 @@ class GuideFeedback extends React.Component {
         return(
 
             <div id="guideFeeadback" className="sec-design" >
-                {!this.state.spinner ? "" :
+
+                {!this.state.spinner[0] ? "" :
                     <div id='fr'>
-                        אנא המתן/י הפעולה מתבצעת
+                        {this.state.spinner[1]}
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",

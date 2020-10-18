@@ -20,7 +20,7 @@ class FeedbackStudents extends Component {
             {
                 isLoaded:false,
                 show:false,
-                spinner:true
+                spinner: [true,'נא להמתין הדף נטען'],
             }
     }
 
@@ -58,20 +58,20 @@ class FeedbackStudents extends Component {
                 return;
 
             }
-            this.loadSpinner(false)
+            this.loadSpinner(false,'')
             this.render()
         })
     }
 
     async  GetTeams() {
-        this.loadSpinner(true)
+        this.loadSpinner(true,"מיבא נתוני קבוצה")
         var from = this.GetDates(this.state.dateFrom)
         var to = this.GetDates(this.state.dateTo)
 
         if(!this.state.dateFrom || !this.state.dateTo )
         {
             alert("נא למלא תאריך התחלה וסיום")
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
             return
         }
 
@@ -104,19 +104,22 @@ class FeedbackStudents extends Component {
             })
             this.setState({options:options})
             console.log("in 4")
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
         })
 
     }
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
     render() {
         return(
             <div>
-                {!this.state.spinner ? "" :
+                {!this.state.spinner[0] ? "" :
                     <div id='fr'>
-                        אנא המתן/י הפעולה מתבצעת
+                        {this.state.spinner[1]}
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",

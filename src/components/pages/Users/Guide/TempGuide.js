@@ -9,7 +9,7 @@ class TestGuide extends React.Component {
         super(props);
         
         this.state = {
-            spinner: true,
+            spinner: [true,'נא להמתין הדף נטען'],
             page:'menu',
             user: props.location,
             error:false,
@@ -36,8 +36,11 @@ class TestGuide extends React.Component {
     }
 
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
     async componentDidMount() {
         auth.onAuthStateChanged(async user=>{
@@ -87,9 +90,9 @@ class TestGuide extends React.Component {
        render() {
         return (
             <div id="instructor" className="sec-design" dir='rtl'>
-                {!this.state.spinner ? "" :
+                {!this.state.spinner[0] ? "" :
                     <div id='fr'>
-                        אנא המתן/י הפעולה מתבצעת
+                        {this.state.spinner[1]}
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",

@@ -16,38 +16,18 @@ class UserApproval extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            spinner: true,
+            spinner: [true,'נא להמתין הדף נטען'],
 
         };
 
     }
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
-
-
-    // async componentDidUpdate(prevProps, prevState, snapshot) {
-    //     const collection = await db.collection('paintings').get()
-    //     const usersList = [];
-    //     collection.forEach(doc => {
-    //         const data = doc.data();
-    //         if (data)
-    //             usersList.push(data)
-    //     });
-    //     let i;
-    //     console.log(this.state.users)
-    //     for (i=0;i<usersList.length;i++)
-    //     {
-    //         if(usersList[i].email!==this.state.users[i].email)
-    //         {
-    //             this.setState({users: usersList});
-    //             return
-    //         }
-    //     }
-    //
-    //
-    // }
 
 
     async componentDidMount() {
@@ -88,10 +68,10 @@ class UserApproval extends React.Component {
                 return;
 
             }
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
             this.render()
         })
-        this.loadSpinner(true)
+        this.loadSpinner(true,"טוען משתמשים להצגה")
         const collection = await db.collection('waitforapproval').get()
         const usersList = [];
         collection.forEach(doc => {
@@ -106,7 +86,7 @@ class UserApproval extends React.Component {
                 options.push({ value: doc.ref, label: doc.data().name })
             })
 
-        this.loadSpinner(false)
+        this.loadSpinner(false,"")
 
     }
 
@@ -157,22 +137,22 @@ render() {
     if(this.state.page ==='menu')
         return(
             <div>
-                {!this.state.spinner ? "" :
-                <div id='fr'>
-                    אנא המתן/י הפעולה מתבצעת
-                    <div className="sweet-loading">
-                        <ClipLoader style={{
-                            backgroundColor: "rgba(255,255,255,0.85)",
-                            borderRadius: "25px"
-                        }}
-                            //   css={override}
-                                    size={120}
-                                    color={"#123abc"}
+                {!this.state.spinner[0] ? "" :
+                    <div id='fr'>
+                        {this.state.spinner[1]}
+                        <div className="sweet-loading">
+                            <ClipLoader style={{
+                                backgroundColor: "rgba(255,255,255,0.85)",
+                                borderRadius: "25px"
+                            }}
+                                //   css={override}
+                                        size={120}
+                                        color={"#123abc"}
 
-                        />
+                            />
+                        </div>
                     </div>
-                </div>
-            }
+                }
             <TempManager>
 
             </TempManager>

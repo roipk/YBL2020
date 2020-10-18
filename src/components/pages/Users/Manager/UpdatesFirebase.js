@@ -20,7 +20,7 @@ class UpdatesFirebase extends Component {
 
         this.state =
             {
-                spinner: true,
+                spinner: [true,'נא להמתין הדף נטען'],
                 isLoaded:false,
                 date:"",
                 newTeamName:'',
@@ -39,8 +39,11 @@ class UpdatesFirebase extends Component {
         this.handleChange = this.handleChange.bind(this)
     }
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+    loadSpinner(event,massage){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
     async handleChange(event)
@@ -60,9 +63,10 @@ class UpdatesFirebase extends Component {
     render() {
         return(
             <div id="instactorReport" className="sec-design" dir='rtl'>
-                {!this.state.spinner ? "" :
+
+                {!this.state.spinner[0] ? "" :
                     <div id='fr'>
-                        אנא המתן/י הפעולה מתבצעת
+                        {this.state.spinner[1]}
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",
@@ -343,7 +347,7 @@ class UpdatesFirebase extends Component {
 
 
     async getAllUsers(user) {
-        this.loadSpinner(true)
+        this.loadSpinner(true,"מיבא נתוני משתמשים")
 
         if ((user === 'guides' && this.state.Guides && this.state.Guides > 1) ||
             (user === 'students' && this.state.Students && this.state.Students > 1) ||
@@ -351,7 +355,7 @@ class UpdatesFirebase extends Component {
             (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
             (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
             (user === 'Teams' && this.state.Teams && this.state.Teams > 1)) {
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
             return
         }
         console.log(user)
@@ -415,22 +419,23 @@ class UpdatesFirebase extends Component {
             this.setState({Teams: allUsers})
         }
 
-        this.loadSpinner(false)
+        this.loadSpinner(false,"")
         console.log(allUsers)
     }
 
 
     async handleSubmit(event)
     {
-        this.loadSpinner(true)
+        this.loadSpinner(true,"מיבא קבוצות")
         console.log(this.state.teamPath)
         if(!this.state.date) {
+            this.loadSpinner(false,"")
             return;
         }
         console.log("in");
         var team = await db.collection("Teams").doc(this.state.teamPath).get();
         console.log(team)
-        this.loadSpinner(false)
+        this.loadSpinner(false,"")
     }
     async componentDidMount() {
         auth.onAuthStateChanged(async user=>{
@@ -470,15 +475,15 @@ class UpdatesFirebase extends Component {
                 return;
 
             }
-            this.loadSpinner(false)
+            this.loadSpinner(false,"")
             this.render()
         })
-        this.loadSpinner(true)
+        this.loadSpinner(true,"מיבא קבוצות")
         var nameTeams =  await db.collection("Teams").get();
         nameTeams.forEach(doc=>{
             options.push({ value: doc.ref, label: doc.data().name })
         })
-        this.loadSpinner(false)
+        this.loadSpinner(false,"")
     }
     async handleChangeDate(event)
     {
@@ -556,7 +561,7 @@ class UpdatesFirebase extends Component {
                         </Grid>
                         <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
                         <button onClick={async ()=>{
-                            this.loadSpinner(true)
+                            this.loadSpinner(true,"מעדכן נתונים")
                             console.log('in1')
                             if(user.type==='guides' || user.type==='testers') {
                                 console.log('in2')
@@ -614,7 +619,7 @@ class UpdatesFirebase extends Component {
                                 console.log('in9')
                                 this.getAllUsers('students')
                             }
-                            this.loadSpinner(false)
+                            this.loadSpinner(false,'')
                             alert('הוחלפה קבוצה')
                         }}>החלף</button>
                         </Grid>

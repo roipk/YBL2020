@@ -10,13 +10,17 @@ class TempStudent extends React.Component {
 
         this.state = {
             user: props.location,
-            spinner: true,
+            spinner: [true,'נא להמתין הדף נטען'],
         };
     }
 
 
-    loadSpinner(event){
-        this.setState({spinner:event})
+
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
 
@@ -106,9 +110,9 @@ class TempStudent extends React.Component {
         return (
             <div id="instructor" className="sec-design" dir="rtl">
 
-                {!this.state.spinner ? "" :
+                {!this.state.spinner[0] ? "" :
                     <div id='fr'>
-                        אנא המתן/י הפעולה מתבצעת
+                        {this.state.spinner[1]}
                         <div className="sweet-loading">
                             <ClipLoader style={{
                                 backgroundColor: "rgba(255,255,255,0.85)",
