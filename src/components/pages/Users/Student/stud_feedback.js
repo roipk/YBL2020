@@ -287,7 +287,7 @@ class StudentFeedback extends React.Component {
 
                 <div id="box" className="chekbox" >
                     <label id="checkbox" className="title-input" htmlFor="name">
-                        ?באיזה מידה המפגש היום חידש לך / למדת דברים חדשים
+                        באיזה מידה המפגש היום חידש לך / למדת דברים חדשים?
                     </label>
                     <br/>
 
@@ -308,7 +308,7 @@ class StudentFeedback extends React.Component {
                     </div>
                     <br/>
                     <label id="checkbox" className="title-input" htmlFor="name">
-                        ?באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד
+                        באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד?
                     </label>
                     <br/>
                     <div>
@@ -328,7 +328,7 @@ class StudentFeedback extends React.Component {
                     </div>
                     <br/>
                     <label id="checkbox" className="title-input" htmlFor="name">
-                       ?באיזה מידה נושא המפגש היה רלוונטי עבורך
+                       באיזה מידה נושא המפגש היה רלוונטי עבורך?
                     </label>
                     <br/>
                     <div>
@@ -349,7 +349,7 @@ class StudentFeedback extends React.Component {
                     </div>
                     <br/>
                     <label id="checkbox" className="title-input" htmlFor="name">
-                        ?באיזה מידה לקחת חלק פעיל במפגש היום
+                        באיזה מידה לקחת חלק פעיל במפגש היום?
                     </label>
                     <br/>
                     <div>
@@ -372,7 +372,7 @@ class StudentFeedback extends React.Component {
                     <br/>
 
                     <div id="name-group" className="form-group">
-                        <label id="feedback" className="title-input" htmlFor="name">?מה את/ה לוקח/ת מהמפגש היום
+                        <label id="feedback" className="title-input" htmlFor="name">מה את/ה לוקח/ת מהמפגש היום?
                            </label>
                         {/*<Grid item xs={12}>*/}
                         {/*    {*/}

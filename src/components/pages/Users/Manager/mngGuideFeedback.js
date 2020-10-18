@@ -6,7 +6,7 @@ import {auth, db, getPathData, getUser} from "../../../../firebase/firebase";
 import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
 import {Radio, RadioGroup} from "@material-ui/core";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink } from "react-csv";
 
 
 
@@ -256,7 +256,7 @@ class FeedbackGuide extends Component {
 
                                     <CSVLink
                                         data={csvData}
-                                        filename={this.state.dateFrom+"-"+this.state.dateTo+".csv"}
+                                        filename={this.state.dateFrom+"-"+this.state.dateTo+"_g_מדריכים.csv"}
                                         className="btn btn-primary"
                                         target="_blank"
                                     >
@@ -264,14 +264,6 @@ class FeedbackGuide extends Component {
                                     הורדת כל דוחות הקבוצה בתאריכים הנבחרים
                                 </button>
                                     </CSVLink>
-                                {/*<CSVLink*/}
-                                {/*    data={csvData}*/}
-                                {/*    filename={this.state.dateFrom+"-"+this.state.dateTo+".csv"}*/}
-                                {/*    className="btn btn-primary"*/}
-                                {/*    target="_blank"*/}
-                                {/*>*/}
-                                {/*   הורדת הדוחות*/}
-                                {/*</CSVLink>*/}
                                 {
                                     this.state.forms.map((Form,index) => (
                                         <Grid  item xs={12}  key={index}>

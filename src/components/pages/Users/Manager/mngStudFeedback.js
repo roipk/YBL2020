@@ -5,12 +5,25 @@ import Select from "react-select";
 import {auth, db, getUser} from "../../../../firebase/firebase";
 import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import { CSVLink } from "react-csv";
 
 
 
 let op = false
-
+const csvData = [
+    [
+        "שם קבוצה",
+        "שם המדריך",
+        "תאריך המפגש",
+        "נושא המפגש",
+        "שאלות",
+        "במידה מועטה מאוד",
+        "במידה מועטה",
+        "במידה בינונית",
+        "במידה רבה",
+        "במידה רבה מאוד",
+    ],
+];
 
 class FeedbackStudents extends Component {
 
@@ -23,6 +36,7 @@ class FeedbackStudents extends Component {
                 spinner: [true,'נא להמתין הדף נטען'],
             }
     }
+
 
     async componentDidMount() {
         auth.onAuthStateChanged(async user => {
@@ -61,6 +75,82 @@ class FeedbackStudents extends Component {
             this.loadSpinner(false,'')
             this.render()
         })
+    }
+
+
+
+    createCsvFile(forms)
+    {
+        forms.map(form=>{
+
+            var date = form.data().date.toDate()
+            var day = date.getDate()
+            var month = date.getMonth()+1
+            var year = date.getFullYear()
+            date = day+'/'+month+"/"+year
+            console.log(form.data())
+            csvData.push([
+                this.state.teamName,
+                form.data().nameGuide,
+                date,
+                form.data().topicMeeting,
+            ],)
+            csvData.push([
+                    '',
+                    '',
+                    '',
+                    '',
+                    'באיזה מידה המפגש היום חידש לך/למדת דברים חדשים?',
+                    form.data().formStudents['q1'][0],
+                    form.data().formStudents['q1'][1],
+                    form.data().formStudents['q1'][2],
+                    form.data().formStudents['q1'][3],
+                    form.data().formStudents['q1'][4],
+
+                ],)
+            csvData.push([
+                    '',
+                    '',
+                    '',
+                    '',
+                    'באיזה מידה אתה מרגיש שהמפגש יעזור לך בעתיד?',
+                    form.data().formStudents['q2'][0],
+                    form.data().formStudents['q2'][1],
+                    form.data().formStudents['q2'][2],
+                    form.data().formStudents['q2'][3],
+                    form.data().formStudents['q2'][4],
+
+                ],)
+            csvData.push([
+                    '',
+                    '',
+                    '',
+                    '',
+                    'באיזה מידה נושא המפגש היה רלוונטי עבורך?',
+                    form.data().formStudents['q3'][0],
+                    form.data().formStudents['q3'][1],
+                    form.data().formStudents['q3'][2],
+                    form.data().formStudents['q3'][3],
+                    form.data().formStudents['q3'][4],
+
+                ],)
+            csvData.push([
+                    '',
+                    '',
+                    '',
+                    '',
+                    'באיזה מידה לקחת חלק פעיל במפגש היום?',
+                    form.data().formStudents['q4'][0],
+                    form.data().formStudents['q4'][1],
+                    form.data().formStudents['q4'][2],
+                    form.data().formStudents['q4'][3],
+                    form.data().formStudents['q4'][4],
+
+                ],)
+            csvData.push([],)
+            csvData.push([],)
+        })
+
     }
 
     async  GetTeams() {
@@ -180,6 +270,7 @@ class FeedbackStudents extends Component {
                                     <button id="viewReport" className="btn btn-info" onClick={()=>{
 
                                         this.setState({show:!this.state.show, forms:this.state.team[1].docs})
+                                        this.createCsvFile(this.state.team[1].docs)
                                     }}>{!this.state.show?("הצג דו\"ח מפגשים"):("הסתר דו\"ח מפגשים")}<span
                                         className="fa fa-arrow-right"></span></button>
                                 </Grid>
@@ -188,6 +279,16 @@ class FeedbackStudents extends Component {
                         </div>
                         {this.state.forms?(
                             <Grid  item xs={12} hidden={!this.state.show} >
+                                <CSVLink
+                                    data={csvData}
+                                    filename={this.state.dateFrom+"_"+this.state.dateTo+"_s_חניכים.csv"}
+                                    className="btn btn-primary"
+                                    target="_blank"
+                                >
+                                    <button>
+                                        הורדת כל דוחות החניכים של הקבוצה בתאריכים הנבחרים
+                                    </button>
+                                </CSVLink>
                                 {
                                     this.state.forms.map((Form,index) => (
                                         <Grid  item xs={12}  key={index}>
