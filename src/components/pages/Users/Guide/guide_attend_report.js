@@ -499,14 +499,17 @@ class GuideReports extends React.Component {
         else{
             console.log("in11")
             feedback=""
-            feedbackToStudents={}
+            feedbackToStudents=[]
             studentsComes=[]
-            feedbackToStudents=updateTeamDate.data()["feedbackToStudents"]
-            console.log('not approved')
-            updateTeamDateSet.set({
-                feedbackToStudents:{
-                    [name]:firebase.firestore.FieldValue.delete()
-                }}, { merge: true });
+            feedbackToStudents= updateTeamDate.data()["feedbackToStudents"]
+            var newfeedbacks=[]
+            for(var i=0;i<feedbackToStudents.length;i++)
+            {
+                if(feedbackToStudents[i].substr(0,name.length)!==name) {
+                    newfeedbacks.push(feedbackToStudents[i])
+                }
+            }
+            await updateTeamDateSet.set({feedbackToStudents:newfeedbacks},{merge:true});
         }
 
 
