@@ -402,19 +402,21 @@ class GuideReports extends React.Component {
                     console.log(feedback)
                     feedbackToStudents.push(name+": "+feedback);
                     studentsComes.push(name)
-                    console.log(dataStudent.topicMeeting)
                     postStudents.push(dataStudent.topicMeeting,);
                     console.log(dataStudent)
                     console.log(dataStudent.formStudents)
                     formStudents = dataStudent.formStudents;
+                    if(!formStudents)
+                        formStudents={}
                     updateTeamDateSet.set({
                         feedbackToStudents: feedbackToStudents,
                         studentsComes:studentsComes,
-                        // guideName: team.fname+' '+team.lname,
+                        guideName: team.fname+' '+team.lname,
                         postStudents: postStudents,
                         formStudents: formStudents
                     }, { merge: true });
-                } else {
+                } else
+                    {
                     console.log("in7")
                     if (updateTeamDate.data()["postStudents"]) {
                         console.log("in8")
@@ -446,20 +448,28 @@ class GuideReports extends React.Component {
                         studentsComes.push(name)
                     }
                     if (updateTeamDate.data()["feedbackToStudents"]) {
-                        console.log("in9")
+                        console.log("in10")
                         feedbackToStudents = updateTeamDate.data()["feedbackToStudents"]
+                        console.log(feedbackToStudents)
                         var enter = false
-                        await feedbackToStudents.map((oldfeedback, i) => {
-                            var newName = oldfeedback.substr(0, name.length)
-                            if (newName === name) {
-                                console.log('enter')
-                                feedbackToStudents[i] = name + ": " + feedback
-                                enter = true
-                            }
-                        })
+                        if(feedbackToStudents && feedbackToStudents.length > 0) {
+                            await feedbackToStudents.map((oldfeedback, i) => {
+                                var newName = oldfeedback.substr(0, name.length)
+                                if (newName === name) {
+                                    console.log('enter')
+                                    feedbackToStudents[i] = name + ": " + feedback
+                                    enter = true
+                                }
+                            })
+                        }
                         if (!enter) {
-                            console.log(name)
+
+                            console.log("in11")
+                            if(feedbackToStudents.length === 0)
+                                feedbackToStudents=[]
+                            console.log(feedbackToStudents)
                             feedbackToStudents.push(name + ": " + feedback)
+
 
                         }
                     console.log(feedbackToStudents)
@@ -471,7 +481,7 @@ class GuideReports extends React.Component {
                     }
                     if (updateTeamDate.data()["formStudents"]) {
                         // console.log("formStudents")
-                        console.log("in10")
+                        console.log("in12")
                         formStudents = await updateTeamDate.data()['formStudents']
                         if (dataStudent.canUpdate) {
                             console.log("in11")

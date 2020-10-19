@@ -232,32 +232,6 @@ class StudentFeedback extends React.Component {
 
     render() {
 
-        // if(this.state.user.email)
-        //     console.log(this.state)
-        // if(this.state.page ==='report')
-        return(this.StudentAttendReport())
-        // else if(this.state.page ==='viewReport')
-        //     return(this.StudentViewReport())
-        // else
-        //     return(this.menu())
-    }
-
-
-    menu() {
-
-        return (<div id="instructor" className="sec-design">
-            <h2>Hello Student {this.state.user.email} </h2>
-
-            <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>רישום נוכחות<span
-                className="fa fa-arrow-right"></span></button>
-            <button id="report-button" className="btn btn-info"  onClick={()=>{this.chooseLayout('viewReport')}} >הצגת נוכחות<span
-                className="fa fa-arrow-right"></span></button>
-
-            <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
-        </div>)
-    }
-
-    StudentAttendReport(){
         return ( <div>
 
 
@@ -330,7 +304,7 @@ class StudentFeedback extends React.Component {
                     </div>
                     <br/>
                     <label id="checkbox" className="title-input" htmlFor="name">
-                       באיזה מידה נושא המפגש היה רלוונטי עבורך?
+                        באיזה מידה נושא המפגש היה רלוונטי עבורך?
                     </label>
                     <br/>
                     <div>
@@ -375,7 +349,7 @@ class StudentFeedback extends React.Component {
 
                     <div id="name-group" className="form-group">
                         <label id="feedback" className="title-input" htmlFor="name">מה את/ה לוקח/ת מהמפגש היום?
-                           </label>
+                        </label>
                         {/*<Grid item xs={12}>*/}
                         {/*    {*/}
                         {/*        <div>*/}
@@ -393,7 +367,7 @@ class StudentFeedback extends React.Component {
                 {/*<button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>*/}
                 <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>דווח נוכחות ושלח משוב</button>
                 <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
-                <button id="logout" className="btn btn-info" >התנתק</button>
+                <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
 
                 {/*<button id="go-back" className="btn btn-info" onClick={() => {*/}
                 {/*        this.chooseLayout("menu")*/}
@@ -403,24 +377,6 @@ class StudentFeedback extends React.Component {
 
             </div>
         </div>);
-    }
-
-
-
-
-
-    StudentViewReport(){
-        return(
-            <div id="student_feedback" class="sec-design">
-                <div id="topic" class="form-group">
-                    <h2>לא נמצאו רישומי נוכחות</h2>
-                </div>
-                <button type="submit" id="confirm-form" className="btn btn-info" >רישום נוכחות</button>
-                <button id="go-back" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזור</button>
-
-            </div>
-
-        )
     }
 
     loadUser(page)
