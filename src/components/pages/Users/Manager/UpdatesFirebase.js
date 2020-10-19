@@ -8,11 +8,11 @@ import {CSVLink} from "react-csv";
 
 
 var options = []
-var optionsType = [
-    {value:'students',lable:'חניך'},
-    {value:'guides',lable:'מדריך'},
-    {value:'managers',lable:'מנהל'},
-    {value:'testers',lable:'בודק'}]
+// var optionsType = [
+//     {value:'students',lable:'חניך'},
+//     {value:'guides',lable:'מדריך'},
+//     {value:'managers',lable:'מנהל'},
+//     {value:'testers',lable:'בודק'}]
 var guidesOptions = []
 var studentsOptions = []
 var emptyGuidesOptions = []
@@ -647,32 +647,6 @@ class UpdatesFirebase extends Component {
                         <Grid container spacing={2}>
                             <Grid item xs={8}>
                         <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
-                            console.log(e.label,e.value);
-                            user.options = e.label
-                            var teamPath = this.state.guideTeamPath
-                            var teamName = this.state.guideTeamName
-                            if(teamPath && teamName) {
-                                if (index < teamPath.length) {
-                                    teamPath[index] = e.value
-                                    teamName[index] = e.label
-                                }
-                                else
-                                {
-                                    teamPath.push(e.value)
-                                    teamName.push(e.label)
-                                }
-                            }
-                            else
-                            {
-                                teamPath = [e.value]
-                                teamName = [e.label]
-
-                            }
-                            this.setState({guideTeamPath:teamPath,guideTeamName:teamName})
-                        }} />
-                        </Grid>
-                            <Grid item xs={8}>
-                        <Select  placeholder={" החלף תפקיד "} options={optionsType} onChange={(e)=>{
                             console.log(e.label,e.value);
                             user.options = e.label
                             var teamPath = this.state.guideTeamPath
