@@ -4,6 +4,7 @@ import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
 import Select from "react-select";
 import ClipLoader from "react-spinners/ClipLoader";
+import {CSVLink} from "react-csv";
 
 
 var options = []
@@ -13,6 +14,9 @@ var emptyGuidesOptions = []
 var emptyStudentsOptions = []
 var emptyTeamOptions = []
 var TeamOptions = []
+var csvGuidesData = []
+var csvStudentsData = []
+
 class UpdatesFirebase extends Component {
 
     constructor(props) {
@@ -60,10 +64,77 @@ class UpdatesFirebase extends Component {
 
     }
 
+
+    createCsvFile(users,type)
+    {
+        if(type ==='guides')
+        {
+            csvGuidesData = [
+                [
+                    "שם פרטי",
+                    "שם משפחה",
+                    "ת.ז",
+                    "טלפון",
+                    "מייל",
+                    "תפקיד",
+                    "קבוצה",
+                ],
+            ];
+            users.map(user=>{
+                csvGuidesData.push([
+                    user.data().fname,
+                    user.data().lname,
+                    user.data().ID,
+                    user.data().phone.substr(0,3)+"-"+user.data().phone.substr(3,user.data().phone.length),
+                    user.data().email,
+                    user.data().type=='testers'?'בודק':
+                        user.data().type=='managers'?"מנהל":
+                        user.data().type=='guides'?"מדריך":
+                        user.data().type=='students'?"חניך":"",
+                    user.data().teamName,
+
+                ],)
+            })
+        }
+        else
+        {
+            csvStudentsData = [
+                [
+                    "שם פרטי",
+                    "שם משפחה",
+                    "ת.ז",
+                    "טלפון",
+                    "מייל",
+                    "תפקיד",
+                    "קבוצה",
+                ],
+            ];
+            users.map(user=>{
+                csvStudentsData.push([
+                    user.data().fname,
+                    user.data().lname,
+                    user.data().ID,
+                    user.data().phone.substr(0,2)+"-"+user.data().phone.substr(3,user.data().phone.length),
+                    user.data().email,
+                    user.data().type=='testers'?'בודק':
+                        user.data().type=='managers'?"מנהל":
+                            user.data().type=='guides'?"מדריך":
+                                user.data().type=='students'?"חניך":"",
+                    user.data().teamName,
+
+                ],)
+            })
+        }
+
+    }
+
+
+
+
+
     render() {
         return(
             <div id="instactorReport" className="sec-design" dir='rtl'>
-
                 {!this.state.spinner[0] ? "" :
                     <div id='fr'>
                         {this.state.spinner[1]}
@@ -183,18 +254,36 @@ class UpdatesFirebase extends Component {
                             <button onClick={()=>{
                                 this.getAllUsers('guides')
                                     this.setState({showGuides:!this.state.showGuides,guideTeamName:null,guideName:null})
-
                             }} >{this.state.showGuides?'הסתר רשימת מדריכים':'הצג רשימת מדריכים'}</button>
+                                    {
+                                        (this.state.showGuides && this.state.Guides) ? (
+                                            <div>
+                                                <Grid item xs={12}>
+                                                     נמצאו:{this.state.Guides.length} מדריכים
+                                                <Select placeholder={" מצא מדריך "} options={guidesOptions}
+                                                        onChange={(e) => {
+                                                            console.log(e.label, e.value);
+                                                            this.setState({Guides: [e.value]})
+                                                        }}/>
+
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <CSVLink
+                                                    data={csvGuidesData}
+                                                    filename={"רשימת מדריכים.csv"}
+                                                    className="btn btn-primary"
+                                                    target="_blank"
+                                                >
+                                                    <button>
+                                                       הורדת פרטי קשר מדריכים
+                                                    </button>
+                                                </CSVLink>
+                                        </Grid>
+                                        </div> ) : ('')
+                                    }
+
                             {
-                                (this.state.showGuides && this.state.Guides )?(<div> נמצאו: {this.state.Guides.length} מדריכים
-                                    <Select  placeholder={" מצא מדריך "} options={guidesOptions} onChange={(e)=>{
-                                        console.log(e.label,e.value);
-                                        this.setState({Guides:[e.value]})
-                                    }} />
-                                </div>):('')
-                            }
-                            {
-                                (!this.state.Guides || !this.state.showGuides)?'':
+                                (!this.state.Guides || !this.state.showGuides) ? '' :
                                     this.state.Guides.map((Guide,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
@@ -218,11 +307,26 @@ class UpdatesFirebase extends Component {
                             }
                             {
                                 (this.state.showStudents && this.state.Students )?(
+                                    <div>
+                                        <Grid item xs={12}>
                                     <Select  placeholder={" מצא חניך "} options={studentsOptions} onChange={(e)=>{
                                         console.log(e.label,e.value);
                                         this.setState({Students:e.value})
                                     }} />
-                                ):('')
+                                        </Grid>
+                                    <Grid item xs={12}>
+                                        <CSVLink
+                                            data={csvStudentsData}
+                                            filename={"רשימת חניכים.csv"}
+                                            className="btn btn-primary"
+                                            target="_blank"
+                                        >
+                                            <button>
+                                                הורדת פרטי קשר חניכים
+                                            </button>
+                                        </CSVLink>
+                                </Grid>
+                                </div>):('')
                             }
                             {
                                 (!this.state.Students || !this.state.showStudents)?'':
@@ -232,8 +336,6 @@ class UpdatesFirebase extends Component {
                                             {this.card(Student.data(),index)}
                                         </Grid >
                                     ))
-
-
                             }
                         </div>
                     </Grid>
@@ -405,10 +507,14 @@ class UpdatesFirebase extends Component {
                 }
             })
         })
-        if (user === 'guides')
+        if (user === 'guides') {
             this.setState({Guides: allUsers})
-        else if (user === 'students')
+            this.createCsvFile(allUsers,'guides')
+        }
+        else if (user === 'students') {
             this.setState({Students: allUsers})
+            this.createCsvFile(allUsers,"students")
+        }
         else if (user === 'guidesEmpty')
             this.setState({GuidesEmpty: allUsers})
         else if (user === 'studentEmpty')
@@ -419,8 +525,7 @@ class UpdatesFirebase extends Component {
             this.setState({Teams: allUsers})
         }
 
-        this.loadSpinner(false,"")
-        console.log(allUsers)
+        this.loadSpinner(false)
     }
 
 
