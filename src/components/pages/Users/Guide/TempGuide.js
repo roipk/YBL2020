@@ -116,12 +116,12 @@ class TestGuide extends React.Component {
                     <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Profile",this.state.user)}} >עדכון פרטים או סיסמא<span
                         className="fa fa-arrow-right"></span></button>
                     <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
-                    <button id="report-button" className="btn btn-info" onClick={()=>{
-                        this.props.history.push({
-                            pathname: `User`,
-                            data: this.state.user // your data array of objects
-                        })}} >חזרה לדף בדיקות<span
-                        className="fa fa-arrow-right"></span></button>
+                    {/*<button id="report-button" className="btn btn-info" onClick={()=>{*/}
+                    {/*    this.props.history.push({*/}
+                    {/*        pathname: `User`,*/}
+                    {/*        data: this.state.user // your data array of objects*/}
+                    {/*    })}} >חזרה לדף בדיקות<span*/}
+                    {/*    className="fa fa-arrow-right"></span></button>*/}
                 </div>
             </div>
         )

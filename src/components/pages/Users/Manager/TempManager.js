@@ -108,7 +108,7 @@ class TempManager extends React.Component {
                 <button id="report-button" className="btn btn-info" onClick={()=>{NextPage(this.props,"Profile",this.state.user)}} >עדכון פרטים או סיסמא<span
                         className="fa fa-arrow-right"></span></button>
                 <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
-                <button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>
+                {/*<button onClick={() => this.loadTempPage("User")}>חזרה להמשך בדיקות דפים</button>*/}
             </div>
 
         );
