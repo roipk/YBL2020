@@ -19,6 +19,7 @@ class SignUp extends React.Component {
             fname:'',
             lname:'',
             email:'',
+            ID: '',
             phone:'',
             team:'',
             teamName:'',
@@ -133,6 +134,25 @@ class SignUp extends React.Component {
                         <Grid item xs={12}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
+                                id="ID"
+                                name="ID"
+                                type="tel"
+                                autoComplete="off"
+                                value={this.state.ID}
+                                onChange={e => {
+                                    this.setState({ID:e.target.value})
+                                    this.GetTeams()
+                                }}
+                                variant="standard"
+                                required
+                                fullWidth
+                                label="תעודת זהות"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                inputProps={{style: {textAlign: 'center'}}}
                                 id="email"
                                 name="email"
                                 type="email"
@@ -148,6 +168,7 @@ class SignUp extends React.Component {
                                 label="Email"
                             />
                         </Grid>
+
                         <Grid item xs={6}>
                             <div>
 

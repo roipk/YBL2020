@@ -531,6 +531,7 @@ class UpdatesFirebase extends Component {
                         <h4> שם: {user.fname+' '+ user.lname} </h4>
                         <h4> טלפון: {user.phone}</h4>
                         <h4> אימייל: {user.email}</h4>
+                        <h4> תעודת זהות: {user.ID}</h4>
                         <h4> קבוצה: {user.teamName}</h4>
                         <Grid container spacing={2}>
                             <Grid item xs={8}>
