@@ -8,6 +8,11 @@ import {CSVLink} from "react-csv";
 
 
 var options = []
+var optionsType = [
+    {value:'students',lable:'חניך'},
+    {value:'guides',lable:'מדריך'},
+    {value:'managers',lable:'מנהל'},
+    {value:'testers',lable:'בודק'}]
 var guidesOptions = []
 var studentsOptions = []
 var emptyGuidesOptions = []
@@ -17,8 +22,9 @@ var TeamOptions = []
 var csvGuidesData = []
 var csvStudentsData = []
 
-class UpdatesFirebase extends Component {
 
+
+class UpdatesFirebase extends Component {
     constructor(props) {
         super(props);
 
@@ -665,6 +671,32 @@ class UpdatesFirebase extends Component {
                             this.setState({guideTeamPath:teamPath,guideTeamName:teamName})
                         }} />
                         </Grid>
+                            <Grid item xs={8}>
+                        <Select  placeholder={" החלף תפקיד "} options={optionsType} onChange={(e)=>{
+                            console.log(e.label,e.value);
+                            user.options = e.label
+                            var teamPath = this.state.guideTeamPath
+                            var teamName = this.state.guideTeamName
+                            if(teamPath && teamName) {
+                                if (index < teamPath.length) {
+                                    teamPath[index] = e.value
+                                    teamName[index] = e.label
+                                }
+                                else
+                                {
+                                    teamPath.push(e.value)
+                                    teamName.push(e.label)
+                                }
+                            }
+                            else
+                            {
+                                teamPath = [e.value]
+                                teamName = [e.label]
+
+                            }
+                            this.setState({guideTeamPath:teamPath,guideTeamName:teamName})
+                        }} />
+                        </Grid>
                         <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
                         <button onClick={async ()=>{
                             this.loadSpinner(true,"מעדכן נתונים")
@@ -672,7 +704,6 @@ class UpdatesFirebase extends Component {
                             if(user.type==='guides' || user.type==='testers') {
                                 console.log('in2')
                                 console.log(user.uid)
-
 
                                 try{
                                 var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
