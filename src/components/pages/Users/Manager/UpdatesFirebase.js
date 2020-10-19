@@ -178,9 +178,7 @@ class UpdatesFirebase extends Component {
 
                             if(this.state.teamName !== this.state.newTeamName) {
                                 await this.setState({replaceTeamName: false})
-                                this.state.teamPath.update({
-                                    name:this.state.newTeamName
-                                })
+                                await this.state.teamPath.update({name:this.state.newTeamName})
                                 alert('בוצע שינוי שם  קבוצה בהצלחה')
                                 window.location.reload(true);
 
@@ -298,19 +296,20 @@ class UpdatesFirebase extends Component {
                         <div className="text-below-image">
                             <button onClick={()=>{
                                 this.getAllUsers('students')
-                                this.setState({showStudents:!this.state.showStudents})
+                                this.setState({showStudents:!this.state.showStudents,studentTeamName:null,studentName:null})
+
                             }} >{this.state.showStudents?'הסתר רשימת חניכים':'הצג רשימת חניכים'}</button>
                             {
-                                (this.state.showStudents && this.state.Students )?<div> נמצאו: {this.state.Students.length} חניכים </div>:''
-                            }
-                            {
-                                (this.state.showStudents && this.state.Students )?(
+                                (this.state.showStudents && this.state.Students) ? (
                                     <div>
                                         <Grid item xs={12}>
-                                            <Select  placeholder={" מצא חניך "} options={studentsOptions} onChange={(e)=>{
-                                                console.log(e.label,e.value);
-                                                this.setState({Students:e.value})
-                                            }} />
+                                            נמצאו:{this.state.Students.length} חניכים
+                                            <Select placeholder={" מצא חניך "} options={studentsOptions}
+                                                    onChange={(e) => {
+                                                        console.log(e.label, e.value);
+                                                        this.setState({Students: [e.value]})
+                                                    }}/>
+
                                         </Grid>
                                         <Grid item xs={12}>
                                             <CSVLink
@@ -324,7 +323,7 @@ class UpdatesFirebase extends Component {
                                                 </button>
                                             </CSVLink>
                                         </Grid>
-                                    </div>):('')
+                                    </div> ) : ('')
                             }
                             {
                                 (!this.state.Students || !this.state.showStudents)?'':
@@ -338,7 +337,9 @@ class UpdatesFirebase extends Component {
 
                             }
                         </div>
+
                     </Grid>
+
                     <Grid item xs={12}>
                         <div className="text-below-image">
                             <button onClick={async ()=>{
