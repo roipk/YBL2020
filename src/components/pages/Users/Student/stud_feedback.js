@@ -1,5 +1,5 @@
 import React from "react";
-import {auth, db, getUser} from '../../../../firebase/firebase'
+import {auth, db, getUser, signOut} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 import {BackPage} from "../UserPage";
@@ -185,7 +185,8 @@ class StudentFeedback extends React.Component {
                 return;
 
             }
-            var teamName = await db.collection("guides").doc(auth.currentUser.uid).get()
+            var teamName = await db.collection("students").doc(auth.currentUser.uid).get()
+
             if(!teamName.data().teamName)
             {
                 alert("אינך משוייכ/ת לקבוצה יש לפנות למנהל")
@@ -251,7 +252,8 @@ class StudentFeedback extends React.Component {
                 className="fa fa-arrow-right"></span></button>
             <button id="report-button" className="btn btn-info"  onClick={()=>{this.chooseLayout('viewReport')}} >הצגת נוכחות<span
                 className="fa fa-arrow-right"></span></button>
-            <button id="go-back" className="btn btn-info" >התנתק</button>
+
+            <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
         </div>)
     }
 
