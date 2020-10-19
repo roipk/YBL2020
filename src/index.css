@@ -7,12 +7,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-<<<<<<< HEAD
   background-image: url(layout/images/image3.png);
-=======
-  background-image: url(layout/images/background3.jpeg);
->>>>>>> master
-  /* position: fixed; */
   min-height: 100%;
   min-width: 100%;
   background-size: cover;
