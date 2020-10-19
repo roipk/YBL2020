@@ -144,7 +144,6 @@ class SignUp extends React.Component {
                                     this.GetTeams()
                                 }}
                                 variant="standard"
-                                required
                                 fullWidth
                                 label="תעודת זהות"
                             />
