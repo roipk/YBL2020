@@ -4,27 +4,17 @@ import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
 import Select from "react-select";
 import ClipLoader from "react-spinners/ClipLoader";
-import {CSVLink} from "react-csv";
 
 
 var options = []
-// var optionsType = [
-//     {value:'students',lable:'חניך'},
-//     {value:'guides',lable:'מדריך'},
-//     {value:'managers',lable:'מנהל'},
-//     {value:'testers',lable:'בודק'}]
 var guidesOptions = []
 var studentsOptions = []
 var emptyGuidesOptions = []
 var emptyStudentsOptions = []
 var emptyTeamOptions = []
 var TeamOptions = []
-var csvGuidesData = []
-var csvStudentsData = []
-
-
-
 class UpdatesFirebase extends Component {
+
     constructor(props) {
         super(props);
 
@@ -70,77 +60,10 @@ class UpdatesFirebase extends Component {
 
     }
 
-
-    createCsvFile(users,type)
-    {
-        if(type ==='guides')
-        {
-            csvGuidesData = [
-                [
-                    "שם פרטי",
-                    "שם משפחה",
-                    "ת.ז",
-                    "טלפון",
-                    "מייל",
-                    "תפקיד",
-                    "קבוצה",
-                ],
-            ];
-            users.map(user=>{
-                csvGuidesData.push([
-                    user.data().fname,
-                    user.data().lname,
-                    user.data().ID,
-                    user.data().phone.substr(0,3)+"-"+user.data().phone.substr(3,user.data().phone.length),
-                    user.data().email,
-                    user.data().type=='testers'?'בודק':
-                        user.data().type=='managers'?"מנהל":
-                        user.data().type=='guides'?"מדריך":
-                        user.data().type=='students'?"חניך":"",
-                    user.data().teamName,
-
-                ],)
-            })
-        }
-        else
-        {
-            csvStudentsData = [
-                [
-                    "שם פרטי",
-                    "שם משפחה",
-                    "ת.ז",
-                    "טלפון",
-                    "מייל",
-                    "תפקיד",
-                    "קבוצה",
-                ],
-            ];
-            users.map(user=>{
-                csvStudentsData.push([
-                    user.data().fname,
-                    user.data().lname,
-                    user.data().ID,
-                    user.data().phone.substr(0,2)+"-"+user.data().phone.substr(3,user.data().phone.length),
-                    user.data().email,
-                    user.data().type=='testers'?'בודק':
-                        user.data().type=='managers'?"מנהל":
-                            user.data().type=='guides'?"מדריך":
-                                user.data().type=='students'?"חניך":"",
-                    user.data().teamName,
-
-                ],)
-            })
-        }
-
-    }
-
-
-
-
-
     render() {
         return(
             <div id="instactorReport" className="sec-design" dir='rtl'>
+
                 {!this.state.spinner[0] ? "" :
                     <div id='fr'>
                         {this.state.spinner[1]}
@@ -216,7 +139,7 @@ class UpdatesFirebase extends Component {
                             console.log(this.state.teamPath)
                             if(this.state.teamPath) {
                                 await this.setState({delete: false})
-                               var d = await db.doc(this.state.teamPath).get()
+                                var d = await db.doc(this.state.teamPath).get()
                                 if(d.data().guide) {
                                     console.log("team on guide remove")
                                     await d.data().guide.update({
@@ -224,13 +147,13 @@ class UpdatesFirebase extends Component {
                                         teamName: null
                                     })
                                 }
-                               var studs = await  db.collection("students").where('teamName','==',this.state.teamName).get()
-                                    studs.docs.forEach(async student=>{
-                                        student.ref.update({
-                                            teamName: null,
-                                            team:null
-                                        })
+                                var studs = await  db.collection("students").where('teamName','==',this.state.teamName).get()
+                                studs.docs.forEach(async student=>{
+                                    student.ref.update({
+                                        teamName: null,
+                                        team:null
                                     })
+                                })
 
                                 var guide = await  db.collection("guides").where('teamName','==',this.state.teamName).get()
                                 guide.docs.forEach(async student=>{
@@ -240,7 +163,7 @@ class UpdatesFirebase extends Component {
                                     })
                                 })
 
-                               await db.doc(this.state.teamPath).delete().then(function() {
+                                await db.doc(this.state.teamPath).delete().then(function() {
                                     console.log("הקבוצה נמחקה בהצלחה!");
                                 }).catch(function(error) {
                                     console.error("Error removing document: ", error);
@@ -259,37 +182,19 @@ class UpdatesFirebase extends Component {
                         <div className="text-below-image">
                             <button onClick={()=>{
                                 this.getAllUsers('guides')
-                                    this.setState({showGuides:!this.state.showGuides,guideTeamName:null,guideName:null})
+                                this.setState({showGuides:!this.state.showGuides,guideTeamName:null,guideName:null})
+
                             }} >{this.state.showGuides?'הסתר רשימת מדריכים':'הצג רשימת מדריכים'}</button>
-                                    {
-                                        (this.state.showGuides && this.state.Guides) ? (
-                                            <div>
-                                                <Grid item xs={12}>
-                                                     נמצאו:{this.state.Guides.length} מדריכים
-                                                <Select placeholder={" מצא מדריך "} options={guidesOptions}
-                                                        onChange={(e) => {
-                                                            console.log(e.label, e.value);
-                                                            this.setState({Guides: [e.value]})
-                                                        }}/>
-
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <CSVLink
-                                                    data={csvGuidesData}
-                                                    filename={"רשימת מדריכים.csv"}
-                                                    className="btn btn-primary"
-                                                    target="_blank"
-                                                >
-                                                    <button>
-                                                       הורדת פרטי קשר מדריכים
-                                                    </button>
-                                                </CSVLink>
-                                        </Grid>
-                                        </div> ) : ('')
-                                    }
-
                             {
-                                (!this.state.Guides || !this.state.showGuides) ? '' :
+                                (this.state.showGuides && this.state.Guides )?(<div> נמצאו: {this.state.Guides.length} מדריכים
+                                    <Select  placeholder={" מצא מדריך "} options={guidesOptions} onChange={(e)=>{
+                                        console.log(e.label,e.value);
+                                        this.setState({Guides:[e.value]})
+                                    }} />
+                                </div>):('')
+                            }
+                            {
+                                (!this.state.Guides || !this.state.showGuides)?'':
                                     this.state.Guides.map((Guide,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
@@ -313,26 +218,11 @@ class UpdatesFirebase extends Component {
                             }
                             {
                                 (this.state.showStudents && this.state.Students )?(
-                                    <div>
-                                        <Grid item xs={12}>
                                     <Select  placeholder={" מצא חניך "} options={studentsOptions} onChange={(e)=>{
                                         console.log(e.label,e.value);
                                         this.setState({Students:e.value})
                                     }} />
-                                        </Grid>
-                                    <Grid item xs={12}>
-                                        <CSVLink
-                                            data={csvStudentsData}
-                                            filename={"רשימת חניכים.csv"}
-                                            className="btn btn-primary"
-                                            target="_blank"
-                                        >
-                                            <button>
-                                                הורדת פרטי קשר חניכים
-                                            </button>
-                                        </CSVLink>
-                                </Grid>
-                                </div>):('')
+                                ):('')
                             }
                             {
                                 (!this.state.Students || !this.state.showStudents)?'':
@@ -342,6 +232,8 @@ class UpdatesFirebase extends Component {
                                             {this.card(Student.data(),index)}
                                         </Grid >
                                     ))
+
+
                             }
                         </div>
                     </Grid>
@@ -513,14 +405,10 @@ class UpdatesFirebase extends Component {
                 }
             })
         })
-        if (user === 'guides') {
+        if (user === 'guides')
             this.setState({Guides: allUsers})
-            this.createCsvFile(allUsers,'guides')
-        }
-        else if (user === 'students') {
+        else if (user === 'students')
             this.setState({Students: allUsers})
-            this.createCsvFile(allUsers,"students")
-        }
         else if (user === 'guidesEmpty')
             this.setState({GuidesEmpty: allUsers})
         else if (user === 'studentEmpty')
@@ -531,7 +419,8 @@ class UpdatesFirebase extends Component {
             this.setState({Teams: allUsers})
         }
 
-        this.loadSpinner(false)
+        this.loadSpinner(false,"")
+        console.log(allUsers)
     }
 
 
@@ -642,98 +531,98 @@ class UpdatesFirebase extends Component {
                         <h4> שם: {user.fname+' '+ user.lname} </h4>
                         <h4> טלפון: {user.phone}</h4>
                         <h4> אימייל: {user.email}</h4>
-                        <h4> תעודת זהות: {user.ID}</h4>
                         <h4> קבוצה: {user.teamName}</h4>
                         <Grid container spacing={2}>
                             <Grid item xs={8}>
-                        <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
-                            console.log(e.label,e.value);
-                            user.options = e.label
-                            var teamPath = this.state.guideTeamPath
-                            var teamName = this.state.guideTeamName
-                            if(teamPath && teamName) {
-                                if (index < teamPath.length) {
-                                    teamPath[index] = e.value
-                                    teamName[index] = e.label
-                                }
-                                else
-                                {
-                                    teamPath.push(e.value)
-                                    teamName.push(e.label)
-                                }
-                            }
-                            else
-                            {
-                                teamPath = [e.value]
-                                teamName = [e.label]
+                                <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
+                                    console.log(e.label,e.value);
+                                    user.options = e.label
+                                    var teamPath = this.state.guideTeamPath
+                                    var teamName = this.state.guideTeamName
+                                    if(teamPath && teamName) {
+                                        if (index < teamPath.length) {
+                                            teamPath[index] = e.value
+                                            teamName[index] = e.label
+                                        }
+                                        else
+                                        {
+                                            teamPath.push(e.value)
+                                            teamName.push(e.label)
+                                        }
+                                    }
+                                    else
+                                    {
+                                        teamPath = [e.value]
+                                        teamName = [e.label]
 
-                            }
-                            this.setState({guideTeamPath:teamPath,guideTeamName:teamName})
-                        }} />
-                        </Grid>
-                        <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
-                        <button onClick={async ()=>{
-                            this.loadSpinner(true,"מעדכן נתונים")
-                            console.log('in1')
-                            if(user.type==='guides' || user.type==='testers') {
-                                console.log('in2')
-                                console.log(user.uid)
+                                    }
+                                    this.setState({guideTeamPath:teamPath,guideTeamName:teamName})
+                                }} />
+                            </Grid>
+                            <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
+                                <button onClick={async ()=>{
+                                    this.loadSpinner(true,"מעדכן נתונים")
+                                    console.log('in1')
+                                    if(user.type==='guides' || user.type==='testers') {
+                                        console.log('in2')
+                                        console.log(user.uid)
 
-                                try{
-                                var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
-                                console.log('in5')
-                                console.log(oldGuide.data())
 
-                                    await db.doc((oldGuide.data().guide).path).update({
-                                        teamName:null,
-                                        team:null
-                                    })
-                                    console.log('in6')
+                                        try{
+                                            var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
+                                            console.log('in5')
+                                            console.log(oldGuide.data())
 
-                                }
-                                catch(e){
-                                    console.log('in7')
-                                    console.log('לקבוצה לא היה מדריך לפני')
-                                    console.log(e)
-                                }
-                                try{
-                                    console.log(user.team.id)
-                                    await db.collection('Teams').doc(user.team.id).update({
-                                        guide: null
-                                    })
-                                }
-                                catch{
-                                    console.log("למדריך לא הייתה קבוצה לפני")
-                                }
-                                var updateTeam = await db.collection('guides').doc(user.uid)
-                                console.log('in3')
-                                await updateTeam.update({
-                                    teamName:this.state.guideTeamName[index],
-                                    team:this.state.guideTeamPath[index]
-                                })
+                                            await db.doc((oldGuide.data().guide).path).update({
+                                                teamName:null,
+                                                team:null
+                                            })
+                                            console.log('in6')
 
-                                console.log(this.state.guideTeamPath)
-                                await db.collection('Teams').doc(this.state.guideTeamPath[index].id).update({
-                                        guide: updateTeam
-                                })
-                                this.getAllUsers('guides')
-                            }
-                            else
-                            {
-                                console.log('in8')
-                                console.log(user.uid)
-                                var updateTeam = await db.collection('students').doc(user.uid)
-                                updateTeam.update({
-                                    teamName:this.state.guideTeamName[index],
-                                    team:this.state.guideTeamPath[index]
-                                })
-                                console.log('in9')
-                                this.getAllUsers('students')
-                            }
-                            this.loadSpinner(false,'')
-                            alert('הוחלפה קבוצה')
-                        }}>החלף</button>
-                        </Grid>
+                                        }
+                                        catch(e){
+                                            console.log('in7')
+                                            console.log('לקבוצה לא היה מדריך לפני')
+                                            console.log(e)
+                                        }
+                                        try{
+                                            console.log(user.team.id)
+                                            await db.collection('Teams').doc(user.team.id).update({
+                                                guide: null
+                                            })
+                                        }
+                                        catch{
+                                            console.log("למדריך לא הייתה קבוצה לפני")
+                                        }
+                                        var updateTeam = await db.collection('guides').doc(user.uid)
+                                        console.log('in3')
+                                        await updateTeam.update({
+                                            teamName:this.state.guideTeamName[index],
+                                            team:this.state.guideTeamPath[index]
+                                        })
+
+                                        console.log(this.state.guideTeamPath)
+                                        await db.collection('Teams').doc(this.state.guideTeamPath[index].id).update({
+                                            guide: updateTeam
+                                        })
+                                        this.getAllUsers('guides')
+                                    }
+                                    else
+                                    {
+                                        console.log('in8')
+                                        console.log(user.uid)
+                                        var updateTeam = await db.collection('students').doc(user.uid)
+                                        updateTeam.update({
+                                            teamName:this.state.guideTeamName[index],
+                                            team:this.state.guideTeamPath[index]
+                                        })
+                                        console.log('in9')
+                                        this.getAllUsers('students')
+                                    }
+                                    this.loadSpinner(false,'')
+                                    alert('הוחלפה קבוצה')
+                                }}>החלף</button>
+                            </Grid>
                         </Grid>
                     </div>
                 </div>
