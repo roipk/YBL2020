@@ -89,8 +89,15 @@ export async function CreateUser(user) {
 }
 
 export async function CreateNewTeam(team) {
-    await  db.collection("Teams").doc().set({name:team})
-    console.log("done")
+    await  db.collection("Teams").doc().set({name:team}).then(()=>{
+        alert("הקבוצה נוספה בהצלחה")
+    return true;
+    }
+    ).catch((e)=>{
+        alert("משהו השתבש הקבוצה לא נוספה ")
+        return false;
+    })
+
 }
 
 export async function checkUser() {

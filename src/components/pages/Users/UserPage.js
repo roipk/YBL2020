@@ -64,8 +64,8 @@ class UserPage extends React.Component {
                         user: user,
                         type: type
                     })
-                    if(type!=='Tester')
-                        this.loadUser(type)
+                    // if(type!=='Tester')
+                    //     this.loadUser(type)
                 }
                 else{
                     alert('המנהל עדיין לא אישר את הבקשה')

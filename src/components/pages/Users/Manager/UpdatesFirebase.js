@@ -85,10 +85,11 @@ class UpdatesFirebase extends Component {
                         <input type="text" name="team" placeholder="שם קבוצה חדשה" onChange={this.handleChange}/>
                     </Grid>
                     <Grid item xs={6} >
-                        <button onClick={()=>{
-                            CreateNewTeam(this.state.newTeamName)
-                            alert("הקבוצה נוספה בהצלחה")
-                            window.location.reload(true);}}>צור קבוצה חדשה</button>
+                        <button onClick={async ()=>{
+                            var newTeam= this.state.newTeamName
+                            await CreateNewTeam(newTeam)
+                            window.location.reload(true)
+                        }}>צור קבוצה חדשה</button>
                     </Grid>
                     <Grid item xs={6}>
                         <button onClick={()=>{
@@ -450,8 +451,8 @@ class UpdatesFirebase extends Component {
                         user: user,
                         type: type
                     })
-                    if(type!=='Tester')
-                        this.loadUser(type)
+                    // if(type!=='Tester')
+                    //     this.loadUser(type)
                 }
                 else{
                     alert('המנהל עדיין לא אישר את הבקשה')
