@@ -3,7 +3,6 @@ import {auth, db, getUser, signOut} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
 import {BackPage} from "../UserPage";
-import Grid from "@material-ui/core/Grid";
 import ClipLoader from "react-spinners/ClipLoader";
 
 

@@ -426,7 +426,7 @@ class GuideFeedback extends React.Component {
                             {
                                 <div>
 
-                                    <textarea  dir="rtl" cols="70" name="q6" id="q6i" rows="5" placeholder="Your Answer"placeholder={'התשובה שלך'} value={this.state.form.q6?(this.state.form.q6):('') } onChange={(e)=>this.handleChange(e)}  required/>
+                                    <textarea  dir="rtl" cols="70" name="q6" id="q6i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q6?(this.state.form.q6):('') } onChange={(e)=>this.handleChange(e)}  required/>
 
 
                                 </div>

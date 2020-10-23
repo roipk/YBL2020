@@ -1,18 +1,10 @@
 import React from "react";
-import {auth, db, getUser} from '../../../firebase/firebase'
+import {auth, getUser} from '../../../firebase/firebase'
 import {Button} from "@material-ui/core";
 
 
 import ClipLoader from "react-spinners/ClipLoader";
 
-
-
-
-// const override = css`
-//   display: block;
-//   margin: 0 auto;
-//   border-color: red;
-// `;
 
 
 export function BackPage(prop,data)

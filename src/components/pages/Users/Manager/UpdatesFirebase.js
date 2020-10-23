@@ -80,19 +80,23 @@ class UpdatesFirebase extends Component {
                 ],
             ];
             users.map(user=>{
+                if(user)
+                {
                 csvGuidesData.push([
                     user.data().fname,
                     user.data().lname,
                     user.data().ID,
                     user.data().phone.substr(0,3)+"-"+user.data().phone.substr(3,user.data().phone.length),
                     user.data().email,
-                    user.data().type=='testers'?'בודק':
-                        user.data().type=='managers'?"מנהל":
-                            user.data().type=='guides'?"מדריך":
-                                user.data().type=='students'?"חניך":"",
+                    user.data().type==='testers'?'בודק':
+                        user.data().type==='managers'?"מנהל":
+                            user.data().type==='guides'?"מדריך":
+                                user.data().type==='students'?"חניך":"",
                     user.data().teamName,
 
                 ],)
+                    }
+                return user
             })
         }
         else
@@ -109,20 +113,24 @@ class UpdatesFirebase extends Component {
                 ],
             ];
             users.map(user=>{
-                csvStudentsData.push([
-                    user.data().fname,
-                    user.data().lname,
-                    user.data().ID,
-                    user.data().phone.substr(0,2)+"-"+user.data().phone.substr(3,user.data().phone.length),
-                    user.data().email,
-                    user.data().type=='testers'?'בודק':
-                        user.data().type=='managers'?"מנהל":
-                            user.data().type=='guides'?"מדריך":
-                                user.data().type=='students'?"חניך":"",
-                    user.data().teamName,
+                if(user) {
+                    csvStudentsData.push([
+                        user.data().fname,
+                        user.data().lname,
+                        user.data().ID,
+                        user.data().phone.substr(0, 2) + "-" + user.data().phone.substr(3, user.data().phone.length),
+                        user.data().email,
+                        user.data().type === 'testers' ? 'בודק' :
+                            user.data().type === 'managers' ? "מנהל" :
+                                user.data().type === 'guides' ? "מדריך" :
+                                    user.data().type === 'students' ? "חניך" : "",
+                        user.data().teamName,
 
-                ],)
+                    ],)
+                }
+                return user
             })
+
         }
 
     }
@@ -677,6 +685,7 @@ class UpdatesFirebase extends Component {
 
 
                                         try{
+                                            var updateTeam;
                                             var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
                                             console.log('in5')
                                             console.log(oldGuide.data())
@@ -702,7 +711,7 @@ class UpdatesFirebase extends Component {
                                         catch{
                                             console.log("למדריך לא הייתה קבוצה לפני")
                                         }
-                                        var updateTeam = await db.collection('guides').doc(user.uid)
+                                        updateTeam = await db.collection('guides').doc(user.uid)
                                         console.log('in3')
                                         await updateTeam.update({
                                             teamName:this.state.guideTeamName[index],
@@ -719,7 +728,7 @@ class UpdatesFirebase extends Component {
                                     {
                                         console.log('in8')
                                         console.log(user.uid)
-                                        var updateTeam = await db.collection('students').doc(user.uid)
+                                        updateTeam = await db.collection('students').doc(user.uid)
                                         updateTeam.update({
                                             teamName:this.state.guideTeamName[index],
                                             team:this.state.guideTeamPath[index]

@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import {db, admin, CreateUser, DeleteUser, auth, getUser} from '../../../../firebase/firebase'
+import {db, CreateUser, DeleteUser, auth, getUser} from '../../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TempManager from "./TempManager";

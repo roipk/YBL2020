@@ -3,15 +3,10 @@ import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
 import {auth, db, getPathData, getUser} from "../../../../firebase/firebase";
-import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
-import {Radio, RadioGroup} from "@material-ui/core";
 import { CSVLink } from "react-csv";
 
 
-
-
-let op = false
 
 var csvData = [];
 
@@ -30,12 +25,7 @@ class FeedbackGuide extends Component {
 
 
 
-    exportCsv()
-    {
-        var Row = []
-        var a=[['id','name','email']]
 
-    }
     async  GetTeams() {
         this.loadSpinner(true,"מיבא נתוני קבוצה")
         var from = this.GetDates(this.state.dateFrom)
@@ -44,8 +34,8 @@ class FeedbackGuide extends Component {
         if(!this.state.dateFrom || !this.state.dateTo )
         {
             alert("נא למלא תאריך התחלה וסיום")
-            return
             this.loadSpinner(false,'')
+            return
         }
 
         var options=[]
@@ -129,6 +119,7 @@ class FeedbackGuide extends Component {
                 report.form.q9,
 
             ],)
+       return report
         })
 
     }

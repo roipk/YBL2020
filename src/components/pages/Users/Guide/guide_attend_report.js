@@ -1,5 +1,5 @@
 import React from "react";
-import firebase, {auth, db, getUser} from '../../../../firebase/firebase';
+import {auth, db, getUser} from '../../../../firebase/firebase';
 import './Guide.css'
 import Grid from "@material-ui/core/Grid";
 import {BackPage} from "../UserPage";
@@ -381,6 +381,7 @@ class GuideReports extends React.Component {
         var updateTeamDate  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date).get();
         var updateTeamDateSet  = await db.collection("Teams").doc(team.team.id).collection("Dates").doc(this.state.date)
         var name=student.data.fname+" "+ student.data.lname
+        var enter
         console.log("in3");
         var feedbackToStudents = [];
         postStudents = [];
@@ -429,7 +430,7 @@ class GuideReports extends React.Component {
                     if (updateTeamDate.data()["studentsComes"]) {
                         console.log("in9")
                         studentsComes = updateTeamDate.data()["studentsComes"]
-                        var enter = false
+                        enter = false
                         await studentsComes.map((oldCome, i) => {
                             var newName = oldCome.substr(0, name.length)
                             if (newName === name) {
@@ -437,6 +438,7 @@ class GuideReports extends React.Component {
                                 studentsComes[i] = name
                                 enter = true
                             }
+                    return oldCome
                         })
                         if (!enter) {
                             studentsComes.push(name)
@@ -451,7 +453,7 @@ class GuideReports extends React.Component {
                         console.log("in10")
                         feedbackToStudents = updateTeamDate.data()["feedbackToStudents"]
                         console.log(feedbackToStudents)
-                        var enter = false
+                        enter = false
                         if(feedbackToStudents && feedbackToStudents.length > 0) {
                             await feedbackToStudents.map((oldfeedback, i) => {
                                 var newName = oldfeedback.substr(0, name.length)
@@ -460,6 +462,7 @@ class GuideReports extends React.Component {
                                     feedbackToStudents[i] = name + ": " + feedback
                                     enter = true
                                 }
+                        return oldfeedback
                             })
                         }
                         if (!enter) {

@@ -7,9 +7,6 @@ import '../Users/UserPage.css'
 import {auth} from "../../../firebase/firebase";
 
 
-const options = [
-]
-let op = false
 
 class resetPassword extends React.Component {
     constructor(props) {

@@ -1,9 +1,8 @@
 import React from "react";
-import  {db,auth, getStudentData,getStudent,getGuide,getManager} from '../../../firebase/firebase'
+import  {auth, getStudentData,getStudent,getGuide,getManager} from '../../../firebase/firebase'
 import {BackPage} from "./UserPage";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
-import Select from "react-select";
 
 
 class Profile extends React.Component {
@@ -73,7 +72,7 @@ class Profile extends React.Component {
 
     async sendData(){
         if(this.state.password && this.state.Vpassword){
-            if(this.state.password != this.state.Vpassword){
+            if(this.state.password !== this.state.Vpassword){
                 alert("הסיסמא ואימות הסיסמא לא תואמים")
                 return
             }

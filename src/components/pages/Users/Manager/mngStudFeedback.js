@@ -3,13 +3,11 @@ import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import Select from "react-select";
 import {auth, db, getUser} from "../../../../firebase/firebase";
-import $ from "jquery";
 import ClipLoader from "react-spinners/ClipLoader";
 import { CSVLink } from "react-csv";
 
 
 
-let op = false
 const csvData = [
     [
         "שם קבוצה",
@@ -149,6 +147,7 @@ class FeedbackStudents extends Component {
                 ],)
             csvData.push([],)
             csvData.push([],)
+        return form
         })
 
     }

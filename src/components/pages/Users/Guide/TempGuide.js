@@ -1,5 +1,5 @@
 import React from "react";
-import {auth, getPathData, getUser, signOut} from '../../../../firebase/firebase';
+import {auth, getUser, signOut} from '../../../../firebase/firebase';
 import './Guide.css'
 import {NextPage} from "../UserPage";
 import ClipLoader from "react-spinners/ClipLoader";

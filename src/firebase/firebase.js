@@ -4,14 +4,22 @@ import 'firebase/firebase-firestore'
 // import * as admin from 'firebase-admin';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD91v4LsW6wytMO6tJoUE7xyVz6BLTm5jk",
-    authDomain: "ybl-project-b5e04.firebaseapp.com",
-    databaseURL: "https://ybl-project-b5e04.firebaseio.com",
-    projectId: "ybl-project-b5e04",
-    storageBucket: "ybl-project-b5e04.appspot.com",
-    messagingSenderId: "288673703911",
-    appId: "1:288673703911:web:e0cc3b8ea3fc61019c3f42",
-    measurementId: "G-1RWZH22PZ6"
+    // apiKey: "AIzaSyD91v4LsW6wytMO6tJoUE7xyVz6BLTm5jk",
+    // authDomain: "ybl-project-b5e04.firebaseapp.com",
+    // databaseURL: "https://ybl-project-b5e04.firebaseio.com",
+    // projectId: "ybl-project-b5e04",
+    // storageBucket: "ybl-project-b5e04.appspot.com",
+    // messagingSenderId: "288673703911",
+    // appId: "1:288673703911:web:e0cc3b8ea3fc61019c3f42",
+    // measurementId: "G-1RWZH22PZ6"
+    apiKey: "AIzaSyC5lZ0pGbNOQ7m7BsIssvOXQoog8N_SM1c",
+    authDomain: "finalybl.firebaseapp.com",
+    databaseURL: "https://finalybl.firebaseio.com",
+    projectId: "finalybl",
+    storageBucket: "finalybl.appspot.com",
+    messagingSenderId: "427494885685",
+    appId: "1:427494885685:web:9b536c1f2322e03052a47c",
+    measurementId: "G-3WSTZQY0QK"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -47,6 +55,11 @@ export default firebase;
 //         console.log('Error creating new user:', error);
 //     });
 
+db.collection("Teams").doc().get().then(res=>{
+    console.log(res)
+}).catch(e=>{
+    console.log(e)
+})
 
 export async function CreateNewUser(email,phone) {
     var res = await auth.createUserWithEmailAndPassword(email,phone)
