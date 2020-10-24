@@ -1,14 +1,16 @@
 import React from "react";
-import  {auth, getStudentData,getStudent,getGuide,getManager} from '../../../firebase/firebase'
-import {BackPage} from "./UserPage";
+import {auth, getStudentData, getStudent, getGuide, getManager, getUser} from '../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 class Profile extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loadPage:false,
+            spinner: [true,'נא להמתין הדף נטען'],
             fname:'',
             lname:'',
             phone:'',
@@ -17,13 +19,34 @@ class Profile extends React.Component {
 
 
     async componentDidMount() {
-        auth.onAuthStateChanged(user=>{
+        var href =  window.location.href.split("/",5)
+        console.log(href)
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+
+                var type = await getUser(user)
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
+                {
+                    if(type==='Tester')
+                        type = href[3]
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    await this.getDate()
+                    this.loadSpinner(false,"")
+                    this.setState({loadPage:true})
+                    this.render()
+                    return
+                }
+                else
+                {
+
+                    this.notfound()
+                    return
+                }
 
             }
             else {
@@ -34,8 +57,7 @@ class Profile extends React.Component {
                 return;
 
             }
-            this.getDate()
-            this.render()
+
         })
 
     }
@@ -101,12 +123,34 @@ class Profile extends React.Component {
             alert("הפרטים שונו בהצלחה")
         })
     }
-
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
+    }
     render() {
-        console.log("******")
-        return (
-            <div id="instructor" className="sec-design">
-                <Grid container spacing={2}>
+        if(this.state.loadPage)
+        {
+            return (
+                <div id="instructor" className="sec-design">
+                    {!this.state.spinner[0] ? "" :
+                        <div id='fr'>
+                            {this.state.spinner[1]}
+                            <div className="sweet-loading">
+                                <ClipLoader style={{
+                                    backgroundColor: "rgba(255,255,255,0.85)",
+                                    borderRadius: "25px"
+                                }}
+                                    //   css={override}
+                                            size={120}
+                                            color={"#123abc"}
+
+                                />
+                            </div>
+                        </div>
+                    }
+                    <Grid container spacing={2}>
                         <Grid item xs={6}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
@@ -116,7 +160,7 @@ class Profile extends React.Component {
                                 autoComplete="off"
                                 value={this.state.lname}
                                 onChange={e => {
-                                    this.setState({lname:e.target.value})
+                                    this.setState({lname: e.target.value})
                                 }}
                                 variant="standard"
                                 fullWidth
@@ -133,7 +177,7 @@ class Profile extends React.Component {
                                 autoFocus
                                 value={this.state.fname}
                                 onChange={e => {
-                                    this.setState({fname:e.target.value})
+                                    this.setState({fname: e.target.value})
                                 }}
                                 variant="standard"
                                 fullWidth
@@ -149,7 +193,7 @@ class Profile extends React.Component {
                                 autoComplete="off"
                                 value={this.state.phone}
                                 onChange={e => {
-                                    this.setState({phone:e.target.value})
+                                    this.setState({phone: e.target.value})
                                 }}
                                 variant="standard"
                                 fullWidth
@@ -164,7 +208,7 @@ class Profile extends React.Component {
                                 type="password"
                                 autoComplete="off"
                                 onChange={(e) => {
-                                    this.setState({password:e.target.value})
+                                    this.setState({password: e.target.value})
                                 }}
                                 variant="standard"
                                 fullWidth
@@ -179,7 +223,7 @@ class Profile extends React.Component {
                                 type="password"
                                 autoComplete="off"
                                 onChange={(e) => {
-                                    this.setState({Vpassword:e.target.value})
+                                    this.setState({Vpassword: e.target.value})
                                 }}
                                 variant="standard"
                                 fullWidth
@@ -187,12 +231,35 @@ class Profile extends React.Component {
                             />
                         </Grid>
                     </Grid>
-                <button id="report-button" className="btn btn-info" onClick={()=>{this.sendData()}}>עדכון פרטים<span
-                    className="fa fa-arrow-right"></span></button>
-                <button onClick={() => {BackPage(this.props,this.state.user)}}>חזרה </button>
+                    <button id="report-button" className="btn btn-info" onClick={() => {
+                        this.sendData()
+                    }}>עדכון פרטים<span
+                        className="fa fa-arrow-right"></span></button>
+                    <button onClick={() => {
+                        this.BackPage()
+                    }}>חזרה
+                    </button>
 
-            </div>
-        );
+                </div>
+            );
+        }
+        else
+            return (<div> {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {this.state.spinner[1]}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
+
+                        />
+                    </div>
+                </div>
+            }</div>)
     }
 
 
@@ -205,7 +272,21 @@ class Profile extends React.Component {
         return
     }
 
+    notfound()
+    {
+        this.props.history.push({
+            pathname: `/404`,
+            data: this.state.user // your data array of objects
+        })
+    }
 
+    BackPage()
+    {
+        this.props.history.push({
+            pathname: `/${this.state.type}/${this.state.user.uid}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 }
 
 

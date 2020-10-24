@@ -41,14 +41,43 @@ function LoadPage() {
                     <Route exact path="/" component={HomePage} />
 
                     <Route exact path="/Login" component={Login} />
+                    <Route exact path="/Login/:404" component={notFound} />
                     <Route exact path="/resetPassword" component={resetPassword} />
+                    <Route exact path="/resetPassword/:404" component={notFound} />
                     <Route exact path="/SignUp" component={SignUp} />
+                    <Route exact path="/SignUp/:404" component={notFound} />
                     <Route exact path="/User" component={UserPage} />
+                    <Route exact path="/User/:404" component={notFound} />
 
 
                     <Route exact path="/Student/:id" component={Students} />
+                    <Route exact path="/Student/:id/Feedback" component={StudentFeedback} />
+                    <Route exact path="/Student/:id/Profile" component={Profile} />
+                    <Route exact path="/Student/:id/:404" component={notFound} />
+                    <Route exact path="/Student/:id/:page/:404" component={notFound} />
+
+
                     <Route exact path="/Guide/:id" component={Guides} />
+                    <Route exact path="/Guide/:id/Reports" component={GuideReports} />
+                    <Route exact path="/Guide/:id/Feedback" component={GuideFeedback} />
+                    <Route exact path="/Guide/:id/profile" component={Profile} />
+                    <Route exact path="/Guide/:id/:404" component={notFound} />
+                    <Route exact path="/Guide/:id/:page/:404" component={notFound} />
+
+
                     <Route exact path="/Manager/:id" component={Managers} />
+                    <Route exact path="/Manager/:id/UserApproval" component={UserApproval} />
+                    <Route exact path="/Manager/:id/Updates" component={UpdatesFirebase} />
+                    <Route exact path="/Manager/:id/Reports" component={AttendReport} />
+                    <Route exact path="/Manager/:id/Feedbacks/Guide" component={FeedbackGuides} />
+                    <Route exact path="/Manager/:id/Feedbacks/Student" component={FeedbackStudents} />
+                    <Route exact path="/Manager/:id/profile" component={Profile} />
+                    <Route exact path="/Manager/:id/:404" component={notFound} />
+                    <Route exact path="/Manager/:id/:page/:404" component={notFound} />
+
+
+
+
 
                     {/*Student pages*/}
                     <Route exact path="/TempStudent" component={TempStudent} />

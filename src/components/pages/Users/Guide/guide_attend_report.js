@@ -2,7 +2,6 @@ import React from "react";
 import {auth, db, getUser} from '../../../../firebase/firebase';
 import './Guide.css'
 import Grid from "@material-ui/core/Grid";
-import {BackPage} from "../UserPage";
 import ClipLoader from "react-spinners/ClipLoader";
 
 
@@ -17,10 +16,11 @@ class GuideReports extends React.Component {
         super(props);
 
         this.state = {
+            loadPage:false,
+            spinner: [true,'נא להמתין הדף נטען'],
             page:'menu',
             user: props.location,
             error:false,
-            spinner: [true,'נא להמתין הדף נטען'],
             rule:"Manager",
             prevDate:'',
             viewStudent: false,
@@ -228,33 +228,30 @@ class GuideReports extends React.Component {
         }
     }
     async componentDidMount() {
+        var href =  window.location.href.split("/",5)
+        console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
+
                 var type = await getUser(user)
-                console.log(type)
-                if(type)
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
                 {
                     this.setState({
                         isLoad: true,
                         user: user,
                         type: type
                     })
-                    // if(type!=='Tester')
-                        // this.loadUser(type)
-                }
-                else{
-                    alert('המנהל עדיין לא אישר את הבקשה')
-                    window.location.href = '/Login';
+                    this.render()
+                    this.setState({loadPage:true})
+                    this.loadSpinner(false,"")
                     return
                 }
-                // console.log(tester.exists)
-                // console.log(user)
-                console.log("change user")
-                // this.setState({
-                //     isLoad:true,
-                //     user:user,
-                // })
+                else
+                {
+                    this.notfound()
+                    return
+                }
 
             }
             else {
@@ -265,22 +262,8 @@ class GuideReports extends React.Component {
                 return;
 
             }
-            var teamName = await db.collection("guides").doc(auth.currentUser.uid).get()
-            if(!teamName.data().teamName)
-            {
-                alert("אינך משוייכ/ת לקבוצה יש לפנות למנהל")
-                this.loadSpinner(false)
-                BackPage(this.props,this.state.user)
-            }
-            this.loadSpinner(false)
-            this.render()
+
         })
-
-        // console.log(auth.currentUser)
-
-
-    }
-    async componentDidUpdate(prevProps) {
 
     }
 
@@ -557,72 +540,92 @@ class GuideReports extends React.Component {
 
 
     render() {
-        return (
-            <div>
-                {!this.state.spinner[0] ? "" :
-                    <div id='fr'>
-                        {this.state.spinner[1]}
-                        <div className="sweet-loading">
-                            <ClipLoader style={{
-                                backgroundColor: "rgba(255,255,255,0.85)",
-                                borderRadius: "25px"
-                            }}
-                                //   css={override}
-                                        size={120}
-                                        color={"#123abc"}
+        if(this.state.loadPage) {
+            return (
+                <div>
+                    {!this.state.spinner[0] ? "" :
+                        <div id='fr'>
+                            {this.state.spinner[1]}
+                            <div className="sweet-loading">
+                                <ClipLoader style={{
+                                    backgroundColor: "rgba(255,255,255,0.85)",
+                                    borderRadius: "25px"
+                                }}
+                                    //   css={override}
+                                            size={120}
+                                            color={"#123abc"}
 
-                            />
+                                />
+                            </div>
                         </div>
-                    </div>
-                }
-            <div id="guideAttendReport" className="sec-design">
-                <div id="name-group" className="form-group">
-                    <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                    <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
-                    <button className="btn btn-info" onClick={()=>{
-                        if(!this.state.date)
+                    }
+                    <div id="guideAttendReport" className="sec-design">
+                        <div id="name-group" className="form-group">
+                            <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
+                            <input type="date" className="form-control" id="insert-date" name="date"
+                                   onChange={this.handleChangeDate} required/>
+                            <button className="btn btn-info" onClick={() => {
+                                if (!this.state.date) {
+                                    alert("נא לבחור תאריך")
+                                } else
+                                    this.handleSubmit()
+
+                            }}>{!this.state.viewStudent ? ("הצג חניכים") : ("הסתר חניכים")}
+                            </button>
+                        </div>
                         {
-                            alert("נא לבחור תאריך")
-                        }
-                        else
-                            this.handleSubmit()
+                            (!this.state.Students || !this.state.viewStudent) ? (<div></div>) : (
 
-                    }}>{!this.state.viewStudent?("הצג חניכים"):("הסתר חניכים")}
-                    </button>
-                </div>
-                {
-                    (!this.state.Students || !this.state.viewStudent)?  (<div></div>) :  (
-
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Grid  container
-                                       direction="row"
-                                       justify="space-between"
-                                       alignItems="center"
-                                       spacing={2}>
-                                    {
-                                        this.state.Students.map((Student,index) => (
-                                            <Grid  item xs={12}  key={index}>
-                                                {this.Card(Student)}
-                                            </Grid >
-                                        ))}
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <Grid container
+                                              direction="row"
+                                              justify="space-between"
+                                              alignItems="center"
+                                              spacing={2}>
+                                            {
+                                                this.state.Students.map((Student, index) => (
+                                                    <Grid item xs={12} key={index}>
+                                                        {this.Card(Student)}
+                                                    </Grid>
+                                                ))}
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                        </Grid>
 
-                    )
-                }
+                            )
+                        }
 
-                <button id="feedback-button" className="btn btn-info" hidden={!this.state.viewStudent} onClick={async ()=>{
-                    var students = await this.saveAllStudent( this.state.Students)
-                    this.setState({Students:students})
+                        <button id="feedback-button" className="btn btn-info" hidden={!this.state.viewStudent}
+                                onClick={async () => {
+                                    var students = await this.saveAllStudent(this.state.Students)
+                                    this.setState({Students: students})
 
-                }}>שמירת כל השינויים<span className="fa fa-arrow-right"></span></button>
-                <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>
+                                }}>שמירת כל השינויים<span className="fa fa-arrow-right"></span></button>
+                        <button id="feedback-button" className="btn btn-info" onClick={() => {
+                            this.BackPage()
+                        }}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>
+                    </div>
+                </div>
+            )
+        }
+    else
+        return (<div> {!this.state.spinner[0] ? "" :
+            <div id='fr'>
+                {this.state.spinner[1]}
+                <div className="sweet-loading">
+                    <ClipLoader style={{
+                        backgroundColor: "rgba(255,255,255,0.85)",
+                        borderRadius: "25px"
+                    }}
+                        //   css={override}
+                                size={120}
+                                color={"#123abc"}
+
+                    />
+                </div>
             </div>
-            </div>
-
-        )
+        }</div>)
     }
 
     Card(Student) {
@@ -706,6 +709,23 @@ class GuideReports extends React.Component {
             data: this.state.user // your data array of objects
         })
     }
+
+    notfound()
+    {
+        this.props.history.push({
+            pathname: `/404`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
+    BackPage()
+    {
+        this.props.history.push({
+            pathname: `/Guide/${this.state.user.uid}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
 }
 
 

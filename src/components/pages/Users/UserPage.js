@@ -28,6 +28,8 @@ class UserPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            spinner: [true,'נא להמתין הדף נטען'],
+            loadPage:false,
             isLoad:false,
             user: props.location,
             error:false,
@@ -43,34 +45,37 @@ class UserPage extends React.Component {
     }
 
     async componentDidMount() {
-        console.log("work")
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
+
+                console.log(user)
                 var type = await getUser(user)
-                console.log(type)
-                if(type)
+                await this.setState({
+                    isLoad: true,
+                    user: user,
+                    type: type
+                })
+                if(type!=='Tester')
                 {
-                    this.setState({
-                        isLoad: true,
-                        user: user,
-                        type: type
-                    })
-                    // if(type!=='Tester')
-                    //     this.loadUser(type)
+                    this.loadUser(type)
                 }
-                else{
-                    alert('המנהל עדיין לא אישר את הבקשה')
-                    window.location.href = '/Login';
-                    return
-                }
-                // console.log(tester.exists)
-                // console.log(user)
-                console.log("change user")
-                // this.setState({
-                //     isLoad:true,
-                //     user:user,
-                // })
+                // if(href[4] === user.uid && (href[3] === type||type==='Tester'))
+                // {
+
+                    this.setState({loadPage:true})
+                this.loadSpinner(false,"")
+                    this.render()
+                return
+                // }
+                // else
+                // {
+                //
+                //     // window.location.href = `/${type}/${href[4]}`;
+                //     alert('המנהל עדיין לא אישר את הבקשה')
+                //     window.location.href = '/Login';
+                //     return
+                // }
 
             }
             else {
@@ -81,11 +86,10 @@ class UserPage extends React.Component {
                 return;
 
             }
-            this.render()
+
         })
 
     }
-
 
     async  logout() {
         //מסך טעינה
@@ -98,64 +102,92 @@ class UserPage extends React.Component {
         // console.log(this.state.user)
         // if(this.state.user.email)
         //     console.log("this is email : "+this.state.user.email)
+        if (this.state.loadPage) {
             return (
                 <div className="sec-design">
-                {!this.state.user.email? (null):(
-                    <div>
-                        {this.userPage()}
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="secondary"
-                            onClick={this.logout}>
-                            Logout
-                        </Button>
+                    {!this.state.user.email ? (null) : (
+                        <div>
+                            {this.userPage()}
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="secondary"
+                                onClick={this.logout}>
+                                Logout
+                            </Button>
 
 
-                        <button onClick={() => this.loadUser("Student")}>Enter Student</button>
-                        <button onClick={() => this.loadUser("Guide")}>Enter Guide</button>
-                        <button onClick={() => this.loadUser("Manager")}>Enter Manager</button>
-                        <button onClick={() => this.loadTempPage("TempStudent")}>Enter TempStudent</button>
-                        <button onClick={() => this.loadTempPage("TempGuide")}>Enter TempGuide</button>
-                        <button onClick={() => this.loadTempPage("TempManager")}>Enter TempManager</button>
+                            <button onClick={() => this.loadUser("Student")}>Enter Student</button>
+                            <button onClick={() => this.loadUser("Guide")}>Enter Guide</button>
+                            <button onClick={() => this.loadUser("Manager")}>Enter Manager</button>
+                            <button onClick={() => this.loadTempPage("TempStudent")}>Enter TempStudent</button>
+                            <button onClick={() => this.loadTempPage("TempGuide")}>Enter TempGuide</button>
+                            <button onClick={() => this.loadTempPage("TempManager")}>Enter TempManager</button>
 
-                        <button onClick={() => this.loadPage(true)}>loading page</button>
-                        <button onClick={() => this.loadPage(false)}>unloading page</button>
+                            <button onClick={() => this.loadPage(true)}>loading page</button>
+                            <button onClick={() => this.loadPage(false)}>unloading page</button>
 
-                        {!this.state.loading? "":
-                            <div  className="sweet-loading" >
-                                <ClipLoader style={{
-                                    backgroundColor: "rgba(255,255,255,0.85)",
-                                    borderRadius: "25px"}}
-                                    //   css={override}
-                                            size={150}
-                                            color={"#123abc"}
+                            {!this.state.loading ? "" :
+                                <div className="sweet-loading">
+                                    <ClipLoader style={{
+                                        backgroundColor: "rgba(255,255,255,0.85)",
+                                        borderRadius: "25px"
+                                    }}
+                                        //   css={override}
+                                                size={150}
+                                                color={"#123abc"}
 
-                                />
-                            </div>
-                        }
+                                    />
+                                </div>
+                            }
 
-                    </div>
-                )}
+                        </div>
+                    )}
                 </div>
             );
+        }
+        else
+            return (<div> {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {this.state.spinner[1]}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
+
+                        />
+                    </div>
+                </div>
+            }</div>)
     }
 
     loadUser(page)
     {
         this.props.history.push({
-            // pathname: `/${page}/${this.state.user.id}`,
-            pathname: `/Temp${page}`,
+            pathname: `/${page}/${this.state.user.uid}`,
+            // pathname: `/Temp${page}`,
             data: this.state.user // your data array of objects
         })
     }
+
     loadTempPage(page)
     {
         this.props.history.push({
             pathname: `/${page}`,
             data: this.state.user // your data array of objects
         })
+    }
+
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
     userPage()

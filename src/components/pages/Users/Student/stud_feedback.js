@@ -2,7 +2,6 @@ import React from "react";
 import {auth, db, getUser, signOut} from '../../../../firebase/firebase'
 import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
 import './Student.css'
-import {BackPage} from "../UserPage";
 import ClipLoader from "react-spinners/ClipLoader";
 
 
@@ -11,8 +10,9 @@ class StudentFeedback extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoad:false,
+            loadPage:false,
             spinner: [true,'נא להמתין הדף נטען'],
+            isLoad:false,
             user: props.location,
             error:false,
             loading: true,
@@ -147,33 +147,30 @@ class StudentFeedback extends React.Component {
     }
 
     async componentDidMount() {
+        var href =  window.location.href.split("/",5)
+        console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
+
                 var type = await getUser(user)
-                console.log(type)
-                if(type)
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
                 {
                     this.setState({
                         isLoad: true,
                         user: user,
                         type: type
                     })
-                    // if(type!=='Tester')
-                    //     this.loadUser(type)
-                }
-                else{
-                    alert('המנהל עדיין לא אישר את הבקשה')
-                    window.location.href = '/Login';
+                    this.render()
+                    this.setState({loadPage:true})
+                    this.loadSpinner(false,"")
                     return
                 }
-                // console.log(tester.exists)
-                // console.log(user)
-                console.log("change user")
-                // this.setState({
-                //     isLoad:true,
-                //     user:user,
-                // })
+                else
+                {
+                    this.notfound()
+                    return
+                }
 
             }
             else {
@@ -184,16 +181,7 @@ class StudentFeedback extends React.Component {
                 return;
 
             }
-            var teamName = await db.collection("students").doc(auth.currentUser.uid).get()
 
-            if(!teamName.data().teamName)
-            {
-                alert("אינך משוייכ/ת לקבוצה יש לפנות למנהל")
-                this.loadSpinner(false)
-                BackPage(this.props,this.state.user)
-            }
-            this.loadSpinner(false)
-            this.render()
         })
 
     }
@@ -228,10 +216,18 @@ class StudentFeedback extends React.Component {
             data: this.state.user // your data array of objects
         })
     }
+    BackPage()
+    {
+        this.props.history.push({
+            pathname: `/Student/${this.state.user.uid}`,
+            data: this.state.user // your data array of objects
+        })
+    }
 
     render() {
-
-        return ( <div>
+        if(this.state.loadPage)
+        {
+        return (<div>
 
 
             {!this.state.spinner[0] ? "" :
@@ -256,11 +252,12 @@ class StudentFeedback extends React.Component {
 
                 <div id="name-group" className="form-group">
                     <label id="insert-student" className="title-input" htmlFor="name">:בחר את תאריך המפגש </label>
-                    <input type="date" className="form-control" id="insert-date" value={this.state.date} name="date" onChange={this.handleChange}
+                    <input type="date" className="form-control" id="insert-date" value={this.state.date} name="date"
+                           onChange={this.handleChange}
                            required/>
                 </div>
 
-                <div id="box" className="chekbox" >
+                <div id="box" className="chekbox">
                     <label id="checkbox" className="title-input" htmlFor="name">
                         באיזה מידה המפגש היום חידש לך / למדת דברים חדשים?
                     </label>
@@ -274,11 +271,12 @@ class StudentFeedback extends React.Component {
                             onChange={this.hendleRadioButton}
                             row={true}
                         >
-                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                              label="במידה מועטה מאוד"/>
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="במידה מועטה"/>
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="במידה בינונית"/>
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
                     </div>
                     <br/>
@@ -294,11 +292,12 @@ class StudentFeedback extends React.Component {
                             onChange={this.hendleRadioButton}
                             row={true}
                         >
-                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                              label="במידה מועטה מאוד"/>
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="במידה מועטה"/>
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="במידה בינונית"/>
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
                     </div>
                     <br/>
@@ -315,11 +314,12 @@ class StudentFeedback extends React.Component {
                             row={true}
 
                         >
-                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                              label="במידה מועטה מאוד"/>
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="במידה מועטה"/>
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="במידה בינונית"/>
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
                         </RadioGroup>
                     </div>
                     <br/>
@@ -336,11 +336,12 @@ class StudentFeedback extends React.Component {
                             row={true}
 
                         >
-                            <FormControlLabel value="0" labelPlacement="end" control={<Radio />} label="במידה מועטה מאוד" />
-                            <FormControlLabel value="1" labelPlacement="end" control={<Radio />} label="במידה מועטה" />
-                            <FormControlLabel value="2" labelPlacement="end" control={<Radio />} label="במידה בינונית" />
-                            <FormControlLabel value="3" labelPlacement="end" control={<Radio />} label="במידה רבה" />
-                            <FormControlLabel value="4" labelPlacement="end" control={<Radio />} label="במידה רבה מאוד" />
+                            <FormControlLabel value="0" labelPlacement="end" control={<Radio/>}
+                                              label="במידה מועטה מאוד"/>
+                            <FormControlLabel value="1" labelPlacement="end" control={<Radio/>} label="במידה מועטה"/>
+                            <FormControlLabel value="2" labelPlacement="end" control={<Radio/>} label="במידה בינונית"/>
+                            <FormControlLabel value="3" labelPlacement="end" control={<Radio/>} label="במידה רבה"/>
+                            <FormControlLabel value="4" labelPlacement="end" control={<Radio/>} label="במידה רבה מאוד"/>
 
                         </RadioGroup>
                     </div>
@@ -364,9 +365,17 @@ class StudentFeedback extends React.Component {
                     </div>
                 </div>
                 {/*<button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>*/}
-                <button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>דווח נוכחות ושלח משוב</button>
-                <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
-                <button id="logout" className="btn btn-info" onClick={()=>{signOut()}} >התנתק</button>
+                <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit}>דווח נוכחות ושלח משוב
+                </button>
+                <button id="feedback-button" className="btn btn-info" onClick={() => {
+                    this.loadPage()
+                    this.BackPage()
+                }}>חזרה לתפריט
+                </button>
+                <button id="logout" className="btn btn-info" onClick={() => {
+                    signOut()
+                }}>התנתק
+                </button>
 
                 {/*<button id="go-back" className="btn btn-info" onClick={() => {*/}
                 {/*        this.chooseLayout("menu")*/}
@@ -377,12 +386,38 @@ class StudentFeedback extends React.Component {
             </div>
         </div>);
     }
+        else
+        return (<div> {!this.state.spinner[0] ? "" :
+            <div id='fr'>
+                {this.state.spinner[1]}
+                <div className="sweet-loading">
+                    <ClipLoader style={{
+                        backgroundColor: "rgba(255,255,255,0.85)",
+                        borderRadius: "25px"
+                    }}
+                        //   css={override}
+                                size={120}
+                                color={"#123abc"}
+
+                    />
+                </div>
+            </div>
+        }</div>)
+
+    }
 
     loadUser(page)
     {
         this.props.history.push({
             // pathname: `/${page}/${this.state.user.id}`,
             pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+    notfound()
+    {
+        this.props.history.push({
+            pathname: `/404`,
             data: this.state.user // your data array of objects
         })
     }

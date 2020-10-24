@@ -3,7 +3,7 @@ import {getTeamFeedbackByDate, db, auth, getUser} from "../../../../firebase/fir
 import Select from 'react-select'
 import Grid from "@material-ui/core/Grid";
 import $ from 'jquery'
-import {BackPage} from "../UserPage";
+
 import ClipLoader from "react-spinners/ClipLoader";
 
 var options = []
@@ -18,6 +18,7 @@ class AttendReport extends Component {
                 isLoaded:false,
                 date:"",
                 teamPath:"",
+                loadPage:false,
                 spinner: [true,'נא להמתין הדף נטען'],
                 report:false
             }
@@ -33,7 +34,7 @@ class AttendReport extends Component {
     }
 
     render() {
-
+if(this.state.loadPage){
         return(
             <div id="instactorReport" className="sec-design">
                 {!this.state.spinner[0] ? "" :
@@ -77,13 +78,35 @@ class AttendReport extends Component {
                             <div id="studentList" ></div>
                         </Grid>
                         <Grid item xs={12}>
-                                <button id="feedback-button" className="btn btn-info" onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
+                                <button id="feedback-button" className="btn btn-info" onClick={()=>{this.BackPage()}}>חזרה לתפריט</button>
                         </Grid>
                     </Grid>
                 </Grid>
             </div>
 
         )
+} else {
+    console.log(this.state.spinner)
+    return (
+        <div>
+            {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {"טוען נתוני דף"}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
+
+                        />
+                    </div>
+                </div>
+            }
+        </div>)
+}
     }
     async handleSubmit(event)
     {
@@ -109,34 +132,37 @@ class AttendReport extends Component {
         //     $('#studentList').append(br);
         // }
     }
+
     async componentDidMount() {
+        var href =  window.location.href.split("/",5)
+        console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
+
                 var type = await getUser(user)
-                console.log(type)
-                if(type)
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
                 {
                     this.setState({
                         isLoad: true,
                         user: user,
                         type: type
                     })
-                    // if(type!=='Tester')
-                    //     this.loadUser(type)
-                }
-                else{
-                    alert('המנהל עדיין לא אישר את הבקשה')
-                    window.location.href = '/Login';
+                    this.render()
+                    this.setState({loadPage:true})
+                    this.loadSpinner(true,"מיבא נתוני משתמש")
+                    var nameTeams =  await db.collection("Teams").get();
+                    nameTeams.forEach(doc=>{
+                        options.push({ value: doc.ref, label: doc.data().name })
+                    })
+                    this.loadSpinner(false,"")
                     return
                 }
-                // console.log(tester.exists)
-                // console.log(user)
-                console.log("change user")
-                // this.setState({
-                //     isLoad:true,
-                //     user:user,
-                // })
+                else
+                {
+                    this.notfound()
+                    return
+                }
 
             }
             else {
@@ -147,16 +173,11 @@ class AttendReport extends Component {
                 return;
 
             }
-            this.loadSpinner(false,'')
-            this.render()
+
         })
-        this.loadSpinner(true,"מיבא נתוני משתמש")
-        var nameTeams =  await db.collection("Teams").get();
-        nameTeams.forEach(doc=>{
-            options.push({ value: doc.ref, label: doc.data().name })
-        })
-        this.loadSpinner(false,"")
+
     }
+
     async handleChangeDate(event)
     {
         var name = event.target.name;
@@ -173,6 +194,21 @@ class AttendReport extends Component {
         this.props.history.push({
             // pathname: `/${page}/${this.state.user.id}`,
             pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
+    notfound()
+    {
+        this.props.history.push({
+            pathname: `/404`,
+            data: this.state.user // your data array of objects
+        })
+    }
+    BackPage()
+    {
+        this.props.history.push({
+            pathname: `/Manager/${this.state.user.uid}`,
             data: this.state.user // your data array of objects
         })
     }

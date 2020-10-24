@@ -1,169 +1,57 @@
-import React  from "react";
-import  {auth,db} from '../../../../firebase/firebase'
-import { RadioGroup ,FormControlLabel, Radio } from '@material-ui/core';
-import './Student.css'
+import React from "react";
+import {auth, getUser, signOut} from '../../../../firebase/firebase'
+import {NextPage} from "../UserPage";
+import ClipLoader from "react-spinners/ClipLoader";
 
 
 class Student extends React.Component {
-
     constructor(props) {
         super(props);
+
         this.state = {
-            isLoad:false,
+            loadPage:false,
             user: props.location,
-            error:false,
-            loading: true,
-            page:'menu',
-            rule:"Student",
-            form:{
-                guide: "",
-                date: "",
-                feedback: "",
-                topicMeeting: "",
-                feeedbackMeeting: {
-                    help: 0,
-                    new: 0,
-                    relevant: 0,
-                },
-            },
-            searchTerm:"",
-            searchResults:[],
-
-
-
-            search: true,
-            searchQuery: null,
-            value1: [],
-            options : [
-                { key: 1, text: 'Choice 1', value: 1 },
-                { key: 2, text: 'banana', value: 2 },
-                { key: 3, text: 'kabuk', value: 3 },
-            ]
-
-
+            spinner: [true,'נא להמתין הדף נטען'],
         };
-
-        this.handleChange1 = (e, { value }) => this.setState({ value })
-        this.handleSearchChange1 = (e, { searchQuery }) => this.setState({ searchQuery })
-
-
-
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleChange = this.handleChange.bind(this)
-        this.hendleSerch = this.hendleSerch.bind(this)
-        this.hendleRadioButton = this.hendleRadioButton.bind(this)
-
-
-
-
     }
 
-    people = [
-        "אמיר אוחנה",
-        "משה מיזרחי",
-        "איציק מלול",
-        "יוסף טרומפלדור",
-        "יצחק וכותנת הפסים",
-        "מישהו חשוב",
-        "בדיקת אנשים"
-    ];
-
-    async sendDataToFirebase(form)
-    {
-        var path = "4oUqd87D5odv62ebBKOFQ3D4iqX2"
-        try{
-            var stude =await db.collection("students").doc(path).get()
-            var studeSet =await db.collection("students").doc(path)
-
-            var coms =stude.data().coms
-
-            if(!coms)
-            {
-                console.log(coms)
-
-                coms= []
-
-            }
-            coms.push(form)
-            await studeSet.set({coms:coms}, {merge:true})
-            console.log(coms)
 
 
-            // var testAdd = await stude.add({coms:form}, {merge:true})
-
-            alert("end")
-
-            // if(stude){
-            //
-            //
-            //     console.log(stude.data())
-            //     stude.data().coms= form
-            //     console.log(stude.data())
-            //
-            // }
-
-
-        }catch(error) {
-            alert(error.message)
-        }
-
-
-
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
-    getItem(item)
-    {
-        console.log(item.item)
-        this.setState({searchTerm:item.item});
-    }
-    hendleSerch(event)
-    {
-        // this.setState({searchTerm:event.target.value})
-        // this.hendleRes()
-        const results = this.people.filter(person =>
-            person.toLowerCase().includes(event.target.value)
-        );
-        this.setState({searchResults:results,searchTerm:event.target.value});
 
-    }
-    hendleRadioButton(event)
-    {
-        var form = this.state.form
-        var feeedbackMeeting= form.feeedbackMeeting
-        feeedbackMeeting[event.target.name] = event.target.value;
-        form.feeedbackMeeting=feeedbackMeeting
-        this.setState({form:form})
-    }
-
-    handleChange(event)
-    {
-
-        var form = this.state.form
-        form[event.target.name] = event.target.value;
-        this.setState({form:form})
-
-    }
-
-    handleSubmit(event)
-    {
-        console.log(this.state.form)
-        this.sendDataToFirebase(this.state.form)
-
-    }
-    loadPage(event){
-        this.setState({loading:event})
-        //    this.render()
-    }
 
     async componentDidMount() {
-        console.log("work")
-        auth.onAuthStateChanged(user=>{
+        var href =  window.location.href.split("/",5)
+        console.log(href)
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+
+                var type = await getUser(user)
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
+                {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    this.loadSpinner(false,"")
+                    this.setState({loadPage:true})
+                    this.render()
+                    return
+                }
+                else
+                {
+
+                    this.notfound()
+                    return
+                }
 
             }
             else {
@@ -174,27 +62,12 @@ class Student extends React.Component {
                 return;
 
             }
-            this.render()
+
         })
 
     }
 
 
-    async  logout() {
-        //מסך טעינה
-        await auth.signOut();
-        window.location.href = '/';
-        //סיום מסך טעינה
-    }
-
-
-    chooseLayout(page)
-    {
-        this.setState({
-            page:page,
-        })
-        this.render()
-    }
 
 
     loadTempPage(page)
@@ -205,191 +78,102 @@ class Student extends React.Component {
         })
     }
 
+    async  logout() {
+        //מסך טעינה
+        await auth.signOut();
+        window.location.href = '/';
+        //סיום מסך טעינה
+    }
+
+    chooseLayout(page)
+    {
+        this.setState({
+            page:page,
+        })
+        this.render()
+    }
+
+
+
     render() {
+        if(this.state.loadPage) {
+            return (
+                <div id="instructor" className="sec-design" dir="rtl">
 
-        // if(this.state.user.email)
-        //     console.log(this.state)
-        // if(this.state.page ==='report')
-            return(this.StudentAttendReport())
-        // else if(this.state.page ==='viewReport')
-        //     return(this.StudentViewReport())
-        // else
-        //     return(this.menu())
+                    {!this.state.spinner[0] ? "" :
+                        <div id='fr'>
+                            {this.state.spinner[1]}
+                            <div className="sweet-loading">
+                                <ClipLoader style={{
+                                    backgroundColor: "rgba(255,255,255,0.85)",
+                                    borderRadius: "25px"
+                                }}
+                                    //   css={override}
+                                            size={120}
+                                            color={"#123abc"}
+
+                                />
+                            </div>
+                        </div>
+                    }
+                    <h2> שלום {this.state.user.displayName} </h2>
+                    <form id="instructor_menu" className="form-design" name="student_form" method="POST">
+                        <button id="feedback-button" className="btn btn-info" onClick={() => {
+                            NextPage(this.props, "Feedback", this.state.user)
+                        }}>מילוי משוב<span
+                            className="fa fa-arrow-right"></span></button>
+                        <button id="report-button" className="btn btn-info" onClick={() => {
+                            NextPage(this.props, "Profile", this.state.user)
+                        }}>עדכון פרטים או סיסמא<span
+                            className="fa fa-arrow-right"></span></button>
+                        <button id="logout" className="btn btn-info" onClick={() => {
+                            signOut()
+                        }}>התנתק
+                        </button>
+                        {/*<button id="report-button" className="btn btn-info" onClick={()=>{*/}
+                        {/*    this.props.history.push({*/}
+                        {/*    pathname: `User`,*/}
+                        {/*    data: this.state.user // your data array of objects*/}
+                        {/*})}} >חזרה לדף בדיקות<span*/}
+                        {/*    className="fa fa-arrow-right"></span></button>*/}
+                    </form>
+                </div>
+            )
+        }
+        else
+            return (<div> {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {this.state.spinner[1]}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
+
+                        />
+                    </div>
+                </div>
+            }</div>)
     }
 
-
-    menu() {
-
-        return (<div id="instructor" className="sec-design">
-            <h2>Hello Student {this.state.user.email} </h2>
-
-                <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>רישום נוכחות<span
-                    className="fa fa-arrow-right"></span></button>
-                <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('viewReport')}} >הצגת נוכחות<span
-                    className="fa fa-arrow-right"></span></button>
-                <button id="go-back" className="btn btn-info" >התנתק</button>
-        </div>)
+    loadUser(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}/${this.state.user.uid}`,
+            data: this.state.user // your data array of objects
+        })
     }
 
-    StudentAttendReport(){
-        return ( <div>
-
-            <div id="attendreport" className="sec-design">
-                <h2>שלום {this.state.user.name} </h2>
-
-                    <div id="name-group" className="form-group">
-                        <label id="insert-student" className="title-input" htmlFor="name">בחר את תאריך המפגש </label>
-                        <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange}
-                               required/>
-                    </div>
-
-                    {/*<div id="name-group" className="form-group">*/}
-                    {/*    <input*/}
-                    {/*        type="text"*/}
-                    {/*        placeholder="בחר מדריך"*/}
-                    {/*        name = "guide"*/}
-                    {/*        value={this.state.searchTerm}*/}
-                    {/*        onChange={(e)=>{*/}
-                    {/*            this.hendleSerch(e);*/}
-                    {/*            this.handleChange(e);*/}
-                    {/*        }}*/}
-
-
-                    {/*    />*/}
-                    {/*    <ul>*/}
-                    {/*        {this.state.searchResults.map(item => (*/}
-                    {/*            <ul key={item} onClick={()=>{this.getItem({item})}}>{item}</ul>*/}
-                    {/*        ))}*/}
-                    {/*    </ul>*/}
-
-                    {/*</div>*/}
-                    <div id="topic" className="form-group">
-                        <label id="insert-topic" className="title-input" htmlFor="name"> באיזה נושא המפגש
-                            עסק</label>
-                        <input type="text" className="form-control" name="topicMeeting" id="subject"
-                               placeholder="Your Answer" minLength="5" required onChange={this.handleChange}/>
-
-                    </div>
-                    <div id="box" className="chekbox" >
-                        <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה המפגש היום חידש
-                            לך/למדת דברים חדשים</label>
-                        <br/>
-
-                        <div>
-                            <RadioGroup
-                                aria-label="new"
-                                name="new"
-                                // value={location}
-                                onChange={this.hendleRadioButton}
-                                row={true}
-                            >
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                                <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
-                            </RadioGroup>
-                        </div>
-                        <br/>
-                        <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה אתה מרגיש שהמפגש
-                            יעזור לך בעתיד</label>
-                        <br/>
-                        <div>
-                            <RadioGroup
-                                aria-label="Location"
-                                name="help"
-                                // value={location}
-                                onChange={this.hendleRadioButton}
-                                row={true}
-                            >
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                                <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
-                            </RadioGroup>
-                        </div>
-                        <br/>
-                        <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה נושא המפגש היה
-                            רלוונטי עבורך</label>
-                        <br/>
-                        <div>
-                            <RadioGroup
-                                aria-label="Location"
-                                name="relevant"
-                                // value={location}
-                                onChange={this.hendleRadioButton}
-                                row={true}
-
-                            >
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                                <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
-                            </RadioGroup>
-                        </div>
-                        <br/>
-                        <label id="checkbox" className="title-input" htmlFor="name"> באיזה מידה לקחת חלק פעיל במפגש היום</label>
-                        <br/>
-                        <div>
-                            <RadioGroup
-                                aria-label="Location"
-                                name="relevant"
-                                // value={location}
-                                onChange={this.hendleRadioButton}
-                                row={true}
-
-                            >
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה מאוד" />
-                                <FormControlLabel value="1" labelPlacement="start" control={<Radio />} label="במידה מועטה" />
-                                <FormControlLabel value="2" labelPlacement="start" control={<Radio />} label="במידה בינונית" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה" />
-                                <FormControlLabel value="3" labelPlacement="start" control={<Radio />} label="במידה רבה מאוד" />
-
-                            </RadioGroup>
-                        </div>
-                        <br/>
-
-                        <div id="name-group" className="form-group">
-                            <label id="feedback" className="title-input" htmlFor="name"> מה את/ה לוקח/ת מהמפגש
-                                היום</label>
-                            <input type="text" className="form-control" name="feedback" id="Q4" placeholder="Your Answer"
-                                   minLength="10" onChange={this.handleChange} required/>
-                        </div>
-                    </div>
-                    {/*<button id="confirm-form" className="btn btn-info"  onClick={this.handleSubmit}>הצגת נוכחות</button>*/}
-                <button id="logout" className="btn btn-info" >התנתק</button>
-
-                {/*<button id="go-back" className="btn btn-info" onClick={() => {*/}
-                {/*        this.chooseLayout("menu")*/}
-                {/*    }}>חזור*/}
-
-                {/*    </button>*/}
-
-            </div>
-        </div>);
+    notfound()
+    {
+        this.props.history.push({
+            pathname: `/404`,
+            data: this.state.user // your data array of objects
+        })
     }
-
-
-
-
-
-    StudentViewReport(){
-        return(
-            <div id="student_feedback" class="sec-design">
-                    <div id="topic" class="form-group">
-                       <h2>לא נמצאו רישומי נוכחות</h2>
-                    </div>
-                    <button type="submit" id="confirm-form" className="btn btn-info" >רישום נוכחות</button>
-                <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
-
-            </div>
-
-        )
-    }
-
-
 }
 
 

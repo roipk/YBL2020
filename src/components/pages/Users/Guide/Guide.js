@@ -1,90 +1,84 @@
 import React from "react";
-import  {auth,db} from '../../../../firebase/firebase';
-import $ from 'jquery';
+import {auth, getUser, signOut} from '../../../../firebase/firebase';
+import './Guide.css'
+import {NextPage} from "../UserPage";
+import ClipLoader from "react-spinners/ClipLoader";
+
+
 
 
 class Guide extends React.Component {
     constructor(props) {
         super(props);
 
+
         this.state = {
+            spinner: [true,'נא להמתין הדף נטען'],
             page:'menu',
             user: props.location,
             error:false,
+            loadPage:false,
             loading: true,
             rule:"Manager",
-            reportDate:""
+            prevDate:'',
+            viewStudent: false,
+            date:"",
+            form : {
+                date:"",
+                q1:"",
+                q2:"",
+                q3:"",
+                q4:"",
+                q5:"",
+                q6:"",
+                q7:"",
+                q8:"",
+                q9:""
+            }
         };
 
-
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleSubmit2 = this.handleSubmit2.bind(this)
-        this.handleChange = this.handleChange.bind(this)
-       
-
+        console.log(props.location)
+        // getPathData("Teams/FgMtMMfD72JGd2qYJ9VD/Dates/2020-10-10")
     }
 
 
-
-
-    async getDataFromFirebase(event)
-    {
-        // var guidePath = "awwLpQL9A1WKW9KX60Lz"
-        try{
-
-            // var guideUid = 'awwLpQL9A1WKW9KX60Lz'
-            // const guide = await firebase.firestore()
-            //     .collection('guides')
-            //     .doc(guideUid);
-
-            var collection = await db.collection("students").where("guide","==","awwLpQL9A1WKW9KX60Lz").get()
-            // var collection = await db.collection("students").where("guide2","==",guide).get()//reference
-            // var collection = await db.collection("students").where("coms"," array-contains",{approved:false}).get()
-            var students = []
-            collection.forEach(doc => {
-                const data = doc.get("coms");
-                if (data)
-                    data.forEach(doc1 =>{
-                        if(doc1["date"] === this.state.reportDate && doc1["approved"]===false){
-                            console.log(doc)
-                            students.push(doc);
-                            return false;
-                        }
-                    });
-            });
-            this.createCheckList(students);
-        }catch(error) {
-            alert(error.message)
-        }
+    loadSpinner(event,massage = ""){
+        var spinner = []
+        spinner.push(event)
+        spinner.push(massage)
+        this.setState({spinner:spinner})
     }
 
-    handleChange(event)
-    {
-        // this.state.reportDate = event.target.value;
-        this.setState({reportDate: event.target.value})
-    }
 
-    handleSubmit(event)
-    {
-        this.getDataFromFirebase(event)
-    }
-    loadPage(event){
-        this.setState({loading:event})
-    }
-    handleSubmit2(event)
-    {
-        this.checkstudents(event)
-    }
 
     async componentDidMount() {
-        console.log("work")
-        auth.onAuthStateChanged(user=>{
+        var href =  window.location.href.split("/",5)
+        console.log(href)
+        auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+                var type = await getUser(user)
+                console.log(user)
+                console.log(type)
+
+                // if(href[4] === user.uid && (href[3] === type||type==='Tester'))
+                // {
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+                    this.loadSpinner(false,"")
+                    this.setState({loadPage:true})
+                    this.render()
+                    return
+                // }
+                // else
+                // {
+
+                    // this.notfound()
+                    // return
+                // }
 
             }
             else {
@@ -95,188 +89,93 @@ class Guide extends React.Component {
                 return;
 
             }
-            this.render()
+
         })
-
-    }
-
-    async checkstudents(event){
-        var selectedDate = this.state.reportDate
-        $('#stList input:checkbox').each(async function () {
-            var path = (this.checked ? $(this).val() : "");
-            try{
-                var stude = await db.collection("students").doc(path).get()
-                var data =stude.data().coms
-                if (data)
-                    data.forEach(doc1 =>{
-                        if(doc1["date"] === selectedDate && doc1["approved"]===false){
-                            // var index =data.indexOf(doc1)
-                            var usersCollection = this.afs.collection('students', ref => ref.where('coms', 'array-contains', {'date':selectedDate }) );
-                            console.log(usersCollection)
-                        }
-                    });
-            }catch(error){
-                console.log(error.message)
-            }
-        });
-    }
-
-    createCheckList(students){
-        students.forEach(doc =>{
-            const label=document.createElement("label");
-            label.setAttribute("class","container")
-            label.innerHTML=doc.get("fname")+" "+doc.get("lname")
-            const inputC = document.createElement("input");
-            inputC.setAttribute("type", "checkbox");
-            inputC.setAttribute("value", doc.id);
-            label.appendChild(inputC)
-            const div= document.getElementById("stList")
-            div.appendChild(label)
-        })
-    }
-    async  logout() {
-        //מסך טעינה
-        await auth.signOut();
-        window.location.href = '/';
-        //סיום מסך טעינה
-    }
-
-    chooseLayout(page)
-    {
-        this.setState({
-            page:page,
-        })
-        this.render()
     }
 
 
     render() {
-        if(this.state.user.email)
-            console.log("this is email : "+this.state.user.email)
-        if(this.state.page ==='feedback')
-            return(this.GuideFeedback())
-        else if(this.state.page === 'report')
-        return(this.GuideAttendReport())
-        else if(this.state.page === 'student')
-            return(this.GuideAttendStudent())
-        else
-            return(this.menu())
-    }
+if(this.state.loadPage) {
+    return (
+        <div id="instructor" className="sec-design" dir='rtl'>
+            {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {this.state.spinner[1]}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
 
-    menu() {
-        return (
-            <div id="instructor" className="sec-design" dir='rtl'>
-                <h2>שלום מדריך {this.state.user.name} </h2>
-                <div id="instructor_menu" className="form-design" name="student_form" method="POST">
-                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout("report")}}>אישור דו"ח נוכחות<span
-                        className="fa fa-arrow-right"></span></button>
-                    <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('feedback')}} >מילוי משוב פעילות<span
-                        className="fa fa-arrow-right"></span></button>
-                    <button id="report-button" className="btn btn-info" onClick={()=>{this.chooseLayout('student')}} >מילוי משוב חניכים<span
-                        className="fa fa-arrow-right"></span></button>
-                    <button id="logout" className="btn btn-info" >התנתק</button>
+                        />
+                    </div>
+                </div>
+            }
+            <h2>שלום {this.state.user.displayName} </h2>
+            {/*<h2>Hello Guide {this.state.user.email} </h2>*/}
+            <div id="instructor_menu" className="form-design" name="student_form" method="POST">
+                <button id="feedback-button" className="btn btn-info" onClick={() => {
+                    NextPage(this.props, "Reports", this.state.user)
+                }}>אישור דו"ח נוכחות<span
+                    className="fa fa-arrow-right"></span></button>
+                <button id="report-button" className="btn btn-info" onClick={() => {
+                    NextPage(this.props, "Feedback", this.state.user)
+                }}>מילוי משוב<span
+                    className="fa fa-arrow-right"></span></button>
+                <button id="report-button" className="btn btn-info" onClick={() => {
+                    NextPage(this.props, "Profile", this.state.user)
+                }}>עדכון פרטים או סיסמא<span
+                    className="fa fa-arrow-right"></span></button>
+                <button id="logout" className="btn btn-info" onClick={() => {
+                    signOut()
+                }}>התנתק
+                </button>
+                {/*<button id="report-button" className="btn btn-info" onClick={()=>{*/}
+                {/*    this.props.history.push({*/}
+                {/*        pathname: `User`,*/}
+                {/*        data: this.state.user // your data array of objects*/}
+                {/*    })}} >חזרה לדף בדיקות<span*/}
+                {/*    className="fa fa-arrow-right"></span></button>*/}
+            </div>
+        </div>
+    )
+}
+    else
+        return (<div> {!this.state.spinner[0] ? "" :
+            <div id='fr'>
+                {this.state.spinner[1]}
+                <div className="sweet-loading">
+                    <ClipLoader style={{
+                        backgroundColor: "rgba(255,255,255,0.85)",
+                        borderRadius: "25px"
+                    }}
+                        //   css={override}
+                                size={120}
+                                color={"#123abc"}
+
+                    />
                 </div>
             </div>
-        )
+        }</div>)
     }
 
-    GuideAttendReport(){
-        return(
-            <div id="guideAttendReport" className="sec-design">
-                <div id="name-group" className="form-group">
-                    <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                    <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
-                    <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
-                </div>
-                <div id="name-group" className="form-group" dir="rtl">
-                    <label id="insert-message" className="title-input">אשר את נוכחות החניכים במפגש:</label><br/>
-                    <div id="stList" className="checkboxes"></div>
-                </div>
-                <button id="confirm-form" className="btn btn-info" onClick={this.handleSubmit2} >אשר</button>
-                <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור</button>
-            </div>
-        )
+    notfound()
+    {
+        this.props.history.push({
+            pathname: `/404`,
+            data: this.state.user // your data array of objects
+        })
     }
 
-    GuideFeedback() {
-        return(
-            <div id="guideFeeadback" className="sec-design">
-                <div id="guide_form" className="form-design" name="guide_form">
-                    <div id="name-group" className="form-group">
-                        <label id="insert-date" className="title-input">הכנס את התאריך בו התקיים המפגש</label>
-                        <input type="date" className="form-control" name="insert-student" id="insert-student" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q1" className="title-input"> נושא הפעילות</label>
-                        <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q1" className="title-input"> מספר הפעילות</label>
-                        <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q2" className="title-input"> מה היה בפעילות</label>
-                        <input type="text" className="form-control" name="Q2" id="Q2" placeholder="Your Answer" minLength="5" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q1" className="title-input">עם איזה תחושה יצאתי מהפעילות</label>
-                        <input type="text" className="form-control" name="Q1" id="Q1" placeholder="Your Answer" minLength="5" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q3" className="title-input">עם אילו הצלחות נפגשתי בפעילות</label>
-                        <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q3" className="title-input">עם אילו דילמות נפגשתי בפעילות</label>
-                        <input type="text" className="form-control" name="Q3" id="Q3" placeholder="Your Answer" minLength="10" required/>
-                    </div>
-                    <div id="name-group" className="form-group">
-                        <label id="Q4" className="title-input" htmlFor="name"> נקודות חשובות למפגש הבא</label>
-                        <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
-                    </div>
-                    <div id ="box" className="chekbox">
-                        <label id="insert-name" className="title-input">באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות</label><br/>
-                        <div name="form1" className="chekbox" >
-                            <label>במידה מועטה מאוד<input type="radio" value="0"/></label>
-                            <label>במידה מועטה<input type="radio" value="1"/></label>
-                            <label>במידה בינונית<input type="radio" value="2"/></label>
-                            <label>במידה רבה<input type="radio" value="3"/></label>
-                            <label>במידה רבה מאוד<input type="radio" value="4"/></label>
-
-                        </div>
-                    </div>
-                    <br/>
-                    <div id="name-group" className="form-group">
-                        <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה</label>
-                        <input type="text" className="form-control" name="firstName" id="firstName" placeholder="Your Answer" minLength="10" required/>
-                    </div>
-                    <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
-                    <button type="submit" id="confirm-form" className="btn btn-info" >שלח משוב</button>
-
-                </div>
-            </div>
-        )
-    }
-
-    GuideAttendStudent(){
-        return(
-            <div id="guideAttendReport" className="sec-design">
-                <div id="name-group" className="form-group">
-                    <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
-                    <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChange} required/>
-                    <button className="btn btn-info" onClick={this.handleSubmit}>הצג</button>
-                </div>
-                <div id="name-group" className="form-group" dir="rtl">
-                    <div id="stList" className="checkboxes"></div>
-                </div>
-                <div id="name-group" className="form-group">
-                    <label id="Q4" className="title-input" htmlFor="name">יש לכתוב על כל חניך – במה בלט/ה? הצלחות שחווה/חוותה, התקדמות במישור הרגשי/חברתי וכד</label>
-                    <input type="text" className="form-control" name="Q4" id="Q4" placeholder="Your Answer" minLength="10" required/>
-                </div>
-                <button type="submit" id="confirm-form" className="btn btn-info" >שלח משוב</button>
-                <button id="go-back" className="btn btn-info"  onClick={()=>{this.chooseLayout("menu")}}>חזור לתפריט</button>
-            </div>
-        )
+    loadUser(page)
+    {
+        this.props.history.push({
+            pathname: `/${page}/${this.state.user.uid}`,
+            data: this.state.user // your data array of objects
+        })
     }
 
 }

@@ -4,7 +4,6 @@ import {db, CreateUser, DeleteUser, auth, getUser} from '../../../../firebase/fi
 import Grid from "@material-ui/core/Grid";
 import '../Guide/Guide.css';
 import TempManager from "./TempManager";
-import {BackPage} from "../UserPage";
 import ClipLoader from "react-spinners/ClipLoader";
 
 
@@ -16,6 +15,7 @@ class UserApproval extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loadPage:false,
             spinner: [true,'נא להמתין הדף נטען'],
 
         };
@@ -31,33 +31,47 @@ class UserApproval extends React.Component {
 
 
     async componentDidMount() {
+        var href =  window.location.href.split("/",5)
+        console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
+
                 var type = await getUser(user)
-                console.log(type)
-                if(type)
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
                 {
                     this.setState({
                         isLoad: true,
                         user: user,
                         type: type
                     })
-                    // if(type!=='Tester')
-                    //     this.loadUser(type)
-                }
-                else{
-                    alert('המנהל עדיין לא אישר את הבקשה')
-                    window.location.href = '/Login';
+                    this.render()
+                    this.setState({loadPage:true})
+                    this.loadSpinner(false,"")
+                    this.loadSpinner(true,"טוען משתמשים להצגה")
+                    const collection = await db.collection('waitforapproval').get()
+                    const usersList = [];
+                    collection.forEach(doc => {
+                        const data = doc.data();
+                        if (data)
+                            usersList.push(data)
+                    });
+                    this.setState({users: usersList});
+
+                    var nameTeams =  await db.collection("Teams").get();
+                    nameTeams.forEach(doc=>{
+                        options.push({ value: doc.ref, label: doc.data().name })
+                    })
+
+                    this.loadSpinner(false,"")
+
                     return
                 }
-                // console.log(tester.exists)
-                // console.log(user)
-                console.log("change user")
-                // this.setState({
-                //     isLoad:true,
-                //     user:user,
-                // })
+                else
+                {
+                    this.notfound()
+                    return
+                }
 
             }
             else {
@@ -68,30 +82,10 @@ class UserApproval extends React.Component {
                 return;
 
             }
-            this.loadSpinner(false,"")
-            this.render()
+
         })
-        this.loadSpinner(true,"טוען משתמשים להצגה")
-        const collection = await db.collection('waitforapproval').get()
-        const usersList = [];
-        collection.forEach(doc => {
-            const data = doc.data();
-            if (data)
-                usersList.push(data)
-        });
-        this.setState({users: usersList});
-
-        var nameTeams =  await db.collection("Teams").get();
-            nameTeams.forEach(doc=>{
-                options.push({ value: doc.ref, label: doc.data().name })
-            })
-
-        this.loadSpinner(false,"")
 
     }
-
-
-
 
     radio(e,index,user)
 {
@@ -133,34 +127,67 @@ class UserApproval extends React.Component {
     }
 }
 render() {
-        
-    if(this.state.page ==='menu')
-        return(
-            <div>
-                {!this.state.spinner[0] ? "" :
-                    <div id='fr'>
-                        {this.state.spinner[1]}
-                        <div className="sweet-loading">
-                            <ClipLoader style={{
-                                backgroundColor: "rgba(255,255,255,0.85)",
-                                borderRadius: "25px"
-                            }}
-                                //   css={override}
-                                        size={120}
-                                        color={"#123abc"}
+        if(this.state.loadPage) {
+            if (this.state.page === 'menu')
+                return (
+                    <div>
+                        {!this.state.spinner[0] ? "" :
+                            <div id='fr'>
+                                {this.state.spinner[1]}
+                                <div className="sweet-loading">
+                                    <ClipLoader style={{
+                                        backgroundColor: "rgba(255,255,255,0.85)",
+                                        borderRadius: "25px"
+                                    }}
+                                        //   css={override}
+                                                size={120}
+                                                color={"#123abc"}
 
-                            />
-                        </div>
+                                    />
+                                </div>
+                            </div>
+                        }
+                        <TempManager>
+
+                        </TempManager>
                     </div>
-                }
-            <TempManager>
+                )
+            if (this.state.users) {
+                if (this.state.users.length === 0) {
+                    return (
+                        <div id="guideAttendReport" className="sec-design" dir="rtl">
+                            {!this.state.spinner[0] ? "" :
+                                <div id='fr'>
+                                    {this.state.spinner[1]}
+                                    <div className="sweet-loading">
+                                        <ClipLoader style={{
+                                            backgroundColor: "rgba(255,255,255,0.85)",
+                                            borderRadius: "25px"
+                                        }}
+                                            //   css={override}
+                                                    size={120}
+                                                    color={"#123abc"}
 
-            </TempManager>
-            </div>
-        )
-        if(this.state.users) {
-            if(this.state.users.length === 0)
-            {
+                                        />
+                                    </div>
+                                </div>
+                            }
+                            <div id="name-group" className="form-group">
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        אין משתמשים חדשים
+                                    </Grid>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <button id="feedback-button" className="btn btn-info" onClick={() => {
+                                        this.BackPage()
+                                    }}>חזרה לתפריט
+                                    </button>
+                                </Grid>
+                            </div>
+                        </div>
+                    )
+                }
                 return (
                     <div id="guideAttendReport" className="sec-design" dir="rtl">
                         {!this.state.spinner[0] ? "" :
@@ -182,21 +209,79 @@ render() {
                         <div id="name-group" className="form-group">
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
-                                    אין משתמשים חדשים
+                                    <Grid container
+                                          direction="row"
+                                          justify="space-between"
+                                          alignItems="center"
+                                          spacing={2}>
+
+                                        {this.state.users.map((user, index) => (
+                                                <Grid item xs={12} key={index}>
+                                                    {this.Card(user, index)}
+                                                </Grid>
+                                            )
+                                        )}
+
+
+                                    </Grid>
+                                    {/*<Grid item xs={12}>*/}
+                                    {/*    <div className="text-below-image">*/}
+                                    {/*        <button>אישור בקשות מסומנות</button>*/}
+                                    {/*    </div>*/}
+                                    {/*</Grid>*/}
+                                    <Grid item xs={12}>
+                                        <button id="feedback-button" className="btn btn-info" onClick={() => {
+                                            this.BackPage()
+                                        }}>חזרה לתפריט
+                                        </button>
+                                    </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
+                        </div>
+
+
+                        {/*<button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>*/}
+
+
+                    </div>
+                );
+            } else {
+                return (
+                    <div id="guideAttendReport" className="sec-design" dir="rtl">
+                        {!this.state.spinner[0] ? "" :
+                            <div id='fr'>
+                                {this.state.spinner[1]}
+                                <div className="sweet-loading">
+                                    <ClipLoader style={{
+                                        backgroundColor: "rgba(255,255,255,0.85)",
+                                        borderRadius: "25px"
+                                    }}
+                                        //   css={override}
+                                                size={120}
+                                                color={"#123abc"}
+
+                                    />
+                                </div>
+                            </div>
+                        }
+                        <div id="name-group" className="form-group">
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    טוען משתמשים
+                                </Grid>
                             </Grid>
                         </div>
                     </div>
                 )
             }
+        }
+        else {
+            console.log(this.state.spinner)
             return (
-                <div id="guideAttendReport" className="sec-design" dir="rtl">
+                <div>
                     {!this.state.spinner[0] ? "" :
                         <div id='fr'>
-                            {this.state.spinner[1]}
+                            {"טוען נתוני דף"}
                             <div className="sweet-loading">
                                 <ClipLoader style={{
                                     backgroundColor: "rgba(255,255,255,0.85)",
@@ -210,72 +295,7 @@ render() {
                             </div>
                         </div>
                     }
-                    <div id="name-group" className="form-group">
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Grid container
-                                      direction="row"
-                                      justify="space-between"
-                                      alignItems="center"
-                                      spacing={2}>
-
-                                    {this.state.users.map((user,index) => (
-                                        <Grid item xs={12} key={index}>
-                                            {this.Card(user, index)}
-                                        </Grid>
-                                        )
-                                    )}
-
-
-                                </Grid>
-                                {/*<Grid item xs={12}>*/}
-                                {/*    <div className="text-below-image">*/}
-                                {/*        <button>אישור בקשות מסומנות</button>*/}
-                                {/*    </div>*/}
-                                {/*</Grid>*/}
-                                <Grid item xs={12}>
-                                    <button id="feedback-button" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזרה לתפריט</button>
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </div>
-
-
-                    {/*<button id="feedback-button" className="btn btn-info"  onClick={()=>{this.chooseLayout}}>חזרה לתפריט<span className="fa fa-arrow-right"></span></button>*/}
-
-
-                </div>
-            );
-        }
-        else
-        {
-           return (
-               <div id="guideAttendReport" className="sec-design" dir="rtl">
-                   {!this.state.spinner[0] ? "" :
-                       <div id='fr'>
-                           {this.state.spinner[1]}
-                           <div className="sweet-loading">
-                               <ClipLoader style={{
-                                   backgroundColor: "rgba(255,255,255,0.85)",
-                                   borderRadius: "25px"
-                               }}
-                                   //   css={override}
-                                           size={120}
-                                           color={"#123abc"}
-
-                               />
-                           </div>
-                       </div>
-                   }
-                   <div id="name-group" className="form-group">
-                       <Grid container spacing={2}>
-                           <Grid item xs={12}>
-                               טוען משתמשים
-                           </Grid>
-                       </Grid>
-                   </div>
-               </div>
-           )
+                </div>)
         }
 }
 
@@ -402,6 +422,14 @@ render() {
         this.props.history.push({
             // pathname: `/${page}/${this.state.user.id}`,
             pathname: `/Temp${page}`,
+            data: this.state.user // your data array of objects
+        })
+    }
+
+    BackPage()
+    {
+        this.props.history.push({
+            pathname: `/Manager/${this.state.user.uid}`,
             data: this.state.user // your data array of objects
         })
     }

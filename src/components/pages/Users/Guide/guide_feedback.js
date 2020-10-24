@@ -1,8 +1,7 @@
 import React from "react";
-import {auth, db} from '../../../../firebase/firebase';
+import {auth, db, getUser} from '../../../../firebase/firebase';
 import { Radio, RadioGroup} from "@material-ui/core";
 import './Guide.css'
-import {BackPage} from "../UserPage";
 import Grid from "@material-ui/core/Grid";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -12,9 +11,10 @@ class GuideFeedback extends React.Component {
         super(props);
 
         this.state = {
+            loadPage:false,
+            spinner: [true,'נא להמתין הדף נטען'],
             page:'menu',
             user: props.location,
-            spinner: [true,'נא להמתין הדף נטען'],
             error:false,
             loading: true,
             rule:"Manager",
@@ -278,14 +278,33 @@ class GuideFeedback extends React.Component {
 
 
     }
+
     async componentDidMount() {
+        var href =  window.location.href.split("/",5)
+        console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
-                this.setState({
-                    isLoad:true,
-                    user:user,
-                })
+
+                console.log("in1")
+                var type = await getUser(user)
+                console.log(type)
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
+                {
+                    console.log("in2")
+                    this.setState({
+                        isLoad: true,
+                        user: user,
+                        type: type
+                    })
+
+                }
+                else
+                {
+                    console.log("in3")
+                    this.notfound()
+                    return
+                }
 
             }
             else {
@@ -296,22 +315,19 @@ class GuideFeedback extends React.Component {
                 return;
 
             }
+            console.log("in4")
             var teamName = await db.collection("guides").doc(auth.currentUser.uid).get()
-                if(!teamName.data().teamName)
-                {
-                    alert("אינך משוייכ/ת לקבוצה יש לפנות למנהל")
-                    this.loadSpinner(false)
-                    BackPage(this.props,this.state.user)
-                }
-            this.loadSpinner(false)
+            if(!teamName.data().teamName)
+            {
+                alert("אינך משוייכ/ת לקבוצה יש לפנות למנהל")
+                this.loadSpinner(false)
+                this.BackPage()
+            }
+            this.loadSpinner(false,"")
+            this.setState({loadPage:true})
             this.render()
+
         })
-
-        // console.log(auth.currentUser)
-
-
-    }
-    async componentDidUpdate(prevProps) {
 
     }
 
@@ -349,162 +365,227 @@ class GuideFeedback extends React.Component {
 
 
     render() {
-        return(
+        if(this.state.loadPage) {
+            return (
+                <div id="guideFeeadback" className="sec-design">
 
-            <div id="guideFeeadback" className="sec-design" >
+                    {!this.state.spinner[0] ? "" :
+                        <div id='fr'>
+                            {this.state.spinner[1]}
+                            <div className="sweet-loading">
+                                <ClipLoader style={{
+                                    backgroundColor: "rgba(255,255,255,0.85)",
+                                    borderRadius: "25px"
+                                }}
+                                    //   css={override}
+                                            size={120}
+                                            color={"#123abc"}
 
-                {!this.state.spinner[0] ? "" :
-                    <div id='fr'>
-                        {this.state.spinner[1]}
-                        <div className="sweet-loading">
-                            <ClipLoader style={{
-                                backgroundColor: "rgba(255,255,255,0.85)",
-                                borderRadius: "25px"
-                            }}
-                                //   css={override}
-                                        size={120}
-                                        color={"#123abc"}
-
-                            />
+                                />
+                            </div>
                         </div>
+                    }
+                    <div dir="rtl">
+                        <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
+                        <input type="date" id="insert-date" name="date" onChange={(e) => this.handleChange(e)}
+                               required/>
+                        <div id="name-group">
+                            <label id="Q1L" className="title-input">נושא הפעילות:</label>
+                            <input type="text" name="q1" id="q1i" placeholder={'התשובה שלך'}
+                                   value={this.state.form.q1 ? (this.state.form.q1) : ('')} onChange={(e) => {
+                                this.handleChange(e)
+                            }} required/>
+                        </div>
+                        <div id="name-group">
+                            <label id="Q2L" className="title-input">מספר הפעילות:</label>
+                            <input type="text" name="q2" id="q2i" placeholder={'התשובה שלך'}
+                                   value={this.state.form.q2 ? (this.state.form.q2) : ('')}
+                                   onChange={(e) => this.handleChange(e)} required/>
+                        </div>
+                        <div id="name-group">
+                            <label id="Q3L" className="title-input">מה היה בפעילות?</label>
+                            <Grid item xs={12}>
+                                {
+                                    <div>
+                                        <textarea dir="rtl" cols="70" name="q3" id="q3i" rows="5"
+                                                  placeholder={'התשובה שלך'}
+                                                  value={this.state.form.q3 ? (this.state.form.q3) : ('')}
+                                                  onChange={(e) => this.handleChange(e)} required/>
+
+                                    </div>
+                                }
+                            </Grid>
+                            {/*<input type="text" name="q3" id="q3i" onChange={this.handleChange}  required/>*/}
+                        </div>
+                        <div id="name-group">
+                            <label id="Q4L" className="title-input">עם איזה תחושה יצאתי מהפעילות?</label>
+                            <Grid item xs={12}>
+                                {
+                                    <div>
+
+                                        <textarea dir="rtl" cols="70" name="q4" id="q4i" rows="5"
+                                                  placeholder={'התשובה שלך'}
+                                                  value={this.state.form.q4 ? (this.state.form.q4) : ('')}
+                                                  onChange={(e) => this.handleChange(e)} required/>
+
+
+                                    </div>
+                                }
+                            </Grid>
+                            {/*<input type="text"  name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                        </div>
+                        <div id="name-group">
+                            <label id="Q5L" className="title-input">עם אילו הצלחות נפגשתי בפעילות?</label>
+                            <Grid item xs={12}>
+                                {
+                                    <div>
+
+                                        <textarea dir="rtl" cols="70" name="q5" id="q5i" rows="5"
+                                                  placeholder={'התשובה שלך'}
+                                                  value={this.state.form.q5 ? (this.state.form.q5) : ('')}
+                                                  onChange={(e) => this.handleChange(e)} required/>
+
+
+                                    </div>
+                                }
+                            </Grid>
+                            {/*<input type="text"  name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                        </div>
+                        <div id="name-group">
+                            <label id="Q6L" className="title-input">עם אילו דילמות נפגשתי בפעילות?</label>
+                            <Grid item xs={12}>
+                                {
+                                    <div>
+
+                                        <textarea dir="rtl" cols="70" name="q6" id="q6i" rows="5"
+                                                  placeholder={'התשובה שלך'}
+                                                  value={this.state.form.q6 ? (this.state.form.q6) : ('')}
+                                                  onChange={(e) => this.handleChange(e)} required/>
+
+
+                                    </div>
+                                }
+                            </Grid>
+                            {/*<input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                        </div>
+                        <div id="name-group">
+                            <label id="Q7L" className="title-input" htmlFor="name">נקודות חשובות למפגש הבא:</label>
+                            <Grid item xs={12}>
+                                {
+                                    <div>
+
+                                        <textarea dir="rtl" cols="70" name="q7" id="q7i" rows="5"
+                                                  placeholder={'התשובה שלך'}
+                                                  value={this.state.form.q7 ? (this.state.form.q7) : ('')}
+                                                  onChange={(e) => this.handleChange(e)} required/>
+
+
+                                    </div>
+                                }
+                            </Grid>
+                            {/*<input type="text" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
+                        </div>
+                        <br/>
+                        <label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא
+                            הפעילות?</h4></label>
+                        <div>
+                            <RadioGroup
+                                aria-label="new"
+                                name="q8"
+                                id='q8i'
+                                // value={location}
+                                onChange={(e) => this.handleChange(e)}
+                                row={true}
+                            >
+                                <label id="insert-name" className="title-input" htmlFor="name">
+                                    <Radio id='q8i1' name="q8" value="1" label="במידה מועטה מאוד"/>
+                                    במידה מועטה מאוד
+                                </label>
+                                <label id="insert-name" className="title-input" htmlFor="name">
+                                    <Radio id='q8i2' name="q8" value="2" label="במידה מועטה"/>
+                                    במידה מועטה
+                                </label>
+                                <label id="insert-name" className="title-input" htmlFor="name">
+                                    <Radio id='q8i3' name="q8" value="3" label="במידה בינונית"/>
+                                    במידה בינונית
+                                </label>
+                                <label id="insert-name" className="title-input" htmlFor="name">
+                                    <Radio id='q8i4' name="q8" value="4" label="במידה רבה"/>
+                                    במידה רבה
+                                </label>
+
+                                <label id="insert-name" className="title-input" htmlFor="name">
+                                    <Radio id='q8i5' name="q8" value="5" label="במידה רבה מאוד"/>
+                                    במידה רבה מאוד
+                                </label>
+
+                            </RadioGroup>
+                        </div>
+                        <br/>
+                        <div id="name-group">
+                            <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה
+                                הבאה:</label>
+                            <Grid item xs={12}>
+                                {
+                                    <div>
+
+                                        <textarea dir="rtl" cols="70" name="q9" id="q9i" rows="5"
+                                                  placeholder={'התשובה שלך'}
+                                                  value={this.state.form.q9 ? (this.state.form.q9) : ('')}
+                                                  onChange={(e) => this.handleChange(e)} required/>
+
+
+                                    </div>
+                                }
+                            </Grid>
+                            {/*<input type="text" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
+                        </div>
+
                     </div>
-                }
-                <div dir="rtl">
-                    <label id="date"  className="title-input">הכנס את תאריך המפגש:</label>
-                    <input type="date"  id="insert-date" name="date" onChange={(e)=>this.handleChange(e)} required/>
-                    <div id="name-group">
-                        <label id="Q1L" className="title-input">נושא הפעילות:</label>
-                        <input type="text"  name="q1" id="q1i" placeholder={'התשובה שלך'} value={this.state.form.q1?(this.state.form.q1):('')} onChange={(e)=>{this.handleChange(e)}}  required/>
-                    </div>
-                    <div id="name-group">
-                        <label id="Q2L" className="title-input">מספר הפעילות:</label>
-                        <input type="text" name="q2" id="q2i" placeholder={'התשובה שלך'} value={this.state.form.q2?(this.state.form.q2):('') } onChange={(e)=>this.handleChange(e)}  required/>
-                    </div>
-                    <div id="name-group" >
-                        <label id="Q3L" className="title-input">מה היה בפעילות?</label>
-                        <Grid item xs={12}>
-                            {
-                                <div>
-                                    <textarea  dir="rtl" cols="70" name="q3" id="q3i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q3?(this.state.form.q3):('') } onChange={(e)=>this.handleChange(e)}  required/>
 
-                                </div>
-                            }
-                        </Grid>
-                        {/*<input type="text" name="q3" id="q3i" onChange={this.handleChange}  required/>*/}
-                    </div>
-                    <div id="name-group" >
-                        <label id="Q4L" className="title-input">עם איזה תחושה יצאתי מהפעילות?</label>
-                        <Grid item xs={12}>
-                            {
-                                <div>
-
-                                    <textarea  dir="rtl" cols="70" name="q4" id="q4i" rows="5"placeholder={'התשובה שלך'} value={this.state.form.q4?(this.state.form.q4):('') } onChange={(e)=>this.handleChange(e)}  required/>
-
-
-                                </div>
-                            }
-                        </Grid>
-                        {/*<input type="text"  name="q4" id="q4i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
-                    </div>
-                    <div id="name-group" >
-                        <label id="Q5L" className="title-input">עם אילו הצלחות נפגשתי בפעילות?</label>
-                        <Grid item xs={12}>
-                            {
-                                <div>
-
-                                    <textarea  dir="rtl" cols="70"  name="q5" id="q5i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q5?(this.state.form.q5):('') }  onChange={(e)=>this.handleChange(e)}  required/>
-
-
-                                </div>
-                            }
-                        </Grid>
-                        {/*<input type="text"  name="q5" id="q5i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
-                    </div>
-                    <div id="name-group" >
-                        <label id="Q6L" className="title-input">עם אילו דילמות נפגשתי בפעילות?</label>
-                        <Grid item xs={12}>
-                            {
-                                <div>
-
-                                    <textarea  dir="rtl" cols="70" name="q6" id="q6i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q6?(this.state.form.q6):('') } onChange={(e)=>this.handleChange(e)}  required/>
-
-
-                                </div>
-                            }
-                        </Grid>
-                        {/*<input type="text" name="q6" id="q6i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
-                    </div>
-                    <div id="name-group" >
-                        <label id="Q7L" className="title-input" htmlFor="name">נקודות חשובות למפגש הבא:</label>
-                        <Grid item xs={12}>
-                            {
-                                <div>
-
-                                    <textarea  dir="rtl" cols="70" name="q7" id="q7i" rows="5" placeholder={'התשובה שלך'} value={this.state.form.q7?(this.state.form.q7):('') } onChange={(e)=>this.handleChange(e)}  required/>
-
-
-                                </div>
-                            }
-                        </Grid>
-                        {/*<input type="text" name="q7" id="q7i" onChange={this.handleChange} placeholder="Your Answer" required/>*/}
-                    </div>
-                    <br/>
-                    <label id="insert-name" className="title-input"><h4>באיזו מידה אתה מרגיש שהצלחת להעביר את נושא הפעילות?</h4></label>
-                    <div>
-                        <RadioGroup
-                            aria-label="new"
-                            name="q8"
-                            id ='q8i'
-                            // value={location}
-                            onChange={(e)=>this.handleChange(e)}
-                            row={true}
-                        >
-                            <label id="insert-name" className="title-input" htmlFor="name">
-                                <Radio id='q8i1' name="q8" value="1"  label="במידה מועטה מאוד" />
-                                במידה מועטה מאוד
-                            </label>
-                            <label id="insert-name" className="title-input" htmlFor="name">
-                                <Radio id='q8i2' name="q8" value="2"  label="במידה מועטה" />
-                                במידה מועטה
-                            </label>
-                            <label id="insert-name" className="title-input" htmlFor="name">
-                                <Radio id='q8i3' name="q8" value="3"  label="במידה בינונית" />
-                                במידה בינונית
-                            </label>
-                            <label id="insert-name" className="title-input" htmlFor="name">
-                                <Radio id='q8i4' name="q8" value="4"   label="במידה רבה" />
-                                במידה רבה
-                            </label>
-
-                            <label id="insert-name" className="title-input" htmlFor="name" >
-                                <Radio id='q8i5' name="q8" value="5"  label="במידה רבה מאוד" />
-                                במידה רבה מאוד
-                            </label>
-
-                        </RadioGroup>
-                    </div>
-                    <br/>
-                    <div id="name-group" >
-                        <label id="insert-name" className="title-input" htmlFor="name">שאלות ומחשבות לשיחת הדרכה הבאה:</label>
-                        <Grid item xs={12}>
-                            {
-                                <div>
-
-                                    <textarea  dir="rtl" cols="70" name="q9" id="q9i"  rows="5"placeholder={'התשובה שלך'} value={this.state.form.q9?(this.state.form.q9):('') } onChange={(e)=>this.handleChange(e)}  required/>
-
-
-                                </div>
-                            }
-                        </Grid>
-                        {/*<input type="text" name="q9" id="q9i" onChange={this.handleChange} placeholder="Your Answer" minLength="10" required/>*/}
-                    </div>
-
+                    <button id="sendData" className="btn btn-info" onClick={() => {
+                        this.sendfeedback(this.state.form)
+                    }}>שלח משוב
+                    </button>
+                    <button id="go-back" className="btn btn-info" onClick={() => {
+                        this.BackPage()
+                    }}>חזור לתפריט
+                    </button>
                 </div>
+            )
+        }
+        else
+            return (<div> {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {this.state.spinner[1]}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={120}
+                                    color={"#123abc"}
 
-                <button id="sendData" className="btn btn-info" onClick={()=>{this.sendfeedback(this.state.form)}}>שלח משוב</button>
-                <button id="go-back" className="btn btn-info"  onClick={()=>{BackPage(this.props,this.state.user)}}>חזור לתפריט</button>
-</div>
-        )
+                        />
+                    </div>
+                </div>
+            }</div>)
+    }
+
+    notfound()
+    {
+        this.props.history.push({
+            pathname: `/404`,
+            data: this.state.user // your data array of objects
+        })
+    }
+    BackPage()
+    {
+        this.props.history.push({
+            pathname: `/Guide/${this.state.user.uid}`,
+            data: this.state.user // your data array of objects
+        })
     }
 
 }
