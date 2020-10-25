@@ -46,9 +46,9 @@ class FeedbackGuide extends Component {
 
 
 
-        console.log("in 1")
+        // console.log("in 1")
         var Teamcollection = nameTeams.docs.map( async function(doc) {
-            console.log("in 2")
+            // console.log("in 2")
             var dates = await db.collection("Teams").doc(doc.id).collection("Dates")
                 .where('date','>=',from)
                 .where('date','<=',to)
@@ -71,12 +71,12 @@ class FeedbackGuide extends Component {
 
         Promise.all(Teamcollection).then(res => {
             res.forEach(item=>{
-                console.log("in 3")
+                // console.log("in 3")
                 if(item)
                     options.push({ value: item, label:  item[0].data().name})
             })
             this.setState({options:options})
-            console.log("in 4")
+            // console.log("in 4")
             this.loadSpinner(false,"")
         })
 
@@ -103,7 +103,7 @@ class FeedbackGuide extends Component {
         ];
 
         reportGuide.map(report=>{
-            console.log(reportGuide)
+            // console.log(reportGuide)
             csvData.push([
                 report.form.team,
                 report.form.name,
@@ -126,7 +126,7 @@ class FeedbackGuide extends Component {
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        console.log(href)
+        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
@@ -225,7 +225,7 @@ class FeedbackGuide extends Component {
 
                                 <Grid item xs={6} hidden={!this.state.options}>
                                     <Select id = 'select'  placeholder={" בחר קבוצה "} options={this.state.options} onChange={(e)=>{
-                                        console.log(e.label,e.value);
+                                        // console.log(e.label,e.value);
                                         this.setState({team:e.value,teamName:e.label})
                                     }} required/>
                                 </Grid>
@@ -275,7 +275,7 @@ class FeedbackGuide extends Component {
             </div>
         )
         } else {
-            console.log(this.state.spinner)
+            // console.log(this.state.spinner)
             return (
                 <div>
                     {!this.state.spinner[0] ? "" :
@@ -300,21 +300,21 @@ class FeedbackGuide extends Component {
 
     feedbacks(form,index)
     {
-        console.log(csvData)
-        console.log(form)
+        // console.log(csvData)
+        // console.log(form)
         if(index>=this.state.reportGuide.length)
         {
             return
         }
-        console.log(this.state.show)
+        // console.log(this.state.show)
         if(form && this.state.show) {
-            console.log(form)
+            // console.log(form)
             var reportGuide = this.state.reportGuide[index].form
             var date =form.date.toDate()
             var day = date.getDate()
             var month = date.getMonth()+1
             var year = date.getFullYear()
-            console.log(reportGuide)
+            // console.log(reportGuide)
             return (
                 <div id="name-group" className="form-group" dir="rtl">
                     <div className="report" id="report">

@@ -31,18 +31,18 @@ class SignUp extends React.Component {
 
 
     async  GetTeams() {
-        console.log("בדיקה")
+        // console.log("בדיקה")
 
         if (!op) {
             op=true
             var nameTeams = await db.collection("Teams")
                 .orderBy('name','asc')
                 .get()
-            console.log(nameTeams)
+            // console.log(nameTeams)
             nameTeams.forEach(doc => {
                 options.push({value: doc.ref, label: doc.data().name})
             })
-            console.log(options)
+            // console.log(options)
 
         }
     }
@@ -51,7 +51,7 @@ class SignUp extends React.Component {
         try {
             // await firebase.register(fname, email, password)
 
-            console.log(this.state)
+            // console.log(this.state)
             if(!this.state.fname||!this.state.lname||!this.state.email||!this.state.team||!this.state.phone) {
                 alert("נא למלא את כל השדות החובה")
                 return
@@ -193,7 +193,7 @@ class SignUp extends React.Component {
                         </Grid>
                         <Grid item xs={12} hidden={options.length<=0}>
                             <Select  placeholder={" בחר קבוצה " }options={options} onChange={e=>{
-                                console.log(e.label,e.value);
+                                // console.log(e.label,e.value);
                                 this.setState({team:e.value,teamName:e.label})
                             }} required/>
                         </Grid>

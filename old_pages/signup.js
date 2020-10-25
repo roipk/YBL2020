@@ -34,7 +34,7 @@ function signup() {
 
 
 function sendDataToFirebase() {
-  console.log("in")
+  // console.log("in")
   var name = signup_form.fullName.value;
   var phoneNum = signup_form.phoneNumber.value;
   var email= signup_form.email.value;

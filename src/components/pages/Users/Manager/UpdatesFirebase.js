@@ -179,7 +179,7 @@ class UpdatesFirebase extends Component {
                     </Grid>
                     <Grid item xs={8} hidden={!this.state.replaceTeamName}>
                         <Select  placeholder={" בחר קבוצה להחלפת שם "} options={options} onChange={(e)=>{
-                            console.log(e.label,e.value);
+                            // console.log(e.label,e.value);
                             this.setState({teamPath:e.value,teamName:e.label})
                         }} required/>
                     </Grid>
@@ -195,7 +195,7 @@ class UpdatesFirebase extends Component {
                             }
                             else
                             {
-                                console.log("שם זהה לא ניתן לשנות")
+                                alert("שם זהה לא ניתן לשנות")
                             }
                         }}>אישור החלפה</button>
                     </Grid>
@@ -207,18 +207,18 @@ class UpdatesFirebase extends Component {
                     </Grid>
                     <Grid item xs={8} hidden={!this.state.delete}>
                         <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
-                            console.log(e.label,e.value);
+                            // console.log(e.label,e.value);
                             this.setState({teamPath:(e.value).path,teamName:e.label})
                         }} required/>
                     </Grid>
                     <Grid item xs={4} hidden={!this.state.delete} >
                         <button onClick={async ()=>{
-                            console.log(this.state.teamPath)
+                            // console.log(this.state.teamPath)
                             if(this.state.teamPath) {
                                 await this.setState({delete: false})
                                 var d = await db.doc(this.state.teamPath).get()
                                 if(d.data().guide) {
-                                    console.log("team on guide remove")
+                                    // console.log("team on guide remove")
                                     await d.data().guide.update({
                                         team: null,
                                         teamName: null
@@ -241,7 +241,7 @@ class UpdatesFirebase extends Component {
                                 })
 
                                 await db.doc(this.state.teamPath).delete().then(function() {
-                                    console.log("הקבוצה נמחקה בהצלחה!");
+                                   alert("הקבוצה נמחקה בהצלחה!");
                                 }).catch(function(error) {
                                     console.error("Error removing document: ", error);
                                 });
@@ -250,7 +250,7 @@ class UpdatesFirebase extends Component {
                             }
                             else
                             {
-                                console.log("בחר קבוצה")
+                                // console.log("בחר קבוצה")
                             }
                         }}>מחק</button>
                     </Grid>
@@ -269,7 +269,7 @@ class UpdatesFirebase extends Component {
                                             נמצאו:{this.state.Guides.length} מדריכים
                                             <Select placeholder={" מצא מדריך "} options={guidesOptions}
                                                     onChange={(e) => {
-                                                        console.log(e.label, e.value);
+                                                        // console.log(e.label, e.value);
                                                         this.setState({Guides: [e.value]})
                                                     }}/>
 
@@ -316,7 +316,7 @@ class UpdatesFirebase extends Component {
                                             נמצאו:{this.state.Students.length} חניכים
                                             <Select placeholder={" מצא חניך "} options={studentsOptions}
                                                     onChange={(e) => {
-                                                        console.log(e.label, e.value);
+                                                        // console.log(e.label, e.value);
                                                         this.setState({Students: [e.value]})
                                                     }}/>
 
@@ -360,7 +360,7 @@ class UpdatesFirebase extends Component {
                             {
                                 (this.state.showStudentWithoutTeam && this.state.StudentEmpty )?(<div> נמצאו: {this.state.StudentEmpty.length} חניכים
                                     <Select  placeholder={" מצא חניך "} options={emptyStudentsOptions} onChange={(e)=>{
-                                        console.log(e.label,e.value);
+                                        // console.log(e.label,e.value);
                                         this.setState({StudentEmpty:[e.value]})
                                     }} />
                                 </div>):('')
@@ -389,7 +389,7 @@ class UpdatesFirebase extends Component {
                             {
                                 (this.state.showGuideWithoutTeam && this.state.GuidesEmpty )?(<div> נמצאו: {this.state.GuidesEmpty.length} מדריכים
                                     <Select  placeholder={" מצא מדריך "} options={emptyGuidesOptions} onChange={(e)=>{
-                                        console.log(e.label,e.value);
+                                        // console.log(e.label,e.value);
                                         this.setState({GuidesEmpty:[e.value]})
                                     }} />
                                 </div>):('')
@@ -418,7 +418,7 @@ class UpdatesFirebase extends Component {
                             {
                                 (this.state.showTeamWithoutGuide && this.state.TeamEmpty )?(<div> נמצאו: {this.state.TeamEmpty.length} קבוצות
                                     <Select  placeholder={" מצא קבוצה "} options={emptyTeamOptions} onChange={(e)=>{
-                                        console.log(e.label,e.value);
+                                        // console.log(e.label,e.value);
                                         this.setState({TeamEmpty:[e.value]})
                                     }} />
                                 </div>):('')
@@ -455,7 +455,7 @@ class UpdatesFirebase extends Component {
 
         )
         } else {
-            console.log(this.state.spinner)
+            // console.log(this.state.spinner)
             return (
                 <div>
                     {!this.state.spinner[0] ? "" :
@@ -499,7 +499,7 @@ class UpdatesFirebase extends Component {
             this.loadSpinner(false,"")
             return
         }
-        console.log(user)
+        // console.log(user)
         var temp = user
         if (user === 'guides')
             guidesOptions = []
@@ -565,26 +565,26 @@ class UpdatesFirebase extends Component {
         }
 
         this.loadSpinner(false,"")
-        console.log(allUsers)
+        // console.log(allUsers)
     }
 
 
     async handleSubmit(event)
     {
         this.loadSpinner(true,"מיבא קבוצות")
-        console.log(this.state.teamPath)
+        // console.log(this.state.teamPath)
         if(!this.state.date) {
             this.loadSpinner(false,"")
             return;
         }
-        console.log("in");
+        // console.log("in");
         var team = await db.collection("Teams").doc(this.state.teamPath).get();
-        console.log(team)
+        // console.log(team)
         this.loadSpinner(false,"")
     }
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        console.log(href)
+        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
@@ -649,7 +649,7 @@ class UpdatesFirebase extends Component {
                         <Grid container spacing={2}>
                             <Grid item xs={8}>
                                 <Select  placeholder={" שיבוץ מדריך "} options={emptyGuidesOptions} onChange={(e)=>{
-                                    console.log(e.label,e.value);
+                                    // console.log(e.label,e.value);
                                     this.setState({emtpyGuideTeamPath:e.value,emtpyguideTeamName:e.label})
                                 }} />
                             </Grid>
@@ -679,8 +679,8 @@ class UpdatesFirebase extends Component {
                         <Grid container spacing={2}>
                             <Grid item xs={8}>
                                 <Select  placeholder={" החלף קבוצה "} options={options} onChange={(e)=>{
-                                    console.log(e.label,e.value);
-                                    user.options = e.label
+                                    // console.log(e.label,e.value);
+                                    user.optionss = e.label
                                     var teamPath = this.state.guideTeamPath
                                     var teamName = this.state.guideTeamName
                                     if(teamPath && teamName) {
@@ -706,32 +706,32 @@ class UpdatesFirebase extends Component {
                             <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
                                 <button onClick={async ()=>{
                                     this.loadSpinner(true,"מעדכן נתונים")
-                                    console.log('in1')
+                                    // console.log('in1')
                                     if(user.type==='guides' || user.type==='testers') {
-                                        console.log('in2')
-                                        console.log(user.uid)
+                                        // console.log('in2')
+                                        // console.log(user.uid)
 
 
                                         try{
                                             var updateTeam;
                                             var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
-                                            console.log('in5')
-                                            console.log(oldGuide.data())
+                                            // console.log('in5')
+                                            // console.log(oldGuide.data())
 
                                             await db.doc((oldGuide.data().guide).path).update({
                                                 teamName:null,
                                                 team:null
                                             })
-                                            console.log('in6')
+                                            // console.log('in6')
 
                                         }
                                         catch(e){
-                                            console.log('in7')
+                                            // console.log('in7')
                                             console.log('לקבוצה לא היה מדריך לפני')
                                             console.log(e)
                                         }
                                         try{
-                                            console.log(user.team.id)
+                                            // console.log(user.team.id)
                                             await db.collection('Teams').doc(user.team.id).update({
                                                 guide: null
                                             })
@@ -740,13 +740,13 @@ class UpdatesFirebase extends Component {
                                             console.log("למדריך לא הייתה קבוצה לפני")
                                         }
                                         updateTeam = await db.collection('guides').doc(user.uid)
-                                        console.log('in3')
+                                        // console.log('in3')
                                         await updateTeam.update({
                                             teamName:this.state.guideTeamName[index],
                                             team:this.state.guideTeamPath[index]
                                         })
 
-                                        console.log(this.state.guideTeamPath)
+                                        // console.log(this.state.guideTeamPath)
                                         await db.collection('Teams').doc(this.state.guideTeamPath[index].id).update({
                                             guide: updateTeam
                                         })
@@ -754,14 +754,14 @@ class UpdatesFirebase extends Component {
                                     }
                                     else
                                     {
-                                        console.log('in8')
-                                        console.log(user.uid)
+                                        // console.log('in8')
+                                        // console.log(user.uid)
                                         updateTeam = await db.collection('students').doc(user.uid)
                                         updateTeam.update({
                                             teamName:this.state.guideTeamName[index],
                                             team:this.state.guideTeamPath[index]
                                         })
-                                        console.log('in9')
+                                        // console.log('in9')
                                         this.getAllUsers('students')
                                     }
                                     this.loadSpinner(false,'')

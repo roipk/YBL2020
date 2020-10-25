@@ -20,7 +20,7 @@ export function NextPage(prop,path,data)
         pathname: `${prop.location.pathname}/${path}`,
         data: data,
     })
-    console.log(data)
+    // console.log(data)
 }
 
 
@@ -49,7 +49,7 @@ class UserPage extends React.Component {
             if(user)
             {
 
-                console.log(user)
+                // console.log(user)
                 var type = await getUser(user)
                 await this.setState({
                     isLoad: true,

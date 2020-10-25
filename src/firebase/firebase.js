@@ -55,11 +55,11 @@ export default firebase;
 //         console.log('Error creating new user:', error);
 //     });
 
-db.collection("Teams").doc().get().then(res=>{
-    console.log(res)
-}).catch(e=>{
-    console.log(e)
-})
+// db.collection("Teams").doc().get().then(res=>{
+//     // console.log(res)
+// }).catch(e=>{
+//     console.log(e)
+// })
 
 export async function CreateNewUser(email,phone) {
     var res = await auth.createUserWithEmailAndPassword(email,phone)
@@ -79,7 +79,7 @@ export async function DeleteUser(uid) {
 export async function CreateUser(user) {
 
 
-    console.log(user)
+    // console.log(user)
     // var res = await auth.createUserWithEmailAndPassword(user.email,user.phone)
     // res.user.updateProfile({displayName:user.fname+" "+ user.lname})
 
@@ -125,66 +125,66 @@ export async function signOut() {
 
 export async function getGuide(uid) {
     var guide = await db.collection("guides").doc(uid);
-    console.log(guide);
+    // console.log(guide);
     return guide;
 }
 
 export async function getGuideData(uid) {
     var guideData = await (await db.collection("guides").doc(uid).get()).data();
-    console.log(guideData);
+    // console.log(guideData);
     return guideData;
 }
 
 export async function getGuideFormByDate(uid, date) {
     var guideData = await (await db.collection("guides").doc(uid).collection("comes").doc(date).get()).data();
-    console.log(guideData);
+    // console.log(guideData);
     return guideData;
 }
 
 export async function getPathData(path) {
     var guideData =await (await db.doc(path).get()).data();
-    console.log(guideData);
+    // console.log(guideData);
     return guideData;
 }
 
 export async function getGuideForms(uid) {
     var forms = [];
     var guideData = await db.collection("guides").doc(uid).collection("comes").get();
-    console.log(guideData.docs[0].data());
+    // console.log(guideData.docs[0].data());
     guideData.docs.forEach(doc=>{
         forms.push(doc.data());
     })
-    console.log(forms);
+    // console.log(forms);
     return forms;
 }
 
 export async function getStudent(uid) {
     var student = await db.collection("students").doc(uid);
-    console.log(student);
+    // console.log(student);
     return student;
 }
 
 export async function getStudentData(uid) {
-    console.log(uid)
+    // console.log(uid)
     var studentData = await (await db.collection("students").doc(uid).get()).data();
-    console.log(studentData);
+    // console.log(studentData);
     return studentData;
 }
 
 export async function getStudentFormByDate(uid, date) {
     var studentFormByDate = await (await db.collection("students").doc(uid).collection("comes").doc(date).get()).data();
-    console.log(studentFormByDate);
+    // console.log(studentFormByDate);
     return studentFormByDate;
 }
 
 export async function getStudentForms(uid) {
     var forms = [];
     var studentData = await db.collection("students").doc(uid).collection("comes").get();
-    console.log(studentData.docs[0].data());
+    // console.log(studentData.docs[0].data());
     studentData.docs.forEach(doc=>{
         forms.push(doc.data());
     })
-    console.log(forms);
+    // console.log(forms);
     return forms;
 }
 
@@ -196,8 +196,8 @@ export async function getUser(user)
     var students = await db.collection('students').doc(user.uid).get()
     var managers = await db.collection('managers').doc(user.uid).get()
 
-    console.log(user)
-    console.log(testers.data())
+    // console.log(user)
+    // console.log(testers.data())
     if(testers.exists)
         return 'Tester'
     else if(managers.exists)
@@ -213,19 +213,19 @@ export async function getUser(user)
 
 export async function getManager(uid) {
     var manager = await db.collection("managers").doc(uid);
-    console.log(manager);
+    // console.log(manager);
     return manager;
 }
 
 export async function getManagerData(uid) {
     var managerData = await (await db.collection("managers").doc(uid).get()).data();
-    console.log(managerData);
+    // console.log(managerData);
     return managerData;
 }
 export async function getTeamFeedbackByDate(teamPath,date) {
     var team = await db.collection("Teams").doc(teamPath).collection("Dates").doc(date).get();
     var teamFeedback=team.data()
-    console.log(teamFeedback);
+    // console.log(teamFeedback);
     return teamFeedback;
 }
 //

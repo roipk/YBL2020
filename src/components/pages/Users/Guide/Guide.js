@@ -37,7 +37,7 @@ class Guide extends React.Component {
             }
         };
 
-        console.log(props.location)
+        // console.log(props.location)
         // getPathData("Teams/FgMtMMfD72JGd2qYJ9VD/Dates/2020-10-10")
     }
 
@@ -53,13 +53,13 @@ class Guide extends React.Component {
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        console.log(href)
+        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
                 var type = await getUser(user)
-                console.log(user)
-                console.log(type)
+                // console.log(user)
+                // console.log(type)
 
                 // if(href[4] === user.uid && (href[3] === type||type==='Tester'))
                 // {

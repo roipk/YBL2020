@@ -59,7 +59,7 @@ if(this.state.loadPage){
                             <label id="date" className="title-input">הכנס את תאריך המפגש:</label>
                             <input type="date" className="form-control" id="insert-date" name="date" onChange={this.handleChangeDate} required/>
                             <Select  placeholder={" בחר קבוצה "} options={options} onChange={(e)=>{
-                                console.log(e.label,e.value);
+                                // console.log(e.label,e.value);
                                 this.setState({teamPath:e.value})
                             }} required/>
 
@@ -86,7 +86,7 @@ if(this.state.loadPage){
 
         )
 } else {
-    console.log(this.state.spinner)
+    // console.log(this.state.spinner)
     return (
         <div>
             {!this.state.spinner[0] ? "" :
@@ -135,7 +135,7 @@ if(this.state.loadPage){
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        console.log(href)
+        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {

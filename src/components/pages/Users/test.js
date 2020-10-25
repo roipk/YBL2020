@@ -16,7 +16,7 @@ class test extends React.Component {
     }
 
    async componentDidMount() {
-        console.log("work")
+        // console.log("work")
        auth.onAuthStateChanged(user=>{
            if(user)
            {
@@ -24,7 +24,7 @@ class test extends React.Component {
                    wait:false,
                    user:user,
                })
-               console.log("in")
+               // console.log("in")
            }
            else {
                this.setState({

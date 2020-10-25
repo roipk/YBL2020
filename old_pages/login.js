@@ -1,7 +1,7 @@
 // import {homepage} from './home.js'
 
 function login(permission) {
-    console.log(permission)
+    // console.log(permission)
     $("#data-change").replaceWith(
       `
       <section id="data-change">
@@ -97,9 +97,9 @@ function loginEmail(permission) {
   function enter(promise) {
       var name = loginPhone_form.phoneNumber.value;
       var phoneNum = loginPhone_form.password.value;
-      console.log(name)
-      console.log(phoneNum)
-      console.log(promise)
+      // console.log(name)
+      // console.log(phoneNum)
+      // console.log(promise)
       guideLoadMenu()
 
 }

@@ -20,7 +20,7 @@ class Profile extends React.Component {
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        console.log(href)
+        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
@@ -89,7 +89,7 @@ class Profile extends React.Component {
                 phone:manager.phone,
 
             })
-        console.log(this.state)
+        // console.log(this.state)
     }
 
     async sendData(){
@@ -108,10 +108,10 @@ class Profile extends React.Component {
             alert("אנא מלא את כל הנתונים")
             return
         }
-        console.log(this.state)
+        // console.log(this.state)
         var user=(auth.currentUser).uid
         var student = await getStudent(user)
-        console.log(student)
+        // console.log(student)
         var updateStudent = {
             fname:this.state.fname,
             lname:this.state.lname,

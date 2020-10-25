@@ -29,7 +29,7 @@ var db = firebase.firestore();
 async function writeUserData(phone,name,email,pass) {
 
     var user =await checkIfUserExist(phone);
-    console.log(user);
+    // console.log(user);
     if (!user) {
 
         const data = {

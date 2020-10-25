@@ -47,7 +47,7 @@ class TestGuide extends React.Component {
             if(user)
             {
                 var type = await getUser(user)
-                console.log(type)
+                // console.log(type)
                 if(type)
                 {
                     this.setState({
@@ -65,7 +65,7 @@ class TestGuide extends React.Component {
                 }
                 // console.log(tester.exists)
                 // console.log(user)
-                console.log("change user")
+                // console.log("change user")
                 // this.setState({
                 //     isLoad:true,
                 //     user:user,

@@ -93,7 +93,7 @@ class GuideFeedback extends React.Component {
                 alert("המשוב לתאריך הנוכחי נחתם נא לבחור תאריך אחר")
                 document.getElementById(e.id).value=''
                 form = this.state.form;
-                console.log(name);
+                // console.log(name);
 
                 form[name] = '';
                 this.setState({form:form})
@@ -155,7 +155,7 @@ class GuideFeedback extends React.Component {
         }
         this.loadSpinner(true,"מעדכן נתונים חדשים")
         this.setState({prevDate:this.state.date});
-        console.log("in");
+        // console.log("in");
         var team = (await db.collection("guides").doc(auth.currentUser.uid).get()).data().Team;
         const collection = await db.collection('students').where("team","==",team).get()
         const Students = [];
@@ -168,7 +168,7 @@ class GuideFeedback extends React.Component {
         })
 
         Promise.all(collectionPromisesTeam).then(res => {
-            console.log("end prommis");
+            // console.log("end prommis");
             res.forEach(doc=>{
                 var approv = false;
                 var feedback = ''
@@ -181,7 +181,7 @@ class GuideFeedback extends React.Component {
                 Students.push({data,approv,ref,feedback})
             })
             let i;
-            console.log(Students.length)
+            // console.log(Students.length)
             this.setState({viewStudent: !this.state.viewStudent});
             for (i=0;i<Students.length;i++)
             {
@@ -213,7 +213,7 @@ class GuideFeedback extends React.Component {
         var path = auth.currentUser.uid
         try{
             var guide = await db.collection("guides").doc(path)
-            console.log(form)
+            // console.log(form)
             var newDate = await guide.collection("comes").doc(form.date);
             newDate.set({
                 form: form,
@@ -245,9 +245,9 @@ class GuideFeedback extends React.Component {
             fullDate.setFullYear(year,month-1,day)
             // date.setUTCFullYear(year,month,day)
             // date.setHours(0,0,0)
-            console.log(doc)
+            // console.log(doc)
                 if(!doc.exists){
-                    console.log("not exist")
+                    // console.log("not exist")
                     newDate.set({
                         date:fullDate,
                         reportGuide: formGuide,
@@ -264,7 +264,7 @@ class GuideFeedback extends React.Component {
                     })
                 }
                 else {
-                    console.log(formGuide)
+                    // console.log(formGuide)
                     newDate.update({
                         date:fullDate,
                         reportGuide: formGuide,
@@ -281,17 +281,17 @@ class GuideFeedback extends React.Component {
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        console.log(href)
+        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
 
-                console.log("in1")
+                // console.log("in1")
                 var type = await getUser(user)
-                console.log(type)
+                // console.log(type)
                 if(href[4] === user.uid && (href[3] === type||type==='Tester'))
                 {
-                    console.log("in2")
+                    // console.log("in2")
                     this.setState({
                         isLoad: true,
                         user: user,
@@ -301,7 +301,7 @@ class GuideFeedback extends React.Component {
                 }
                 else
                 {
-                    console.log("in3")
+                    // console.log("in3")
                     this.notfound()
                     return
                 }
@@ -315,7 +315,7 @@ class GuideFeedback extends React.Component {
                 return;
 
             }
-            console.log("in4")
+            // console.log("in4")
             var teamName = await db.collection("guides").doc(auth.currentUser.uid).get()
             if(!teamName.data().teamName)
             {

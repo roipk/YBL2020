@@ -25,7 +25,7 @@ class Manager extends React.Component {
 
     async componentDidMount() {
         var href =  window.location.href.split("/",5)
-        console.log(href)
+        // console.log(href)
         auth.onAuthStateChanged(async user=>{
             if(user)
             {
@@ -141,7 +141,7 @@ class Manager extends React.Component {
                 </div>
             );
         } else {
-            console.log(this.state.spinner)
+            // console.log(this.state.spinner)
             return (
                 <div>
                     {!this.state.spinner[0] ? "" :
