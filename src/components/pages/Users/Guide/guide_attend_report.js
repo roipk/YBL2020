@@ -107,7 +107,7 @@ class GuideReports extends React.Component {
 
     async handleSubmit(event)
     {
-        this.loadSpinner(true,"שומר נתונים")
+        this.loadSpinner(true,"מייבא נתונים")
         if(!this.state.date) {
             this.loadSpinner(false,"")
             return;
@@ -479,7 +479,7 @@ class GuideReports extends React.Component {
                         }
                     }
 
-                    console.log(" start update")
+
                     await updateTeamDateSet.update({
                         // guideName: team.fname + ' ' + team.lname,
                         postStudents: postStudents,
@@ -512,25 +512,39 @@ class GuideReports extends React.Component {
         if(dataStudent && dataStudent.canUpdate)
         {
 
-            if(feedback===undefined)
+            if(feedback === undefined)
                 feedback=""
             dataStudent.canUpdate = false
-            console.log(form)
-            await form.update({
-                approved: approved,
-                form:dataStudent,
-                feedbackGuide: feedback,
-                guideName: team.fname + ' ' + team.lname
-            })
+            if(approved === undefined || dataStudent === undefined || feedback === undefined)
+            {
+                console.log(student)
+                alert("נמצאה בעיית נתונים אצל החניך " + student.data.fname+" "+student.data.lname+" לא נשמרו נתונים עבורו ")
+            }
+            else {
+                await form.update({
+                    approved: approved,
+                    form: dataStudent,
+                    feedbackGuide: feedback,
+                    guideName: team.fname + ' ' + team.lname
+                }).catch(err => {
+                    console.log("err")
+                    console.log(err)
+                })
+            }
         }
         else {
-            if(feedback===undefined)
-                feedback=""
-            await form.set({
-                approved: approved,
-                feedbackGuide: feedback,
-                guideName: team.fname + ' ' + team.lname
-            }, {merge: true})
+            if (feedback === undefined)
+                feedback = ""
+            if (approved === undefined || dataStudent === undefined || feedback === undefined) {
+                console.log(student)
+                alert("נמצאה בעיית נתונים אצל החניך " + student.data.fname + " " + student.data.lname +" לא נשמרו נתונים עבורו ")
+            } else {
+                await form.set({
+                    approved: approved,
+                    feedbackGuide: feedback,
+                    guideName: team.fname + ' ' + team.lname
+                }, {merge: true})
+            }
         }
         student.originFeedback = student.feedback
         student.originCheckBox = student.approv
