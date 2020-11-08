@@ -171,6 +171,7 @@ export async function getStudentData(uid) {
     return studentData;
 }
 
+
 export async function getStudentFormByDate(uid, date) {
     var studentFormByDate = await (await db.collection("students").doc(uid).collection("comes").doc(date).get()).data();
     // console.log(studentFormByDate);
@@ -195,10 +196,13 @@ export async function getUser(user)
     var guides = await db.collection('guides').doc(user.uid).get()
     var students = await db.collection('students').doc(user.uid).get()
     var managers = await db.collection('managers').doc(user.uid).get()
+    var wait = await db.collection('waitforapproval').doc(user.uid).get()
 
     // console.log(user)
     // console.log(testers.data())
-    if(testers.exists)
+    if(wait.exists)
+        return 'wait'
+    else if(testers.exists)
         return 'Tester'
     else if(managers.exists)
         return 'Manager'

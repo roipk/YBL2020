@@ -479,14 +479,15 @@ class GuideReports extends React.Component {
                         }
                     }
 
-                    // console.log(formStudents)
-                    updateTeamDateSet.update({
+                    console.log(" start update")
+                    await updateTeamDateSet.update({
                         // guideName: team.fname + ' ' + team.lname,
                         postStudents: postStudents,
                         feedbackToStudents: feedbackToStudents,
                         studentsComes:studentsComes,
                         formStudents: formStudents
                     })
+
 
                 }
             }
@@ -508,18 +509,23 @@ class GuideReports extends React.Component {
             await updateTeamDateSet.set({feedbackToStudents:newfeedbacks},{merge:true});
         }
 
-
         if(dataStudent && dataStudent.canUpdate)
         {
+
+            if(feedback===undefined)
+                feedback=""
             dataStudent.canUpdate = false
-            await form.set({
+            console.log(form)
+            await form.update({
                 approved: approved,
                 form:dataStudent,
                 feedbackGuide: feedback,
                 guideName: team.fname + ' ' + team.lname
-            }, {merge: true})
+            })
         }
         else {
+            if(feedback===undefined)
+                feedback=""
             await form.set({
                 approved: approved,
                 feedbackGuide: feedback,

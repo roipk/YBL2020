@@ -28,6 +28,7 @@ import StudentFeedback from "./components/pages/Users/Student/stud_feedback";
 import Profile from "./components/pages/Users/profile";
 import GuideReports from "./components/pages/Users/Guide/guide_attend_report";
 import GuideFeedback from "./components/pages/Users/Guide/guide_feedback";
+import Wait from "./components/pages/Users/await";
 
 function LoadPage() {
     return (
@@ -39,7 +40,7 @@ function LoadPage() {
                     {/*</Route>*/}
 
                     <Route exact path="/" component={HomePage} />
-
+                    <Route exact path="/wait/:id" component={Wait} />
                     <Route exact path="/Login" component={Login} />
                     <Route exact path="/Login/:404" component={notFound} />
                     <Route exact path="/resetPassword" component={resetPassword} />

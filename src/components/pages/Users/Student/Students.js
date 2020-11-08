@@ -34,6 +34,12 @@ class Student extends React.Component {
             {
 
                 var type = await getUser(user)
+                if(type === "wait")
+                {
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
                 if(href[4] === user.uid && (href[3] === type||type==='Tester'))
                 {
                     this.setState({

@@ -58,11 +58,16 @@ class Guide extends React.Component {
             if(user)
             {
                 var type = await getUser(user)
-                // console.log(user)
-                // console.log(type)
 
-                // if(href[4] === user.uid && (href[3] === type||type==='Tester'))
-                // {
+                if(type === "wait")
+                {
+                    alert('המנהל עדיין לא אישר את הבקשה')
+                    window.location.href = '/Login';
+                    return
+                }
+
+                if(href[4] === user.uid && (href[3] === type||type==='Tester'))
+                {
                     this.setState({
                         isLoad: true,
                         user: user,
@@ -72,13 +77,13 @@ class Guide extends React.Component {
                     this.setState({loadPage:true})
                     this.render()
                     return
-                // }
-                // else
-                // {
+                }
+                else
+                {
 
-                    // this.notfound()
-                    // return
-                // }
+                    this.notfound()
+                    return
+                }
 
             }
             else {

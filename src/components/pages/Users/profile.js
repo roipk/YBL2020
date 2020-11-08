@@ -1,5 +1,12 @@
 import React from "react";
-import {auth, getStudentData, getStudent, getGuide, getManager, getUser} from '../../../firebase/firebase'
+import {
+    auth,
+    getStudentData,
+    getStudent,
+    getUser,
+    getGuideData,
+    getManagerData, getGuide, getManager
+} from '../../../firebase/firebase'
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -14,6 +21,7 @@ class Profile extends React.Component {
             fname:'',
             lname:'',
             phone:'',
+            type:''
         };
     }
 
@@ -63,33 +71,39 @@ class Profile extends React.Component {
     }
 
     async getDate() {
-        var user=(auth.currentUser).uid
+        var user = (auth.currentUser).uid
         //check if student or guide
         var student = await getStudentData(user)
-        var guide = await getGuide(user)
-        var manager = await getManager(user)
-        if(student)
+        var guide = await getGuideData(user)
+        var manager = await getManagerData(user)
+        console.log(student)
+        console.log(guide)
+        console.log(manager)
+        if (student) {
+
             this.setState({
-                fname:student.fname,
-                lname:student.lname,
-                phone:student.phone,
+                fname: student.fname,
+                lname: student.lname,
+                phone: student.phone,
 
             })
-        else if(guide)
+        } else if (guide) {
             this.setState({
-                fname:guide.fname,
-                lname:guide.lname,
-                phone:guide.phone,
+                fname: guide.fname,
+                lname: guide.lname,
+                phone: guide.phone,
 
             })
-        else if(manager)
+        } else if (manager) {
+
             this.setState({
-                fname:manager.fname,
-                lname:manager.lname,
-                phone:manager.phone,
+                fname: manager.fname,
+                lname: manager.lname,
+                phone: manager.phone,
 
             })
-        // console.log(this.state)
+            // console.log(this.state)
+        }
     }
 
     async sendData(){
@@ -98,10 +112,11 @@ class Profile extends React.Component {
                 alert("הסיסמא ואימות הסיסמא לא תואמים")
                 return
             }
-            else if((this.state.password).length <6){
+            else if((this.state.password).length < 6){
                 alert("הסיסמא צריכה להיות יותר מ6 תווים")
                 return
             }
+            console.log(this.state.password)
             auth.currentUser.updatePassword(this.state.password)
         }
         else if((!this.state.password && this.state.Vpassword)||(this.state.password && !this.state.Vpassword)){
@@ -110,7 +125,18 @@ class Profile extends React.Component {
         }
         // console.log(this.state)
         var user=(auth.currentUser).uid
-        var student = await getStudent(user)
+        if(this.state.type === "Student")
+        {
+            user = await getStudent(user)
+        }
+        else if(this.state.type === "Guide")
+        {
+            user = await getGuide(user)
+        }
+        else if(this.state.type === "Manager")
+        {
+            user = await getManager(user)
+        }
         // console.log(student)
         var updateStudent = {
             fname:this.state.fname,
@@ -118,7 +144,7 @@ class Profile extends React.Component {
             phone:this.state.phone,
         }
 
-        student.update(updateStudent).then(()=>
+        user.update(updateStudent).then(()=>
         {
             alert("הפרטים שונו בהצלחה")
         })
@@ -218,7 +244,7 @@ class Profile extends React.Component {
                         <Grid item xs={12}>
                             <TextField
                                 inputProps={{style: {textAlign: 'center'}}}
-                                id="password"
+                                id="verifyPassword"
                                 name="password"
                                 type="password"
                                 autoComplete="off"
