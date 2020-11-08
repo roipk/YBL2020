@@ -72,15 +72,10 @@ class Profile extends React.Component {
 
     async getDate() {
         var user = (auth.currentUser).uid
-        //check if student or guide
         var student = await getStudentData(user)
         var guide = await getGuideData(user)
         var manager = await getManagerData(user)
-        console.log(student)
-        console.log(guide)
-        console.log(manager)
         if (student) {
-
             this.setState({
                 fname: student.fname,
                 lname: student.lname,
@@ -106,6 +101,37 @@ class Profile extends React.Component {
         }
     }
 
+    // async sendData(){
+    //     if(this.state.password && this.state.Vpassword){
+    //         if(this.state.password !== this.state.Vpassword){
+    //             alert("הסיסמא ואימות הסיסמא לא תואמים")
+    //             return
+    //         }
+    //         else if((this.state.password).length <6){
+    //             alert("הסיסמא צריכה להיות יותר מ6 תווים")
+    //             return
+    //         }
+    //         auth.currentUser.updatePassword(this.state.password)
+    //     }
+    //     else if((!this.state.password && this.state.Vpassword)||(this.state.password && !this.state.Vpassword)){
+    //         alert("אנא מלא את כל הנתונים")
+    //         return
+    //     }
+    //     // console.log(this.state)
+    //     var user=(auth.currentUser).uid
+    //     var student = await getStudent(user)
+    //     // console.log(student)
+    //     var updateStudent = {
+    //         fname:this.state.fname,
+    //         lname:this.state.lname,
+    //         phone:this.state.phone,
+    //     }
+    //
+    //     student.update(updateStudent).then(()=>
+    //     {
+    //         alert("הפרטים עודכנו בהצלחה")
+    //     })
+    // }
     async sendData(){
         if(this.state.password && this.state.Vpassword){
             if(this.state.password !== this.state.Vpassword){
