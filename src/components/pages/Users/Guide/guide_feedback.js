@@ -254,7 +254,7 @@ class GuideFeedback extends React.Component {
                         topicMeeting:this.state.form.q1,
                         nameGuide: team.fname + " "+team.lname,
                         postStudents:[],
-                        feedbackToStudents:{},
+                        feedbackToStudents:[],
                         formStudents:{
                             q1:[0,0,0,0,0],
                             q2:[0,0,0,0,0],

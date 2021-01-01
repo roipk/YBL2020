@@ -46,7 +46,7 @@ class GuideReports extends React.Component {
         this.approvStudent = this.approvStudent.bind(this)
         this.saveStudentData = this.saveStudentData.bind(this)
         this.feedbackGuide = this.feedbackGuide.bind(this)
-        
+
     }
 
 
@@ -356,6 +356,8 @@ class GuideReports extends React.Component {
         var dataStudent = (await form.get()).data()
         if(dataStudent && dataStudent.form) {
             dataStudent = await dataStudent.form
+            console.log("dataStudent")
+            console.log(dataStudent)
         }
         var approved = student.approv
         var feedback = student.feedback
@@ -366,20 +368,25 @@ class GuideReports extends React.Component {
         var name=student.data.fname+" "+ student.data.lname
         var enter
         // console.log("in3");
-        var feedbackToStudents = [];
+        var feedbackToStudents = updateTeamDate.data()["feedbackToStudents"];
+        if(feedbackToStudents === undefined)
+            feedbackToStudents = []
         postStudents = [];
         var studentsComes=[]
         var formStudents = {};
         if(approved) {
-            // console.log("in4");
+            console.log("in4");
             if (dataStudent === undefined) {
+                console.log("in5")
                 feedbackToStudents.push(name+": "+feedback);
                 studentsComes.push(name)
                 updateTeamDateSet.set({
                     studentsComes:studentsComes,
                     feedbackToStudents: feedbackToStudents,
                 }, { merge: true });
-            } else {
+                await this.AddFeedbackToStudent(sid);
+            }
+            else {
                 // console.log("in5")
                 if (!updateTeamDate.data()) {
                     // console.log("in6",dataStudent)
@@ -494,6 +501,7 @@ class GuideReports extends React.Component {
         }
 
         else{
+            await this.AddFeedbackToStudent(sid);
             // console.log("in11")
             feedback=""
             feedbackToStudents=[]
@@ -508,17 +516,20 @@ class GuideReports extends React.Component {
             }
             await updateTeamDateSet.set({feedbackToStudents:newfeedbacks},{merge:true});
         }
-
+        dataStudent = (await form.get()).data()
+        if(dataStudent && dataStudent.form) {
+            dataStudent = await dataStudent.form
+            // console.log("dataStudent")
+            // console.log(dataStudent)
+        }
         if(dataStudent && dataStudent.canUpdate)
         {
-
             if(feedback === undefined)
                 feedback=""
             dataStudent.canUpdate = false
-            if(approved === undefined || dataStudent === undefined || feedback === undefined)
-            {
-                console.log(student)
-                alert("נמצאה בעיית נתונים אצל החניך " + student.data.fname+" "+student.data.lname+" לא נשמרו נתונים עבורו ")
+            if(approved === undefined || dataStudent === undefined || feedback === undefined) {
+                    console.log(student)
+                    alert("נמצאה בעיית נתונים אצל החניך " + student.data.fname+" "+student.data.lname+" לא נשמרו נתונים עבורו ")
             }
             else {
                 await form.update({
@@ -536,7 +547,6 @@ class GuideReports extends React.Component {
             if (feedback === undefined)
                 feedback = ""
             if (approved === undefined || dataStudent === undefined || feedback === undefined) {
-                console.log(student)
                 alert("נמצאה בעיית נתונים אצל החניך " + student.data.fname + " " + student.data.lname +" לא נשמרו נתונים עבורו ")
             } else {
                 await form.set({
@@ -556,7 +566,14 @@ class GuideReports extends React.Component {
 
 
 
+    async AddFeedbackToStudent(sid)
+    {
+        console.log(sid)
 
+        await db.collection("students").doc(sid).collection("comes").doc(this.state.date).set({
+            approved: true,
+        }, {merge: true})
+    }
 
 
     render() {

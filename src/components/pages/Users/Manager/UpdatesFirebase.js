@@ -428,7 +428,7 @@ class UpdatesFirebase extends Component {
                                     this.state.TeamEmpty.map((Team,index) => (
                                         <Grid  item xs={12}  key={index}>
                                             <hr/>
-                                            {this.teamCard(Team.data())}
+                                            {this.teamCard(Team)}
                                         </Grid >
                                     ))
 
@@ -487,18 +487,21 @@ class UpdatesFirebase extends Component {
         })
     }
 
-    async getAllUsers(user) {
+    async getAllUsers(user,reload) {
         this.loadSpinner(true,"מיבא נתוני משתמשים")
 
-        if ((user === 'guides' && this.state.Guides && this.state.Guides > 1) ||
-            (user === 'students' && this.state.Students && this.state.Students > 1) ||
-            (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1) ||
-            (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
-            (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
-            (user === 'Teams' && this.state.Teams && this.state.Teams > 1)) {
-            this.loadSpinner(false,"")
-            return
+            if (!reload && (
+                (user === 'guides' && this.state.Guides && this.state.Guides > 1) ||
+                (user === 'students' && this.state.Students && this.state.Students > 1) ||
+                (user === 'guidesEmpty' && this.state.GuidesEmpty && this.state.GuidesEmpty > 1) ||
+                (user === 'studentEmpty' && this.state.StudentEmpty && this.state.StudentEmpty > 1) ||
+                (user === 'teamEmpty' && this.state.TeamEmpty && this.state.TeamEmpty > 1) ||
+                (user === 'Teams' && this.state.Teams && this.state.Teams > 1))
+            ) {
+                this.loadSpinner(false, "")
+                return
         }
+        var tempTeam=[]
         // console.log(user)
         var temp = user
         if (user === 'guides')
@@ -506,6 +509,10 @@ class UpdatesFirebase extends Component {
         else if (user === 'guidesEmpty') {
             emptyGuidesOptions = []
             temp = 'guides'
+            // console.log("in1")
+            tempTeam = await db.collection("Teams").get();
+            tempTeam = tempTeam.docs
+
         } else if (user === 'studentEmpty') {
             emptyStudentsOptions = []
             temp = 'students'
@@ -519,7 +526,7 @@ class UpdatesFirebase extends Component {
             studentsOptions = []
         var allUsers = []
         await db.collection(temp).get().then(res => {
-            res.forEach(res => {
+            res.forEach( res => {
                 if (res.data().uid) {
                     if (user === 'students') {
                         allUsers.push(res)
@@ -529,9 +536,24 @@ class UpdatesFirebase extends Component {
                         allUsers.push(res)
                         guidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
 
-                    } else if (user === 'guidesEmpty' && !res.data().team) {
-                        allUsers.push(res)
-                        emptyGuidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                    } else if (user === 'guidesEmpty' /*&& !res.data().team*/) {
+                        if(!res.data().team)
+                        {
+                            allUsers.push(res)
+                            emptyGuidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                        }
+                        else {
+                            var found = false
+                            for (var newGuide in tempTeam) {
+                                if (!found && tempTeam[newGuide].data().guide && tempTeam[newGuide].data().guide.id === res.id)
+                                    found = true
+                            }
+                            if (!found) {
+                                allUsers.push(res)
+                                emptyGuidesOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
+                            }
+                        }
+
                     } else if (user === 'studentEmpty' && !res.data().teamName) {
                         allUsers.push(res)
                         emptyStudentsOptions.push({value: res, label: res.data().fname + ' ' + res.data().lname})
@@ -641,6 +663,9 @@ class UpdatesFirebase extends Component {
 
     teamCard(team)
     {
+        var TeamRef = team;
+        team = team.data()
+
         return(
             <div id="name-group" className="form-group" dir="rtl">
                 <div className="report" id="report">
@@ -650,12 +675,23 @@ class UpdatesFirebase extends Component {
                             <Grid item xs={8}>
                                 <Select  placeholder={" שיבוץ מדריך "} options={emptyGuidesOptions} onChange={(e)=>{
                                     // console.log(e.label,e.value);
-                                    this.setState({emtpyGuideTeamPath:e.value,emtpyguideTeamName:e.label})
+                                    this.setState({emtpyGuideTeamPath:e.value,emtpyguideTeamName:e.label,TempTeamName:team.name })
                                 }} />
                             </Grid>
-                            <Grid item xs={4} hidden={!this.state.emtpyGuideTeamPath}>
-
-
+                            <Grid item xs={4}>
+                                <button hidden={!this.state.emtpyGuideTeamPath || this.state.TempTeamName!==team.name} onClick={async ()=>{
+                                    this.loadSpinner(true,"מעדכן נתונים")
+                                    await db.collection("Teams").doc(TeamRef.id).set({
+                                        guide:this.state.emtpyGuideTeamPath.ref
+                                    }, { merge: true })
+                                    await  db.collection("guides").doc(this.state.emtpyGuideTeamPath.id).set({
+                                        team:TeamRef.ref,
+                                        teamName:team.name
+                                    }, { merge: true })
+                                    this.getAllUsers("teamEmpty")
+                                    this.loadSpinner(false,"")
+                                    alert("המדריך נוסף בהצלחה")
+                                }}>שיבוץ</button>
                             </Grid>
                         </Grid>
                     </div>
@@ -700,54 +736,53 @@ class UpdatesFirebase extends Component {
                                         teamName = [e.label]
 
                                     }
-                                    this.setState({guideTeamPath:teamPath,guideTeamName:teamName})
+                                    this.setState({guideTeamPath:teamPath,guideTeamName:teamName,userID:user.ID})
+
                                 }} />
                             </Grid>
-                            <Grid item xs={4} hidden={!this.state.guideTeamName || this.state.guideTeamName.length <= index  || this.state.guideTeamName[index] === user.teamName}>
-                                <button onClick={async ()=>{
+                            <Grid item xs={4}>
+                                <button hidden={!this.state["guideTeamName"] || user.ID !== this.state.userID } onClick={async ()=>{
                                     this.loadSpinner(true,"מעדכן נתונים")
                                     // console.log('in1')
                                     if(user.type==='guides' || user.type==='testers') {
                                         // console.log('in2')
                                         // console.log(user.uid)
 
+                                        if(this.state["guideTeamPath"]) {
+                                            try {
+                                                var updateTeam;
 
-                                        try{
-                                            var updateTeam;
-                                            var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
-                                            // console.log('in5')
-                                            // console.log(oldGuide.data())
+                                                var oldGuide = await db.collection('Teams').doc(this.state.guideTeamPath[index].id).get()
+                                                // console.log('in5')
+                                                // console.log(oldGuide.data())
 
-                                            await db.doc((oldGuide.data().guide).path).update({
-                                                teamName:null,
-                                                team:null
-                                            })
-                                            // console.log('in6')
+                                                await db.doc((oldGuide.data().guide).path).update({
+                                                    teamName: null,
+                                                    team: null
+                                                })
 
-                                        }
-                                        catch(e){
-                                            // console.log('in7')
-                                            console.log('לקבוצה לא היה מדריך לפני')
-                                            console.log(e)
-                                        }
-                                        try{
-                                            // console.log(user.team.id)
-                                            await db.collection('Teams').doc(user.team.id).update({
-                                                guide: null
-                                            })
-                                        }
-                                        catch{
-                                            console.log("למדריך לא הייתה קבוצה לפני")
+                                                // console.log('in6')
+
+                                            } catch (e) {
+                                                console.log('לקבוצה לא היה מדריך לפני')
+                                                // console.log(e)
+                                            }
+                                            try {
+                                                await db.collection('Teams').doc(user.team.id).update({
+                                                    guide: null
+                                                })
+                                            } catch {
+                                                console.log("למדריך לא הייתה קבוצה לפני")
+                                            }
                                         }
                                         updateTeam = await db.collection('guides').doc(user.uid)
-                                        // console.log('in3')
                                         await updateTeam.update({
-                                            teamName:this.state.guideTeamName[index],
-                                            team:this.state.guideTeamPath[index]
+                                            teamName:this.state["guideTeamName"][0],
+                                            team:this.state["guideTeamPath"][0]
                                         })
 
-                                        // console.log(this.state.guideTeamPath)
-                                        await db.collection('Teams').doc(this.state.guideTeamPath[index].id).update({
+
+                                        await db.collection('Teams').doc(this.state["guideTeamPath"][0].id).update({
                                             guide: updateTeam
                                         })
                                         this.getAllUsers('guides')
@@ -758,13 +793,22 @@ class UpdatesFirebase extends Component {
                                         // console.log(user.uid)
                                         updateTeam = await db.collection('students').doc(user.uid)
                                         updateTeam.update({
-                                            teamName:this.state.guideTeamName[index],
-                                            team:this.state.guideTeamPath[index]
+                                            teamName:this.state["guideTeamName"],
+                                            team:this.state["guideTeamPath"]
                                         })
                                         // console.log('in9')
                                         this.getAllUsers('students')
                                     }
                                     this.loadSpinner(false,'')
+
+                                    if(this.state.showGuides)
+                                        this.getAllUsers("guides")
+                                    if(this.state.showStudents)
+                                        this.getAllUsers("students")
+                                    if(this.state.showGuideWithoutTeam)
+                                        this.getAllUsers("guidesEmpty")
+                                    if(this.state.showStudentWithoutTeam)
+                                        this.getAllUsers("StudentEmpty")
                                     alert('הוחלפה קבוצה')
                                 }}>החלף</button>
                             </Grid>

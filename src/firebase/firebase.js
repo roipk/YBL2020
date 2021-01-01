@@ -228,8 +228,15 @@ export async function getManagerData(uid) {
 }
 export async function getTeamFeedbackByDate(teamPath,date) {
     var team = await db.collection("Teams").doc(teamPath).collection("Dates").doc(date).get();
+    console.log(teamPath);
+    if(team === undefined)
+    {
+
+        alert("לא נמצא מדריך לקבוצה")
+    }
+    console.log(team);
     var teamFeedback=team.data()
-    // console.log(teamFeedback);
+    console.log(teamFeedback);
     return teamFeedback;
 }
 //
