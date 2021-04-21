@@ -387,22 +387,22 @@ class StudentFeedback extends React.Component {
         </div>);
     }
         else
-        return (<div> {!this.state.spinner[0] ? "" :
-            <div id='fr'>
-                {this.state.spinner[1]}
-                <div className="sweet-loading">
-                    <ClipLoader style={{
-                        backgroundColor: "rgba(255,255,255,0.85)",
-                        borderRadius: "25px"
-                    }}
-                        //   css={override}
-                                size={120}
-                                color={"#123abc"}
+            return (<div> {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {this.state.spinner[1]}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={100}
+                                    color={"#123abc"}
 
-                    />
+                        />
+                    </div>
                 </div>
-            </div>
-        }</div>)
+            }</div>)
 
     }
 

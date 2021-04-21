@@ -142,7 +142,7 @@ class Profile extends React.Component {
                 alert("הסיסמא צריכה להיות יותר מ6 תווים")
                 return
             }
-            console.log(this.state.password)
+            // console.log(this.state.password)
             auth.currentUser.updatePassword(this.state.password)
         }
         else if((!this.state.password && this.state.Vpassword)||(this.state.password && !this.state.Vpassword)){
@@ -305,7 +305,7 @@ class Profile extends React.Component {
                             borderRadius: "25px"
                         }}
                             //   css={override}
-                                    size={120}
+                                    size={100}
                                     color={"#123abc"}
 
                         />

@@ -372,7 +372,9 @@ class GuideReports extends React.Component {
         if(feedbackToStudents === undefined)
             feedbackToStudents = []
         postStudents = [];
-        var studentsComes=[]
+        var studentsComes=updateTeamDate.data().studentsComes;
+        if(studentsComes ===null || studentsComes === undefined)
+            studentsComes=[]
         var formStudents = {};
         if(approved) {
             console.log("in4");
@@ -387,7 +389,7 @@ class GuideReports extends React.Component {
                 await this.AddFeedbackToStudent(sid);
             }
             else {
-                // console.log("in5")
+                // console.log("in5.1")
                 if (!updateTeamDate.data()) {
                     // console.log("in6",dataStudent)
                     // console.log(feedback)
@@ -647,22 +649,22 @@ class GuideReports extends React.Component {
             )
         }
     else
-        return (<div> {!this.state.spinner[0] ? "" :
-            <div id='fr'>
-                {this.state.spinner[1]}
-                <div className="sweet-loading">
-                    <ClipLoader style={{
-                        backgroundColor: "rgba(255,255,255,0.85)",
-                        borderRadius: "25px"
-                    }}
-                        //   css={override}
-                                size={120}
-                                color={"#123abc"}
+            return (<div> {!this.state.spinner[0] ? "" :
+                <div id='fr'>
+                    {this.state.spinner[1]}
+                    <div className="sweet-loading">
+                        <ClipLoader style={{
+                            backgroundColor: "rgba(255,255,255,0.85)",
+                            borderRadius: "25px"
+                        }}
+                            //   css={override}
+                                    size={100}
+                                    color={"#123abc"}
 
-                    />
+                        />
+                    </div>
                 </div>
-            </div>
-        }</div>)
+            }</div>)
     }
 
     Card(Student) {
