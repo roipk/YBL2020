@@ -46,7 +46,7 @@ if(this.state.loadPage){
                                 borderRadius: "25px"
                             }}
                                 //   css={override}
-                                        size={120}
+                                        size={100}
                                         color={"#123abc"}
 
                             />
@@ -98,7 +98,7 @@ if(this.state.loadPage){
                             borderRadius: "25px"
                         }}
                             //   css={override}
-                                    size={120}
+                                    size={100}
                                     color={"#123abc"}
 
                         />

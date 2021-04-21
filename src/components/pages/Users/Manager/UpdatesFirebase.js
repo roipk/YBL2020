@@ -151,7 +151,7 @@ class UpdatesFirebase extends Component {
                                 borderRadius: "25px"
                             }}
                                 //   css={override}
-                                        size={120}
+                                        size={100}
                                         color={"#123abc"}
 
                             />
@@ -467,7 +467,7 @@ class UpdatesFirebase extends Component {
                                     borderRadius: "25px"
                                 }}
                                     //   css={override}
-                                            size={120}
+                                            size={100}
                                             color={"#123abc"}
 
                                 />

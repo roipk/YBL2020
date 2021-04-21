@@ -217,7 +217,7 @@ class FeedbackStudents extends Component {
                                 borderRadius: "25px"
                             }}
                                 //   css={override}
-                                        size={120}
+                                        size={100}
                                         color={"#123abc"}
 
                             />
@@ -319,7 +319,7 @@ class FeedbackStudents extends Component {
                                     borderRadius: "25px"
                                 }}
                                     //   css={override}
-                                            size={120}
+                                            size={100}
                                             color={"#123abc"}
 
                                 />

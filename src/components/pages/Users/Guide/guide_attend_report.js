@@ -508,7 +508,7 @@ class GuideReports extends React.Component {
             feedback=""
             feedbackToStudents=[]
             studentsComes=[]
-            feedbackToStudents= updateTeamDate.data()["feedbackToStudents"]
+            feedbackToStudents = updateTeamDate.data()["feedbackToStudents"]
             var newfeedbacks=[]
             for(var i=0;i<feedbackToStudents.length;i++)
             {
@@ -591,7 +591,7 @@ class GuideReports extends React.Component {
                                     borderRadius: "25px"
                                 }}
                                     //   css={override}
-                                            size={120}
+                                            size={100}
                                             color={"#123abc"}
 
                                 />

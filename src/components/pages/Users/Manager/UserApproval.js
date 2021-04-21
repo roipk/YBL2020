@@ -140,7 +140,7 @@ render() {
                                         borderRadius: "25px"
                                     }}
                                         //   css={override}
-                                                size={120}
+                                                size={100}
                                                 color={"#123abc"}
 
                                     />
@@ -165,7 +165,7 @@ render() {
                                             borderRadius: "25px"
                                         }}
                                             //   css={override}
-                                                    size={120}
+                                                    size={100}
                                                     color={"#123abc"}
 
                                         />
@@ -199,7 +199,7 @@ render() {
                                         borderRadius: "25px"
                                     }}
                                         //   css={override}
-                                                size={120}
+                                                size={100}
                                                 color={"#123abc"}
 
                                     />
@@ -257,7 +257,7 @@ render() {
                                         borderRadius: "25px"
                                     }}
                                         //   css={override}
-                                                size={120}
+                                                size={100}
                                                 color={"#123abc"}
 
                                     />
@@ -288,7 +288,7 @@ render() {
                                     borderRadius: "25px"
                                 }}
                                     //   css={override}
-                                            size={120}
+                                            size={100}
                                             color={"#123abc"}
 
                                 />

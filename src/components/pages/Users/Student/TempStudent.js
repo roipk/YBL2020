@@ -119,7 +119,7 @@ class TempStudent extends React.Component {
                                 borderRadius: "25px"
                             }}
                                 //   css={override}
-                                        size={120}
+                                        size={100}
                                         color={"#123abc"}
 
                             />
